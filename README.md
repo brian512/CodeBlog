@@ -23,9 +23,6 @@ CodeBlog是为了方便在手机端阅读编程技术博文。集成展示了CSD
  - TabLayout实现主页tab切换；
  - SlidingMenu实现侧滑栏；
 
-![这里写图片描述](http://img.blog.csdn.net/20160610181910604)
-
-
 ----------------
 加群讨论技术和功能，欢迎大家参与！
 ![这里写图片描述](http://img.blog.csdn.net/20160817112120745)
