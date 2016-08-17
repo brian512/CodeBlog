@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">编程博客</string>
+    
+    <string name="app_description">编程博客是为了方便在手机端阅读编程技术的博文。</string>
+    
+    <string name="user_name">年少的风</string>
+    
+    <string name="str_null"></string>
+    <string name="check_update">检查更新</string>
+    <string name="news">新  闻</string>
+    <string name="all_type">全部分类</string>
+    <string name="share_friend">分享给好友</string>
+    <string name="about">关于作者</string>
+    <string name="search">搜索</string>
+    <string name="settings">设  置</string>
+    <string name="chat">聊  天</string>
+    <string name="back">返回</string>
+	<string name="null_str"></string>
+    <string name="hint_userid">CSDN ID</string>
+    
+    <string name="tip_no_network">无网络可用，请确认网络连接！</string>
+    <string name="tip_nomore_data">无更多加载内容</string>
+    
+     
+     
+    <string name="str_profile">个人资料</string>
+    
+    <string name="brian_blog"><a href="http://blog.csdn.net/brian512">http://blog.csdn.net/brian512 </a></string>
+    
+    <string name="madeby">Made by brian512</string>
+    
+</resources>

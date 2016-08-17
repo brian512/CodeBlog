@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.brian.common.view.TitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.tencent.smtt.sdk.WebView
+            android:id="@+id/article_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layerType="software"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/btn_favo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|right"
+            android:padding="10dp"
+            android:src="@drawable/ic_favo_selector" />
+
+        <ProgressBar
+            android:id="@+id/blogContentPro"
+            style="@android:style/Holo.Light.ButtonBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateDrawable="@drawable/progressbar_large"
+            android:visibility="visible" />
+
+        <FrameLayout
+            android:id="@+id/ad_group"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:visibility="invisible">
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/reLoadImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:clickable="true"
+            android:contentDescription="@string/null_str"
+            android:src="@drawable/base_empty_view"
+            android:visibility="invisible" />
+
+    </FrameLayout>
+
+
+</LinearLayout>

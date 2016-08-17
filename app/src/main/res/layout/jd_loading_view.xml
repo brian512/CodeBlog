@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="44dp" 
+    android:gravity="center"
+    android:layout_gravity="center"
+    >
+    
+    <Button 
+        android:id="@+id/reloading_btn"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/com_item_translucence_grep_bg_selector"
+        android:visibility="gone"
+        />
+    
+    <TextView android:id="@+id/progress_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#ff666666"
+        android:layout_centerInParent="true"
+        />
+
+    <ImageView 
+        android:id="@+id/progress_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/progress_text"
+        android:layout_marginRight="16dp"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:src="@drawable/loading_item_circle"
+        android:contentDescription="@null"
+        />
+</RelativeLayout>

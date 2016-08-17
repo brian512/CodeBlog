@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_rl"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/light_blue"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/status_bar"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/head_height">
+
+        <!-- 左侧按钮 -->
+        <TextView
+            android:id="@+id/left_text"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="3dp"
+            android:background="@drawable/ic_back"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textSize="16sp"
+            android:visibility="visible" />
+
+        <!-- 中间标题 -->
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:singleLine="true"
+            android:padding="0dp"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+
+        <!-- 右侧按钮 -->
+        <TextView
+            android:id="@+id/right_text"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/ic_share"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:textSize="16sp"
+            android:visibility="visible" />
+    </RelativeLayout>
+</LinearLayout>

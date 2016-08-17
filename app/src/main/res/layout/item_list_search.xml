@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_bloglist_item"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp" >
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:maxLines="2"
+        android:textColor="@color/black"
+        android:textSize="@dimen/item_size_title" />
+
+    <TextView
+        android:id="@+id/searchDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:ellipsize="end"
+        android:maxLines="4"
+        android:textColor="@color/nomalGray"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/authorTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_gravity="right"
+        android:textColor="@color/nomalGray"
+        android:textSize="18sp" />
+
+</LinearLayout>
