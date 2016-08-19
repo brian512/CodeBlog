@@ -7,6 +7,7 @@ import com.brian.csdnblog.activity.MainTabActivity;
 import com.brian.csdnblog.manager.BrianUncaughtExceptionHandler;
 import com.brian.csdnblog.manager.BrianUncaughtExceptionHandler.OnAppCrashListener;
 import com.brian.csdnblog.manager.PushManager;
+import com.brian.csdnblog.util.ConfigHelper;
 import com.brian.csdnblog.util.ProcessUtil;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
@@ -23,6 +24,7 @@ public class App extends LitePalApplication {
         super.onCreate();
         Env.setContext(this);
         Env.setAppStartTime();
+        ConfigHelper.init(this);
 
         CrashReport.initCrashReport(getApplicationContext(), "900033443", false);
         

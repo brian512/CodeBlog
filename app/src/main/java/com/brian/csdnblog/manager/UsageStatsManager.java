@@ -1,14 +1,14 @@
 
 package com.brian.csdnblog.manager;
 
-import java.util.HashMap;
-
 import android.text.TextUtils;
 
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.util.LogUtil;
 import com.umeng.analytics.MobclickAgent;
+
+import java.util.HashMap;
 
 /**
  * @author brian @date 2015-9-8
