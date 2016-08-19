@@ -46,7 +46,7 @@ public class AboutActivity extends BaseActivity {
 
         String versionName = AppInfoUtil.getVersionName(this);
         if (!TextUtils.isEmpty(versionName)) {
-            mMadeByText.setText(mMadeByText.getText() + " _" + versionName);
+            mMadeByText.setText(mMadeByText.getText() + "  " + versionName);
         }
     }
 

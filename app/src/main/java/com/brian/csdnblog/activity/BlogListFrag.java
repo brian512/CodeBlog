@@ -179,7 +179,11 @@ public class BlogListFrag extends Fragment {
         mRefreshLayout.setOnLoadListener(new RefreshLayout.OnLoadListener() {
             @Override
             public void onLoad() {
-                loadData(false);
+                if (mRefreshable) {
+                    loadData(false);
+                } else {
+                    mRefreshLayout.setLoading(false);
+                }
             }
         });
     }

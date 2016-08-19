@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- 大的点赞按钮 -->
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true"  android:drawable="@color/com_divider_gray_0" />
-    <item android:state_selected="true"  android:drawable="@color/com_divider_gray_0" />
-    <item android:drawable="@color/com_transparent" />
-</selector>

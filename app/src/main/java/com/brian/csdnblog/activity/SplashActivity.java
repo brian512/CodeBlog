@@ -45,6 +45,9 @@ public class SplashActivity extends BaseActivity {
 
     private void jumpMainActivity() {
         int delayDuration = 2000;
+        if (!isFirstLaunch()) {
+            delayDuration = 500;
+        }
         // 延迟进入
         new Handler().postDelayed(new Runnable() {
             @Override

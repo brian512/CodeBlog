@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<animation-list xmlns:android="http://schemas.android.com/apk/res/android" 
-    android:oneshot="false"
-    >
-    <item android:drawable="@drawable/xlistview_head_loading_2" android:duration="150"></item>
-    <item android:drawable="@drawable/xlistview_head_loading_3" android:duration="150"></item>
-    <item android:drawable="@drawable/xlistview_head_loading_2" android:duration="150"></item>
-    <item android:drawable="@drawable/xlistview_head_loading_1" android:duration="150"></item> 
-</animation-list>

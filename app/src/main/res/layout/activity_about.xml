@@ -41,38 +41,21 @@
         android:layout_below="@+id/blogTV"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp" >
+        android:layout_marginTop="55dp" >
 
         <TableRow android:layout_margin="5dp" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="微博："
-                android:textColor="@color/black"
-                android:textSize="@dimen/user_center_size_info" />
-
-            <TextView
-                android:id="@+id/weibo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="brian512"
-                android:textColor="@color/black" />
-        </TableRow>
-
-        <TableRow android:layout_margin="5dp" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="QQ："
+                android:text="QQ群  :"
                 android:textColor="@color/black"
                 android:textSize="@dimen/user_center_size_info" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="625731525"
+                android:text="194067225"
                 android:textColor="@color/black"
                 android:textIsSelectable="true"
                 android:textSize="@dimen/user_center_size_info" />
@@ -83,7 +66,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="E-mail："
+                android:text="github: "
                 android:textColor="@color/black"
                 android:textSize="@dimen/user_center_size_info" />
 
@@ -91,7 +74,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="email"
-                android:text="huamm512@163.com"
+                android:text="https://github.com/brian512/CodeBlog"
+                android:textIsSelectable="true"
                 android:textColor="@color/black"
                 android:textSize="@dimen/user_center_size_info" />
         </TableRow>
@@ -101,7 +85,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="BLOG："
+                android:text="BLOG: "
                 android:textColor="@color/black"
                 android:textSize="@dimen/user_center_size_info" />
 
@@ -110,10 +94,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:autoLink="web"
+                android:textIsSelectable="true"
                 android:text="@string/brian_blog"
                 android:textColor="@color/black" />
         </TableRow>
     </TableLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/contact"
+        android:layout_marginTop="20dp"
+        android:text="欢迎大家的参与！"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/madeby"

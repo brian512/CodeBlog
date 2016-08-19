@@ -131,7 +131,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
-            android:text="阅读记录"
+            android:text="浏览记录"
             android:textColor="@color/black"
             android:textSize="@dimen/user_center_size_menu" />
 

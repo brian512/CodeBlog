@@ -12,7 +12,7 @@
     <string name="news">新  闻</string>
     <string name="all_type">全部分类</string>
     <string name="share_friend">分享给好友</string>
-    <string name="about">关于作者</string>
+    <string name="about">关于</string>
     <string name="search">搜索</string>
     <string name="settings">设  置</string>
     <string name="chat">聊  天</string>
@@ -29,6 +29,6 @@
     
     <string name="brian_blog"><a href="http://blog.csdn.net/brian512">http://blog.csdn.net/brian512 </a></string>
     
-    <string name="madeby">Made by brian512</string>
+    <string name="madeby">made by: brian512</string>
     
 </resources>

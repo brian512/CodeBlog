@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- 加载状态对话框的菊花动画 PS：作为drawable -->
-<animated-rotate xmlns:android="http://schemas.android.com/apk/res/android"
-    android:drawable="@drawable/ic_bottle_image_loading"    
-    android:pivotX="50%"
-    android:pivotY="50%"
-    
-      />

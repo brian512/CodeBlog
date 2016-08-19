@@ -70,11 +70,11 @@ public class BlogListActivity extends BaseActivity {
         mListFrag = new BlogListFrag();
         int type = TypeManager.initType(TypeManager.TYPE_WEB_FAVO);
         if (mType == TYPE_FAVO) {
-            mTitleBar.setTitle("收藏");
+            mTitleBar.setTitle("博文收藏");
             mListFrag.setPageName("FavoList");
         } else if (mType == TYPE_HISTORY) {
             type = TypeManager.initType(TypeManager.TYPE_WEB_HISTORY);
-            mTitleBar.setTitle("学习记录");
+            mTitleBar.setTitle("浏览记录");
             mListFrag.setPageName("HistoryList");
         } else if (mType == TYPE_NEWS) {
             type = TypeManager.initType(TypeManager.TYPE_WEB_OSNEWS);

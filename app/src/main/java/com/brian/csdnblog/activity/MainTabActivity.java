@@ -12,7 +12,6 @@ import android.widget.ImageView;
 
 import com.brian.common.view.DrawerArrowDrawable;
 import com.brian.csdnblog.Config;
-import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.adapter.MainTabAdapter;
 import com.brian.csdnblog.manager.PushManager;
@@ -26,7 +25,6 @@ import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnCloseListener;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenListener;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnScrollListener;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
-import com.tencent.smtt.sdk.QbSdk;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.umeng.onlineconfig.OnlineConfigLog;
@@ -263,20 +261,20 @@ public class MainTabActivity extends SlidingFragmentActivity {
 
     private void preInitX5Core() {
 //        TbsDownloader.needDownload(Env.getContext(), false);
-        QbSdk.allowThirdPartyAppDownload(true);
-        if (!QbSdk.isTbsCoreInited()) {
-            QbSdk.preInit(Env.getContext(), new QbSdk.PreInitCallback() {
-                @Override
-                public void onCoreInitFinished() {
-                    LogUtil.e("onCoreInitFinished");
-                }
-
-                @Override
-                public void onViewInitFinished() {
-                    LogUtil.e("onViewInitFinished");
-                }
-            });
-        }
+//        QbSdk.allowThirdPartyAppDownload(true);
+//        if (!QbSdk.isTbsCoreInited()) {
+//            QbSdk.preInit(Env.getContext(), new QbSdk.PreInitCallback() {
+//                @Override
+//                public void onCoreInitFinished() {
+//                    LogUtil.e("onCoreInitFinished");
+//                }
+//
+//                @Override
+//                public void onViewInitFinished() {
+//                    LogUtil.e("onViewInitFinished");
+//                }
+//            });
+//        }
     }
 
 }
