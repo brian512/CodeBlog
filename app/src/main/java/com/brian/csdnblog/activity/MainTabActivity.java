@@ -77,6 +77,8 @@ public class MainTabActivity extends SlidingFragmentActivity {
     }
 
     private void preInitX5Core() {
+//        TbsDownloader.needDownload(Env.getContext(), false);
+        QbSdk.allowThirdPartyAppDownload(true);
         if (!QbSdk.isTbsCoreInited()) {
             QbSdk.preInit(Env.getContext(), new QbSdk.PreInitCallback() {
                 @Override

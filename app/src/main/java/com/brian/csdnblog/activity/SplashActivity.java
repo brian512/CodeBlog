@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 
 import com.brian.csdnblog.BaseActivity;
 import com.brian.csdnblog.Config;
-import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.PermissionUtil;
@@ -17,8 +16,6 @@ import com.brian.csdnblog.util.PreferenceUtil;
 import com.brian.csdnblog.util.UIUtil;
 import com.oneapm.agent.android.OneApmAgent;
 import com.qhad.ads.sdk.adcore.Qhad;
-import com.tencent.smtt.sdk.QbSdk;
-import com.tencent.smtt.sdk.TbsDownloader;
 import com.umeng.analytics.MobclickAgent;
 
 public class SplashActivity extends BaseActivity {
@@ -48,9 +45,6 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void jumpMainActivity() {
-
-        initX5Kernel();
-
         int delayDuration = 2000;
         // 延迟进入
         new Handler().postDelayed(new Runnable() {
@@ -61,13 +55,6 @@ public class SplashActivity extends BaseActivity {
             }
         }, delayDuration);
     }
-
-
-    private void initX5Kernel() {
-        QbSdk.allowThirdPartyAppDownload(true);
-        TbsDownloader.needDownload(Env.getContext(), true);
-    }
-
 
     /**
      * 创建桌面快捷方式
