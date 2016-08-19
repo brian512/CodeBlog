@@ -38,7 +38,7 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
     };
 
     private static final String URL_CSDN_BLOG_BASE = "http://blog.csdn.net";
-    private static final String URL_CSDN_BLOG_HOME = "http://blog.csdn.net/type/index.html?&page=1";
+    private static final String URL_CSDN_BLOG_HOME = "http://blog.csdn.net/type/newarticle.html?&page=1";
 
 
     // 文章内容页
@@ -72,7 +72,7 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
 
     public List<BlogInfo> getBlogList(int type, String str) {
         try {
-            FileUtil.writeFile("/sdcard/bloglist", str);
+//            FileUtil.writeFile("/sdcard/bloglist", str);
             return doGetHotBlogItemList(type, str);
         } catch (Exception e) {
             MobclickAgent.reportError(Env.getContext(), e);
