@@ -45,6 +45,7 @@ public class MainTabActivity extends SlidingFragmentActivity {
     private ImageView mBtnMenu;
     private ImageView mBtnSearch;
     private TabLayout mTabLayout;
+    private DrawerArrowDrawable mArrowDrawable;
 
     // 主界面的页面切换
     private ViewPager mViewpager = null;
@@ -76,24 +77,6 @@ public class MainTabActivity extends SlidingFragmentActivity {
         preInitX5Core();
     }
 
-    private void preInitX5Core() {
-//        TbsDownloader.needDownload(Env.getContext(), false);
-        QbSdk.allowThirdPartyAppDownload(true);
-        if (!QbSdk.isTbsCoreInited()) {
-            QbSdk.preInit(Env.getContext(), new QbSdk.PreInitCallback() {
-                @Override
-                public void onCoreInitFinished() {
-                    LogUtil.e("onCoreInitFinished");
-                }
-
-                @Override
-                public void onViewInitFinished() {
-                    LogUtil.e("onViewInitFinished");
-                }
-            });
-        }
-    }
-
     private void initUI() {
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mBtnMenu = (ImageView) findViewById(R.id.left_menu);
@@ -106,19 +89,6 @@ public class MainTabActivity extends SlidingFragmentActivity {
         mViewpager.setAdapter(mTabAdapter);
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);//设置滑动模式
         mTabLayout.setupWithViewPager(mViewpager);
-
-        mViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-            @Override
-            public void onPageSelected(int position) {
-                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_MAIN_TAB, mTabAdapter.getPageTitle(position));
-            }
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
     }
 
     private void recoveryUI() {
@@ -175,10 +145,7 @@ public class MainTabActivity extends SlidingFragmentActivity {
                 mArrowDrawable.setProgress(percentOpen);
             }
         });
-
     }
-
-    private DrawerArrowDrawable mArrowDrawable;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -200,11 +167,23 @@ public class MainTabActivity extends SlidingFragmentActivity {
                 UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SEARCH);
             }
         });
+
+        mViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+            @Override
+            public void onPageSelected(int position) {
+                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_MAIN_TAB, mTabAdapter.getPageTitle(position));
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 
             if (getSlidingMenu().isMenuShowing()) {// 左侧栏已展开
@@ -270,16 +249,6 @@ public class MainTabActivity extends SlidingFragmentActivity {
         getIntent().putExtras(intent);// 共享数据
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
-    protected void onResumeFragments() {
-        super.onResumeFragments();
-    }
-
     private void initOnlineParams() {
         OnlineConfigAgent.getInstance().setDebugMode(Config.isDebug);
         OnlineConfigAgent.getInstance().updateOnlineConfig(this);
@@ -292,15 +261,22 @@ public class MainTabActivity extends SlidingFragmentActivity {
         });
     }
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        initUI();
-        initListener();
-        recoveryUI();
+    private void preInitX5Core() {
+//        TbsDownloader.needDownload(Env.getContext(), false);
+        QbSdk.allowThirdPartyAppDownload(true);
+        if (!QbSdk.isTbsCoreInited()) {
+            QbSdk.preInit(Env.getContext(), new QbSdk.PreInitCallback() {
+                @Override
+                public void onCoreInitFinished() {
+                    LogUtil.e("onCoreInitFinished");
+                }
 
-        // 初始化侧滑栏
-        initSlidingMenu(savedInstanceState);
+                @Override
+                public void onViewInitFinished() {
+                    LogUtil.e("onViewInitFinished");
+                }
+            });
+        }
     }
 
 }

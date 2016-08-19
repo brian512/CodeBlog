@@ -11,7 +11,6 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.brian.common.view.TitleBar;
-import com.brian.csdnblog.BaseActivity;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.manager.SettingPreference;

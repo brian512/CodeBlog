@@ -13,7 +13,7 @@ import com.brian.csdnblog.util.FileUtil;
 import com.brian.csdnblog.util.JsoupUtil;
 import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.PreferenceUtil;
-import com.brian.csdnblog.util.ResourceUtils;
+import com.brian.csdnblog.util.ResourceUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import org.jsoup.Jsoup;
@@ -222,7 +222,7 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
             Element profile = null;
             for (Element element : profiles) {
                 if (element.select("ul.panel_head").text()
-                        .equals(ResourceUtils.getString(Env.getContext(), R.string.str_profile))) {
+                        .equals(ResourceUtil.getString(Env.getContext(), R.string.str_profile))) {
                     profile = element;
                     break;
                 }

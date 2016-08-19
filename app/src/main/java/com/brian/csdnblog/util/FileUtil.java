@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2014 Togic Corporation. All rights reserved.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,6 @@
 
 package com.brian.csdnblog.util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.MemoryFile;
@@ -41,7 +40,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-@SuppressLint("NewApi")
 public class FileUtil {
     private static final String TAG = "FileUtil";
 
@@ -78,7 +76,7 @@ public class FileUtil {
     }
 
     public static boolean writeFileWithBackUp(String filePath, String content,
-            boolean append) {
+                                              boolean append) {
         if (TextUtils.isEmpty(filePath)) {
             return false;
         }
@@ -109,12 +107,11 @@ public class FileUtil {
     }
 
     public static boolean writeFile(String filePath, String content) {
-    	return writeFile(filePath, content, false);
+        return writeFile(filePath, content, false);
     }
-    
-    
-    public static boolean writeFile(String filePath, String content,
-            boolean append) {
+
+
+    public static boolean writeFile(String filePath, String content, boolean append) {
         if (!SdCardSize.checkSDCardSizeIsEnough(MIN_SPACE_LEFT)) {
             return false;
         }
@@ -125,8 +122,8 @@ public class FileUtil {
         }
         return false;
     }
-    private static boolean doWriteFile(String filePath, String content,
-            boolean append) {
+
+    private static boolean doWriteFile(String filePath, String content, boolean append) {
         FileWriter fileWriter = null;
         try {
             checkFilePath(filePath);
@@ -141,8 +138,8 @@ public class FileUtil {
             closeStream(fileWriter);
         }
     }
-    public static boolean writeFile(String filePath, byte[] content,
-            boolean append) {
+
+    public static boolean writeFile(String filePath, byte[] content, boolean append) {
         FileOutputStream outputStream = null;
         try {
             checkFilePath(filePath);
@@ -202,7 +199,7 @@ public class FileUtil {
         File file = new File(filePath);
         return checkFileExists(file);
     }
-    
+
     public static boolean checkFileExists(File file) {
         if (file != null && file.exists() && file.isFile()) {
             return true;
@@ -240,6 +237,7 @@ public class FileUtil {
         }
         return false;
     }
+
     private static boolean doChangeFileName(String oldFilePath, String newFileName) {
         File oldFile = new File(oldFilePath);
         if (checkFileExists(oldFile)) {
@@ -337,13 +335,13 @@ public class FileUtil {
     }
 
     public static final boolean setCacheFileLastModified(Context ctx,
-            String fileName, String lastModified) {
+                                                         String fileName, String lastModified) {
         return setFileLastModified(ctx.getFileStreamPath(fileName),
                 lastModified);
     }
 
     public static final String getCacheFileLastModified(Context ctx,
-            String fileName) {
+                                                        String fileName) {
         final File f = ctx.getFileStreamPath(fileName);
         if (f != null && f.exists()) {
             return DateTimeUtil.formatFileModifyDate(f.lastModified());
@@ -353,7 +351,7 @@ public class FileUtil {
     }
 
     public static final boolean writeCache(Context ctx, String fileName,
-            String str, String lastModified) {
+                                           String str, String lastModified) {
         FileOutputStream out = null;
         try {
             out = ctx.openFileOutput(fileName, Context.MODE_PRIVATE);
@@ -373,7 +371,7 @@ public class FileUtil {
     }
 
     public static final boolean writeCache(Context ctx, String fileName,
-            String str, int mode) {
+                                           String str, int mode) {
         FileOutputStream out = null;
         try {
             out = ctx.openFileOutput(fileName, mode);
@@ -461,7 +459,7 @@ public class FileUtil {
         try {
             if (in != null && out != null) {
                 byte[] buffer = new byte[4096];
-                for (int len; (len = in.read(buffer)) > 0;) {
+                for (int len; (len = in.read(buffer)) > 0; ) {
                     out.write(buffer, 0, len);
                 }
                 out.flush();
@@ -512,7 +510,7 @@ public class FileUtil {
     }
 
     public static void deleteInvalidPluginFile(Context ctxt, String dirName,
-            String fileName) {
+                                               String fileName) {
         try {
             if (StringUtil.isEmptyString(fileName)
                     || StringUtil.isEmptyString(dirName)) {
@@ -569,16 +567,16 @@ public class FileUtil {
         if (fileSize == 0) {
             return wrongSize;
         }
-        if (fileSize < 1<<10) {
+        if (fileSize < 1 << 10) {
             fileSizeString = df.format((double) fileSize) + "B";
-        } else if (fileSize < 1<<20) {
-            fileSizeString = df.format((double) fileSize / (1<<10)) + "KB";
-        } else if (fileSize < 1<<30) {
-            fileSizeString = df.format((double) fileSize / (1<<20)) + "MB";
-        } else if (fileSize < 1<<40) {
-            fileSizeString = df.format((double) fileSize / (1<<30)) + "GB";
+        } else if (fileSize < 1 << 20) {
+            fileSizeString = df.format((double) fileSize / (1 << 10)) + "KB";
+        } else if (fileSize < 1 << 30) {
+            fileSizeString = df.format((double) fileSize / (1 << 20)) + "MB";
+        } else if (fileSize < 1 << 40) {
+            fileSizeString = df.format((double) fileSize / (1 << 30)) + "GB";
         } else {
-            fileSizeString = df.format((double) fileSize / (1<<40)) + "TB";
+            fileSizeString = df.format((double) fileSize / (1 << 40)) + "TB";
         }
         return fileSizeString;
     }
@@ -587,22 +585,22 @@ public class FileUtil {
         DecimalFormat df = new DecimalFormat("#.00");
         double fileSizeLong = 0;
         switch (unit) {
-        case UNIT_B:
-            fileSizeLong = Double.valueOf(df.format((double) fileSize));
-            break;
-        case UNIT_KB:
-            fileSizeLong = Double.valueOf(df.format((double) fileSize / (1<<10)));
-            break;
-        case UNIT_MB:
-            fileSizeLong = Double.valueOf(df
-                    .format((double) fileSize / (1<<20)));
-            break;
-        case UNIT_GB:
-            fileSizeLong = Double.valueOf(df
-                    .format((double) fileSize / (1<<30)));
-            break;
-        default:
-            break;
+            case UNIT_B:
+                fileSizeLong = Double.valueOf(df.format((double) fileSize));
+                break;
+            case UNIT_KB:
+                fileSizeLong = Double.valueOf(df.format((double) fileSize / (1 << 10)));
+                break;
+            case UNIT_MB:
+                fileSizeLong = Double.valueOf(df
+                        .format((double) fileSize / (1 << 20)));
+                break;
+            case UNIT_GB:
+                fileSizeLong = Double.valueOf(df
+                        .format((double) fileSize / (1 << 30)));
+                break;
+            default:
+                break;
         }
         return fileSizeLong;
     }
@@ -632,6 +630,7 @@ public class FileUtil {
         }
         return null;
     }
+
     public static HashMap<String, String> getAllValueFromFile(String filePath, String seprator) {
         if (TextUtils.isEmpty(filePath) || seprator == null) {
             return null;
@@ -672,7 +671,7 @@ public class FileUtil {
                 return null;
             }
             BufferedReader reader = new BufferedReader(new FileReader(file));
-            while((temString = reader.readLine()) != null) {
+            while ((temString = reader.readLine()) != null) {
                 content.append(temString);
             }
             closeStream(reader);
@@ -681,7 +680,7 @@ public class FileUtil {
         }
         return content.toString();
     }
-    
+
     public static boolean writeBitmap(String savePath, Bitmap bt) {
         if (TextUtils.isEmpty(savePath) || bt == null || bt.isRecycled()) {
             LogUtil.e("writeBitmap failed");
@@ -712,7 +711,7 @@ public class FileUtil {
 
     /**
      * read file
-     * 
+     *
      * @param filePath
      * @return if file not exist, return null, else return content of file
      * @throws IOException if an error occurs while operator BufferedReader
@@ -745,7 +744,7 @@ public class FileUtil {
 
     /**
      * read file to string list, a element of list is a line
-     * 
+     *
      * @param filePath
      * @return if file not exist, return null, else return content of file
      * @throws IOException if an error occurs while operator BufferedReader
@@ -775,7 +774,7 @@ public class FileUtil {
 
     /**
      * get file name from path, not include suffix
-     * 
+     *
      * <pre>
      *      getFileNameWithoutExtension(null)               =   null
      *      getFileNameWithoutExtension("")                 =   ""
@@ -790,7 +789,7 @@ public class FileUtil {
      *      getFileNameWithoutExtension("/home/admin")      =   "admin"
      *      getFileNameWithoutExtension("/home/admin/a.txt/b.mp3")  =   "b"
      * </pre>
-     * 
+     *
      * @param filePath
      * @return file name from path, not include suffix
      * @see
@@ -813,7 +812,7 @@ public class FileUtil {
 
     /**
      * get file name from path, include suffix
-     * 
+     *
      * <pre>
      *      getFileName(null)               =   null
      *      getFileName("")                 =   ""
@@ -828,7 +827,7 @@ public class FileUtil {
      *      getFileName("/home/admin")      =   "admin"
      *      getFileName("/home/admin/a.txt/b.mp3")  =   "b.mp3"
      * </pre>
-     * 
+     *
      * @param filePath
      * @return file name from path, include suffix
      */
@@ -843,7 +842,7 @@ public class FileUtil {
 
     /**
      * get folder name from path
-     * 
+     *
      * <pre>
      *      getFolderName(null)               =   null
      *      getFolderName("")                 =   ""
@@ -859,7 +858,7 @@ public class FileUtil {
      *      getFolderName("/home/admin")      =   "/home"
      *      getFolderName("/home/admin/a.txt/b.mp3")  =   "/home/admin/a.txt"
      * </pre>
-     * 
+     *
      * @param filePath
      * @return
      */
@@ -875,7 +874,7 @@ public class FileUtil {
 
     /**
      * get suffix of file from path
-     * 
+     *
      * <pre>
      *      getFileExtension(null)               =   ""
      *      getFileExtension("")                 =   ""
@@ -891,7 +890,7 @@ public class FileUtil {
      *      getFileExtension("/home/admin/a.txt/b")  =   ""
      *      getFileExtension("/home/admin/a.txt/b.mp3")  =   "mp3"
      * </pre>
-     * 
+     *
      * @param filePath
      * @return
      */
@@ -917,7 +916,7 @@ public class FileUtil {
      * <li>makeDirs("C:\\Users\\Trinea") can only create users folder</li>
      * <li>makeFolder("C:\\Users\\Trinea\\") can create Trinea folder</li>
      * </ul>
-     * 
+     *
      * @param filePath
      * @return true if the necessary directories have been created or the target directory already exists, false one of
      * the directories can not be created.
@@ -943,7 +942,7 @@ public class FileUtil {
 
     /**
      * Indicates if this file represents a file on the underlying file system.
-     * 
+     *
      * @param filePath
      * @return
      */
@@ -973,7 +972,7 @@ public class FileUtil {
 
     /**
      * Indicates if this file represents a directory on the underlying file system.
-     * 
+     *
      * @param directoryPath
      * @return
      */
@@ -993,7 +992,7 @@ public class FileUtil {
      * <li>if path not exist, return true</li>
      * <li>if path exist, delete recursion. return true</li>
      * <ul>
-     * 
+     *
      * @param path
      * @return
      */
@@ -1055,10 +1054,10 @@ public class FileUtil {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * 判断两个路径是否相等 大小写不敏感 : 存储卡的文件系统一般为FAT, 大小写不敏感
-     * 
+     *
      * @param pathSrc
      * @param pathDst
      * @return
@@ -1073,7 +1072,7 @@ public class FileUtil {
         boolean isEqual = path1.equalsIgnoreCase(path2);
         return isEqual;
     }
-    
+
     /**
      * 判断文件夹是否存在
      */
@@ -1086,8 +1085,8 @@ public class FileUtil {
         File file = new File(path);
         return file.isDirectory();
     }
-    
-    
+
+
     public static List<String> getBrianURLs(Context context, String fileName) {
         List<String> urls = new ArrayList<String>();
         try {

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 
 import com.brian.common.view.TitleBar;
-import com.brian.csdnblog.BaseActivity;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.manager.FavoBlogManager;
 import com.brian.csdnblog.manager.HistoryBlogManager;
@@ -27,11 +26,11 @@ public class BlogListActivity extends BaseActivity {
     public static final int TYPE_NEWS = 2;
     
     private TitleBar mTitleBar;
-    
-    private int mType = TYPE_FAVO;
-    
+
     private BlogListFrag mListFrag;
-    
+
+    private int mType = TYPE_FAVO;
+
     public static void startActivity(Activity activity, int type) {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_KEY_TYPE, type);
@@ -54,7 +53,7 @@ public class BlogListActivity extends BaseActivity {
                 finish();
             }
         });
-        // 分享按钮监听
+        // 删除按钮监听
         mTitleBar.setRightListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

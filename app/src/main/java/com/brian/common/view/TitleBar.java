@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.brian.csdnblog.BaseActivity;
+import com.brian.csdnblog.activity.BaseActivity;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.util.DeviceUtil;

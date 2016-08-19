@@ -19,7 +19,6 @@ import android.widget.ProgressBar;
 
 import com.brian.common.view.TitleBar;
 import com.brian.common.view.ToastUtil;
-import com.brian.csdnblog.BaseActivity;
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
@@ -51,8 +50,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.Stack;
 
-public class BlogContentActivity extends BaseActivity implements
-        OnFetchDataListener<Result<String>> {
+public class BlogContentActivity extends BaseActivity implements OnFetchDataListener<Result<String>> {
 
     private static final String TAG = BlogContentActivity.class.getSimpleName();
 
@@ -112,35 +110,23 @@ public class BlogContentActivity extends BaseActivity implements
 
         initUI();// 初始化界面
         initListener();
+        initAd();
 
-        try {
-            mBlogInfo = (BlogInfo) getIntent().getExtras().getSerializable(BUNDLE_EXTRAS_BLOGINFO);
-        } catch (Exception e) {
-            ToastUtil.showToast("oops，打开出错。。。");
-            finish();
-            return;
-        }
-        if (mBlogInfo == null || TextUtils.isEmpty(mBlogInfo.link)) {
+        initBlogInfo();
+
+        if (mBlogInfo == null) {
             finish();
             return;
         }
         mTitleBar.setTitle(mBlogInfo.title);
 
-        LogUtil.i(TAG, "currenturl:" + mBlogInfo.link);
-
-        mBlogParser = BlogHtmlParserFactory.getBlogParser(mBlogInfo.type);
-        UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_BLOG_COUNT, TypeManager.getBlogName(mBlogInfo.type));
-        // 处理一下链接，可能需要补全域名
-        mCurrentUrl = mBlogParser.getBlogContentUrl(mBlogInfo.link);
-        mBlogInfo.link = mCurrentUrl;
         if (FavoBlogManager.getInstance().isFavo(mCurrentUrl)) {
             mBtnFavo.setSelected(true);
         } else {
             mBtnFavo.setSelected(false);
         }
-        
-        mBlogStack = new Stack<>();
 
+        mBlogStack = new Stack<>();
         // 开始请求数据
         if (TypeManager.getWebType(mBlogInfo.type) == TypeManager.TYPE_WEB_JCC) {
             DataFetcher.getInstance().fetchString(mCurrentUrl, "GB2312", this);
@@ -150,11 +136,29 @@ public class BlogContentActivity extends BaseActivity implements
 
         mProgressBar.setVisibility(View.VISIBLE);
         
-        initAd();
-        
         HistoryBlogManager.getInstance().addBlog(mBlogInfo);
     }
-    
+
+    private void initBlogInfo() {
+        try {
+            mBlogInfo = (BlogInfo) getIntent().getExtras().getSerializable(BUNDLE_EXTRAS_BLOGINFO);
+        } catch (Exception e) {
+            ToastUtil.showToast("oops，打开出错。。。");
+            return;
+        }
+        if (mBlogInfo == null || TextUtils.isEmpty(mBlogInfo.link)) {
+            return;
+        }
+
+        LogUtil.i(TAG, "currenturl:" + mBlogInfo.link);
+
+        mBlogParser = BlogHtmlParserFactory.getBlogParser(mBlogInfo.type);
+        UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_BLOG_COUNT, TypeManager.getBlogName(mBlogInfo.type));
+        // 处理一下链接，可能需要补全域名
+        mCurrentUrl = mBlogParser.getBlogContentUrl(mBlogInfo.link);
+        mBlogInfo.link = mCurrentUrl;
+    }
+
     private void initAd() {
         mAdLayout = (FrameLayout) findViewById(R.id.ad_group);
         String adSpaceid = Config.getAdSplashKey();

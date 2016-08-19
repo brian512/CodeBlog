@@ -3,7 +3,7 @@ package com.brian.csdnblog.manager;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 
-import com.brian.csdnblog.BaseActivity;
+import com.brian.csdnblog.activity.BaseActivity;
 import com.brian.csdnblog.activity.BlogContentActivity;
 import com.brian.csdnblog.activity.ChatActivity;
 import com.brian.csdnblog.model.NotifyMsgInfo;

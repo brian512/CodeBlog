@@ -11,7 +11,6 @@ import android.widget.ListView;
 
 import com.brian.common.view.ChatToolLayout;
 import com.brian.common.view.TitleBar;
-import com.brian.csdnblog.BaseActivity;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.adapter.ChatListAdapter;
 import com.brian.csdnblog.manager.PushManager;

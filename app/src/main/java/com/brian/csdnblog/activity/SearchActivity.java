@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -20,7 +22,6 @@ import android.widget.TextView;
 import com.brian.common.view.RefreshLayout;
 import com.brian.common.view.TitleBar;
 import com.brian.common.view.ToastUtil;
-import com.brian.csdnblog.BaseActivity;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.manager.DataFetcher;
@@ -33,7 +34,6 @@ import com.brian.csdnblog.parser.CSDNHtmlParser;
 import com.brian.csdnblog.util.CommonAdapter;
 import com.brian.csdnblog.util.UIUtil;
 import com.brian.csdnblog.util.WeakRefHandler;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -42,11 +42,11 @@ public class SearchActivity extends BaseActivity {
     private static final String TAG = SearchActivity.class.getSimpleName();
 
     private TitleBar mTitleBar;
-    private EditText etSearch = null;
-    private TextView btSearch = null;
-    private ListView lvResult = null;
+    private EditText mSearchInput = null;
+    private TextView mSearchBtn = null;
+    private ListView mResultListView = null;
     private RefreshLayout mRefreshLayout;
-    private ProgressBar progressBar = null;
+    private ProgressBar mProgressBar = null;
     private View mFooterLayout;
 
     private CommonAdapter<SearchResult> mAdapter = null;
@@ -65,55 +65,33 @@ public class SearchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
+        initUI();
+        initListener();
+    }
+
+    private void initUI() {
         mTitleBar = (TitleBar) findViewById(R.id.title_bar);
-        etSearch = (EditText) findViewById(R.id.et_search);
-        btSearch = (TextView) findViewById(R.id.bt_search);
-        lvResult = (ListView) findViewById(R.id.lv_result);
+        mSearchInput = (EditText) findViewById(R.id.et_search);
+        mSearchBtn = (TextView) findViewById(R.id.bt_search);
+        mResultListView = (ListView) findViewById(R.id.lv_result);
         mRefreshLayout = (RefreshLayout) findViewById(R.id.swipe_container);
-        progressBar = (ProgressBar) findViewById(R.id.progressbar);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
         mFooterLayout = getLayoutInflater().inflate(R.layout.loading_footer, null);
         mFooterLayout.setVisibility(View.GONE);
-        lvResult.addFooterView(mFooterLayout);
-        mRefreshLayout.setChildView(lvResult);
+        mResultListView.addFooterView(mFooterLayout);
+        mRefreshLayout.setChildView(mResultListView);
 
         mTitleBar.setTitle("CSDN搜索");
         mTitleBar.setRightImageVisible(View.INVISIBLE);
-        mTitleBar.setLeftListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        btSearch.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                UIUtil.hideKeyboard(etSearch);
-                mInputText = etSearch.getText().toString()
-                        .replaceAll(
-                                "[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]",
-                                "");
-                if (!TextUtils.isEmpty(mInputText)) {
-                    mInputText = mInputText.trim().replace(' ', '+');
-                    String url = getSearchUrl(mInputText, 1);
-                    mCurrentPage = 1;
-                    loadListData(url);
-                    UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SEARCH, mInputText);
-                } else {
-                    ToastUtil.showToast("请输入适当关键字");
-                }
-            }
-        });
 
         mAdapter = new CommonAdapter<SearchResult>(Env.getContext(), null, R.layout.item_list_search) {
 
             @Override
             public void convert(ViewHolder holder, final SearchResult item) {
-                
                 holder.setText(R.id.title, item.title);
                 holder.setText(R.id.authorTime, item.authorTime);
                 holder.setText(R.id.searchDetail, item.searchDetail);
-                
+
                 holder.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -132,10 +110,39 @@ public class SearchActivity extends BaseActivity {
                 return view;
             }
         };
-        lvResult.setAdapter(mAdapter);
+        mResultListView.setAdapter(mAdapter);
+
+        mResultListView.setVisibility(View.INVISIBLE);
+    }
+
+    private void initListener() {
+        mTitleBar.setLeftListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        mSearchInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH || (event!=null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    onSendMsg();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        mSearchBtn.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                onSendMsg();
+            }
+        });
 
         mRefreshLayout.setOnLoadListener(new RefreshLayout.OnLoadListener() {
-
             @Override
             public void onLoad() {
                 if (!TextUtils.isEmpty(mInputText)) {
@@ -143,8 +150,25 @@ public class SearchActivity extends BaseActivity {
                 }
             }
         });
-        lvResult.setVisibility(View.INVISIBLE);
     }
+
+    private void onSendMsg() {
+        UIUtil.hideKeyboard(mSearchInput);
+        mInputText = mSearchInput.getText().toString()
+                .replaceAll(
+                        "[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]",
+                        "");
+        if (!TextUtils.isEmpty(mInputText)) {
+            mInputText = mInputText.trim().replace(' ', '+');
+            String url = getSearchUrl(mInputText, 1);
+            mCurrentPage = 1;
+            loadListData(url);
+            UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SEARCH, mInputText);
+        } else {
+            ToastUtil.showToast("请输入适当关键字");
+        }
+    }
+
 
     private String getSearchUrl(String keyWord, int page) {
         CSDNHtmlParser parser = CSDNHtmlParser.getInstance();
@@ -153,7 +177,7 @@ public class SearchActivity extends BaseActivity {
 
     private void loadListData(String loadUrl) {
         if (mAdapter.isEmpty()) {
-            progressBar.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.VISIBLE);
         } else {
             mFooterLayout.setVisibility(View.VISIBLE);
         }
@@ -184,22 +208,7 @@ public class SearchActivity extends BaseActivity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this); // 统计时长
-        MobclickAgent.onPageStart(this.getClass().getName());
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd(this.getClass().getName());
-        MobclickAgent.onPause(this);
-    }
-
     private static final int MSG_LIST_ADD = 2;
-
     private Handler.Callback mCallback = new Handler.Callback() {
         
         @Override
@@ -209,8 +218,8 @@ public class SearchActivity extends BaseActivity {
                     if (mCurrentPage <= 1) {
                         mAdapter.removeAllDatas();
                     }
-                    lvResult.setVisibility(View.VISIBLE);
-                    progressBar.setVisibility(View.INVISIBLE);
+                    mResultListView.setVisibility(View.VISIBLE);
+                    mProgressBar.setVisibility(View.INVISIBLE);
                     List<SearchResult> deltaBlogInfos = (List<SearchResult>) msg.obj;
                     if (deltaBlogInfos != null && !deltaBlogInfos.isEmpty()) {
                         mCurrentPage++;

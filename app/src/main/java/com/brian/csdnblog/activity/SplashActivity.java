@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
-import com.brian.csdnblog.BaseActivity;
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.util.LogUtil;
@@ -106,20 +105,6 @@ public class SplashActivity extends BaseActivity {
         LogUtil.i(TAG, "versionCode=" + versionCode);
 
         PreferenceUtil.setInt(SplashActivity.this, PreferenceUtil.pre_key_version_code, versionCode);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this); // 统计时长
-        MobclickAgent.onPageStart(this.getClass().getName());
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd(this.getClass().getName());
-        MobclickAgent.onPause(this);
     }
 
     @Override

@@ -17,7 +17,6 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.brian.common.view.RefreshLayout;
-import com.brian.csdnblog.BaseActivity;
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;

@@ -1,4 +1,4 @@
-package com.brian.csdnblog;
+package com.brian.csdnblog.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.brian.csdnblog.RefWatcherHelper;
 import com.brian.csdnblog.util.LogUtil;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.PushAgent;

@@ -82,6 +82,7 @@ public class DeviceUtil {
      */
     private static int sStatusHeight = 0;
 
+    @Deprecated
     public static int getStatusHeight(Activity activity) {
         if (sStatusHeight == 0) {
             Rect frame = new Rect();
@@ -95,7 +96,6 @@ public class DeviceUtil {
      * 新方法：状态栏的高度，反射的方法获取
      */
     public static int getStatusHeightNew(Context context) {
-
         if (sStatusHeight != 0) {
             return sStatusHeight;
         }
