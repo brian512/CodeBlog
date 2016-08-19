@@ -2,7 +2,9 @@ package com.brian.csdnblog.util;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.text.TextUtils;
 
 import java.util.List;
 
@@ -11,12 +13,15 @@ import java.util.List;
  */
 public class AppInfoUtil {
 
-    private static int mgprocessId = 0;
+    private static int sMyProcessId = 0;
+
+    /**
+     *  客户端渠道名称
+     */
+    public static String sChannelName;
 
     /**
      * 获取进程名
-     *
-     * @param context
      * @return
      */
     public static String getProcessName(Context context) {
@@ -33,8 +38,6 @@ public class AppInfoUtil {
 
     /**
      * 判断进程是否存在
-     *
-     * @param context
      * @return
      */
     public static boolean isExistProcessName(Context context, String processName) {
@@ -49,30 +52,53 @@ public class AppInfoUtil {
 
     /**
      * 根据进程名获取进程id
-     *
-     * @param con
      * @return
      */
     public static int getProcessId(Context con, String processName) {
-        if (mgprocessId == 0) {
+        if (sMyProcessId == 0) {
             ActivityManager am = (ActivityManager) con.getSystemService(Context.ACTIVITY_SERVICE);
             List<ActivityManager.RunningAppProcessInfo> apps = am.getRunningAppProcesses();// 返回进程列表信息
             for (ActivityManager.RunningAppProcessInfo p : apps) {
                 if (p.processName.equals(processName)) {
-                    mgprocessId = p.pid;
+                    sMyProcessId = p.pid;
                     break;
                 }
             }
         }
-        return mgprocessId;
+        return sMyProcessId;
     }
 
+    /**
+     * 获取客户端版本号
+     */
+    private static String sVersionName = "";
     public static String getVersionName(Context context) {
-        try {
-            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+        if (TextUtils.isEmpty(sVersionName)) {
+            try {
+                sVersionName = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
         }
-        return "";
+        return sVersionName;
+    }
+
+    /**
+     * 获取客户端版本号
+     */
+    private static int sVersionCode;
+    public static int getVersionCode(Context context) {
+        // 只获取一次
+        if (sVersionCode == 0) {
+            try {
+                PackageManager pm = context.getPackageManager();
+                String packageName = context.getPackageName();
+                PackageInfo pinfo = pm.getPackageInfo(packageName, PackageManager.GET_CONFIGURATIONS);
+                sVersionCode = pinfo.versionCode;
+            } catch (PackageManager.NameNotFoundException e) {
+                sVersionCode = 0; // 异常情况
+            }
+        }
+        return sVersionCode;
     }
 }

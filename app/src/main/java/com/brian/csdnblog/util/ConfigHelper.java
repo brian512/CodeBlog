@@ -17,6 +17,8 @@ public class ConfigHelper {
             // 调试 (PS:默认为false)
             Config.isDebug = info.metaData.getBoolean("DEBUG_ENABLE");
             LogUtil.log("Config.isDebug=" + Config.isDebug);
+
+            AppInfoUtil.sChannelName            = info.metaData.getString("UMENG_CHANNEL");
         } catch (Exception e) {
         }
     }

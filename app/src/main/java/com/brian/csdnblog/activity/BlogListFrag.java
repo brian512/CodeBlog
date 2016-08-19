@@ -58,6 +58,8 @@ public class BlogListFrag extends Fragment {
     private ListView mBlogListView;// 博客列表
     private View mNoBlogView; // 无数据时显示
     private View mFooterLayout;
+
+    private boolean mRefreshable = true;
     
     private String mPageName = "BlogListFrag";
     
@@ -77,6 +79,7 @@ public class BlogListFrag extends Fragment {
     public void setType(int type) {
         mType = type;
         mBlogParser = BlogHtmlParserFactory.getBlogParser(mType);
+        initData();
         if (mRefreshLayout != null) {
             startRefresh();
         }
@@ -84,9 +87,8 @@ public class BlogListFrag extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        LogUtil.i(TAG, "onCreateView" + mType);
+        LogUtil.i(TAG, "onCreateView: " + mType);
         initUI(inflater);// 初始化组件
-        initData();
         return mRootLy;
     }
 
@@ -156,26 +158,30 @@ public class BlogListFrag extends Fragment {
 
         if (TypeManager.getWebType(mType) == TypeManager.TYPE_WEB_FAVO) {
             mAdapter.addDatas(FavoBlogManager.getInstance().getFavoBlogList());
-            mRefreshLayout.setRefreshing(false);
+            mRefreshable = false;
         } else if (TypeManager.getWebType(mType) == TypeManager.TYPE_WEB_HISTORY) {
             mAdapter.addDatas(HistoryBlogManager.getInstance().getHistoryBlogList());
-            mRefreshLayout.setRefreshing(false);
+            mRefreshable = false;
         } else {
-            mRefreshLayout.setOnRefreshListener(new RefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    LogUtil.trace("");
-                    loadData(true);
-                }
-            });
-
-            mRefreshLayout.setOnLoadListener(new RefreshLayout.OnLoadListener() {
-                @Override
-                public void onLoad() {
-                    loadData(false);
-                }
-            });
+            mRefreshable = true;
         }
+        mRefreshLayout.setOnRefreshListener(new RefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (mRefreshable) {
+                    loadData(true);
+                } else {
+                    mRefreshLayout.setRefreshing(false);
+                }
+            }
+        });
+
+        mRefreshLayout.setOnLoadListener(new RefreshLayout.OnLoadListener() {
+            @Override
+            public void onLoad() {
+                loadData(false);
+            }
+        });
     }
 
     @Override
@@ -192,6 +198,7 @@ public class BlogListFrag extends Fragment {
             @Override
             public void run() {
                 List<BlogInfo> list = null;
+                LogUtil.log("mType=" + mType);
                 try {
                     String cachedStr = FileUtil.getFileContent(Env.getContext().getFilesDir() + "/cache_" + mType);
                     list = new Gson().fromJson(cachedStr, new TypeToken<List<BlogInfo>>() {} .getType());
@@ -373,7 +380,9 @@ public class BlogListFrag extends Fragment {
     }
 
     private void startRefresh() {
-        mRefreshLayout.setRefreshing(true);
-        loadData(true);
+        if (mRefreshable) {
+            mRefreshLayout.setRefreshing(true);
+            loadData(true);
+        }
     }
 }
