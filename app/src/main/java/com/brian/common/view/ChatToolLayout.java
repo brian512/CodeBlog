@@ -46,15 +46,7 @@ public class ChatToolLayout extends FrameLayout {
         mBtSend.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                Editable editable = mEtContent.getText();
-                if (editable == null || TextUtils.isEmpty(editable.toString())) {
-
-                } else {
-                    if (mListener != null) {
-                        mListener.onSendText(editable.toString());
-                        mEtContent.setText("");
-                    }
-                }
+                onEditFinished();
             }
         });
 
@@ -62,19 +54,23 @@ public class ChatToolLayout extends FrameLayout {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEND || (event!=null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    Editable editable = mEtContent.getText();
-                    if (editable == null || TextUtils.isEmpty(editable.toString())) {
-                    } else {
-                        if (mListener != null) {
-                            mListener.onSendText(editable.toString());
-                            mEtContent.setText("");
-                        }
-                    }
+                    onEditFinished();
                     return true;
                 }
                 return false;
             }
         });
+    }
+
+    private void onEditFinished() {
+        Editable editable = mEtContent.getText();
+        if (editable == null || TextUtils.isEmpty(editable.toString())) {
+        } else {
+            if (mListener != null) {
+                mListener.onSendText(editable.toString());
+                mEtContent.setText("");
+            }
+        }
     }
 
     private OnSendTextListener mListener;

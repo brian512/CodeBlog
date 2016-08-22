@@ -190,7 +190,7 @@ public class SearchActivity extends BaseActivity {
 
                 if (TextUtils.isEmpty(response.data)) {
                     if (mAdapter.isEmpty()) {
-                        // 没有搜索岛结果的提示
+                        // 没有搜索到结果的提示
                         UsageStatsManager.sendUsageData(UsageStatsManager.EXP_EMPTY_SEARCH, mInputText);
                     }
                 } else {

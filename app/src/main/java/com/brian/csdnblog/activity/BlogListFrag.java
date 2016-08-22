@@ -298,6 +298,7 @@ public class BlogListFrag extends Fragment {
                     List<BlogInfo> blogInfos = (List<BlogInfo>) msg.obj;
                     if (blogInfos != null && !blogInfos.isEmpty()) {
                         mBlogListView.setVisibility(View.VISIBLE);
+                        mBlogListView.smoothScrollToPosition(0);
                         mNoBlogView.setVisibility(View.GONE);
                         mAdapter.initListWithDatas(blogInfos);
                         mCurrentPage = 1;
