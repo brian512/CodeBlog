@@ -29,7 +29,7 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.umeng.onlineconfig.OnlineConfigLog;
 import com.umeng.onlineconfig.UmengOnlineConfigureListener;
-import com.umeng.update.UmengUpdateAgent;
+import com.xiaomi.market.sdk.XiaomiUpdateAgent;
 
 import org.json.JSONObject;
 
@@ -56,10 +56,8 @@ public class MainTabActivity extends SlidingFragmentActivity {
         setContentView(R.layout.activity_main_tab);
 
         // 友盟更新
-        UmengUpdateAgent.forceUpdate(this);
-        UmengUpdateAgent.update(this);
-        UmengUpdateAgent.silentUpdate(this);
-        UmengUpdateAgent.setUpdateOnlyWifi(false);
+        XiaomiUpdateAgent.update(this);
+        XiaomiUpdateAgent.setCheckUpdateOnlyWifi(false);
 
         MobclickAgent.enableEncrypt(true);
 

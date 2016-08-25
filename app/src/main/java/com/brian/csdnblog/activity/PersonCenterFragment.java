@@ -21,10 +21,10 @@ import com.brian.csdnblog.manager.TypeManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
 import com.brian.csdnblog.util.LogUtil;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.update.UmengUpdateAgent;
-import com.umeng.update.UmengUpdateListener;
-import com.umeng.update.UpdateResponse;
-import com.umeng.update.UpdateStatus;
+import com.xiaomi.market.sdk.UpdateResponse;
+import com.xiaomi.market.sdk.UpdateStatus;
+import com.xiaomi.market.sdk.XiaomiUpdateAgent;
+import com.xiaomi.market.sdk.XiaomiUpdateListener;
 
 /**
  * 个人中心
@@ -150,27 +150,29 @@ public class PersonCenterFragment extends Fragment implements OnClickListener {
     }
     
     private void checkUpdate(final Context context) {
-        UmengUpdateAgent.setUpdateAutoPopup(false);
-        UmengUpdateAgent.setUpdateListener(new UmengUpdateListener() {
+        XiaomiUpdateAgent.setUpdateAutoPopup(false);
+        XiaomiUpdateAgent.setUpdateListener(new XiaomiUpdateListener() {
             @Override
-            public void onUpdateReturned(int updateStatus,UpdateResponse updateInfo) {
+            public void onUpdateReturned(int updateStatus, UpdateResponse updateInfo) {
                 switch (updateStatus) {
-                case UpdateStatus.Yes: // has update
-                    UmengUpdateAgent.showUpdateDialog(context, updateInfo);
+                case UpdateStatus.STATUS_UPDATE: // has update
+                    XiaomiUpdateAgent.arrange();
                     break;
-                case UpdateStatus.No: // has no update
+                case UpdateStatus.STATUS_NO_UPDATE: // has no update
                     Toast.makeText(context, "当前已是最新版本", Toast.LENGTH_SHORT).show();
                     break;
-                case UpdateStatus.NoneWifi: // none wifi
+                case UpdateStatus.STATUS_NO_WIFI: // none wifi
                     Toast.makeText(context, "没有wifi连接， 只在wifi下更新", Toast.LENGTH_SHORT).show();
                     break;
-                case UpdateStatus.Timeout: // time out
+                case UpdateStatus.STATUS_NO_NET: // time out
+                case UpdateStatus.STATUS_FAILED: // time out
+                case UpdateStatus.STATUS_LOCAL_APP_FAILED: // time out
                     Toast.makeText(context, "服务器访问超时", Toast.LENGTH_SHORT).show();
                     break;
                 }
             }
         });
-        UmengUpdateAgent.forceUpdate(context);
+        XiaomiUpdateAgent.update(context);
     }
     
 
