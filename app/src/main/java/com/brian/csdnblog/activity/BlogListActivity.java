@@ -13,6 +13,9 @@ import com.brian.csdnblog.manager.FavoBlogManager;
 import com.brian.csdnblog.manager.HistoryBlogManager;
 import com.brian.csdnblog.manager.TypeManager;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * 收藏、历史、新闻等页面
  * @author huamm
@@ -24,8 +27,8 @@ public class BlogListActivity extends BaseActivity {
     public static final int TYPE_FAVO = 0;
     public static final int TYPE_HISTORY = 1;
     public static final int TYPE_NEWS = 2;
-    
-    private TitleBar mTitleBar;
+
+    @BindView(R.id.title_bar) TitleBar mTitleBar;
 
     private BlogListFrag mListFrag;
 
@@ -42,10 +45,10 @@ public class BlogListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bloglist);
+        ButterKnife.bind(this);
         
         mType = getIntent().getExtras().getInt(EXTRA_KEY_TYPE);
         
-        mTitleBar = (TitleBar) findViewById(R.id.title_bar);
         mTitleBar.setRightImageResource(R.drawable.ic_delete);
         mTitleBar.setLeftListener(new OnClickListener() {
             @Override

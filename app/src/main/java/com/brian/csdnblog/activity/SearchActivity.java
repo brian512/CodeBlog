@@ -38,15 +38,18 @@ import com.brian.csdnblog.util.WeakRefHandler;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class SearchActivity extends BaseActivity {
     private static final String TAG = SearchActivity.class.getSimpleName();
 
-    private TitleBar mTitleBar;
-    private EditText mSearchInput = null;
-    private TextView mSearchBtn = null;
-    private ListView mResultListView = null;
-    private RefreshLayout mRefreshLayout;
-    private ProgressBar mProgressBar = null;
+    @BindView(R.id.title_bar) TitleBar mTitleBar;
+    @BindView(R.id.et_search) EditText mSearchInput = null;
+    @BindView(R.id.bt_search) TextView mSearchBtn = null;
+    @BindView(R.id.lv_result) ListView mResultListView = null;
+    @BindView(R.id.swipe_container) RefreshLayout mRefreshLayout;
+    @BindView(R.id.progressbar) ProgressBar mProgressBar = null;
     private View mFooterLayout;
 
     private CommonAdapter<SearchResult> mAdapter = null;
@@ -64,18 +67,13 @@ public class SearchActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        ButterKnife.bind(this);
 
         initUI();
         initListener();
     }
 
     private void initUI() {
-        mTitleBar = (TitleBar) findViewById(R.id.title_bar);
-        mSearchInput = (EditText) findViewById(R.id.et_search);
-        mSearchBtn = (TextView) findViewById(R.id.bt_search);
-        mResultListView = (ListView) findViewById(R.id.lv_result);
-        mRefreshLayout = (RefreshLayout) findViewById(R.id.swipe_container);
-        mProgressBar = (ProgressBar) findViewById(R.id.progressbar);
         mFooterLayout = getLayoutInflater().inflate(R.layout.loading_footer, null);
         mFooterLayout.setVisibility(View.GONE);
         mResultListView.addFooterView(mFooterLayout);

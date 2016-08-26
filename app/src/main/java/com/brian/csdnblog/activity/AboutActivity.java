@@ -15,11 +15,14 @@ import com.brian.csdnblog.manager.ShareManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
 import com.brian.csdnblog.util.AppInfoUtil;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class AboutActivity extends BaseActivity {
     
-    private TitleBar mTitleBar;
-    private TextView mAuthorLinkText;
-    private TextView mMadeByText;
+    @BindView(R.id.title_bar) TitleBar mTitleBar;
+    @BindView(R.id.blogLink) TextView mAuthorLinkText;
+    @BindView(R.id.madeby) TextView mMadeByText;
 
     public static void startActivity(Activity activity) {
         Intent intent = new Intent();
@@ -31,18 +34,15 @@ public class AboutActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+        ButterKnife.bind(this);
 
         initUI();
         initListener();
     }
 
     private void initUI() {
-        mTitleBar = (TitleBar) findViewById(R.id.title_bar);
         mTitleBar.setRightImageResource(R.drawable.ic_share);
         mTitleBar.setTitle("关于");
-
-        mAuthorLinkText = (TextView) findViewById(R.id.blogLink);
-        mMadeByText = (TextView) findViewById(R.id.madeby);
 
         String versionName = AppInfoUtil.getVersionName(this);
         if (!TextUtils.isEmpty(versionName)) {

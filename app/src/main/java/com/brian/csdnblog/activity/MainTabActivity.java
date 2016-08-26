@@ -33,6 +33,9 @@ import com.xiaomi.market.sdk.XiaomiUpdateAgent;
 
 import org.json.JSONObject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * 主界面
  */
@@ -40,13 +43,13 @@ public class MainTabActivity extends SlidingFragmentActivity {
 
     private static final String TAG = MainTabActivity.class.getSimpleName();
 
-    private ImageView mBtnMenu;
-    private ImageView mBtnSearch;
-    private TabLayout mTabLayout;
-    private DrawerArrowDrawable mArrowDrawable;
-
+    @BindView(R.id.left_menu) ImageView mBtnMenu;
+    @BindView(R.id.right_search) ImageView mBtnSearch;
+    @BindView(R.id.tabs) TabLayout mTabLayout;
     // 主界面的页面切换
-    private ViewPager mViewpager = null;
+    @BindView(R.id.pager) ViewPager mViewpager = null;
+
+    private DrawerArrowDrawable mArrowDrawable;
 
     private MainTabAdapter mTabAdapter = null;
 
@@ -54,6 +57,7 @@ public class MainTabActivity extends SlidingFragmentActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_tab);
+        ButterKnife.bind(this);
 
         // 友盟更新
         XiaomiUpdateAgent.update(this);
@@ -74,13 +78,8 @@ public class MainTabActivity extends SlidingFragmentActivity {
     }
 
     private void initUI() {
-        mTabLayout = (TabLayout) findViewById(R.id.tabs);
-        mBtnMenu = (ImageView) findViewById(R.id.left_menu);
-        mBtnSearch = (ImageView) findViewById(R.id.right_search);
-
         mTabAdapter = new MainTabAdapter(getSupportFragmentManager());
         // 视图切换器
-        mViewpager = (ViewPager) findViewById(R.id.pager);
         mViewpager.setOffscreenPageLimit(4);// 预先加载页面的数量
         mViewpager.setAdapter(mTabAdapter);
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);//设置滑动模式

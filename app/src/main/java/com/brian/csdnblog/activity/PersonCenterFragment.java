@@ -26,6 +26,8 @@ import com.xiaomi.market.sdk.UpdateStatus;
 import com.xiaomi.market.sdk.XiaomiUpdateAgent;
 import com.xiaomi.market.sdk.XiaomiUpdateListener;
 
+import butterknife.ButterKnife;
+
 /**
  * 个人中心
  */
@@ -51,11 +53,9 @@ public class PersonCenterFragment extends Fragment implements OnClickListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
-        LogUtil.i(TAG, "onCreateView");
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.person_center, null);
+        ButterKnife.bind(this, view);
         initComponent(view);
 
         return view;

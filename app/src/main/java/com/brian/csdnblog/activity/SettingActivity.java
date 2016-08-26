@@ -16,19 +16,21 @@ import com.brian.csdnblog.R;
 import com.brian.csdnblog.manager.SettingPreference;
 import com.brian.csdnblog.manager.ShareManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
-import com.brian.csdnblog.util.LogUtil;
 import com.umeng.analytics.MobclickAgent;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class SettingActivity extends BaseActivity {
 
     private static final String TAG = SettingActivity.class.getSimpleName();
 
-    private TitleBar mTitleBar;
-    
-    private TextView mSwitchAdText;
-    private TextView mSwitchVerticalText;
-    private TextView mSwitchPicWifiText;
-    private TextView mSwitchStayBgText;
+    @BindView(R.id.title_bar) TitleBar mTitleBar;
+
+    @BindView(R.id.switch_show_ad_text) TextView mSwitchAdText;
+    @BindView(R.id.switch_vertical_text) TextView mSwitchVerticalText;
+    @BindView(R.id.switch_picinfwifi_text) TextView mSwitchPicWifiText;
+    @BindView(R.id.switch_staybg_text) TextView mSwitchStayBgText;
 
     public static void startActivity(Activity activity) {
         Intent intent = new Intent();
@@ -40,13 +42,12 @@ public class SettingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        LogUtil.i(TAG, "PreferenceSettings : onCreate");
+        ButterKnife.bind(this);
 
         initUI();
     }
     
     private void initUI() {
-        mTitleBar = (TitleBar) findViewById(R.id.title_bar);
         mTitleBar.setTitle("设置");
         mTitleBar.setLeftListener(new OnClickListener() {
             @Override
@@ -62,7 +63,6 @@ public class SettingActivity extends BaseActivity {
             }
         });
         
-        mSwitchAdText      = (TextView)       findViewById(R.id.switch_show_ad_text);
         mSwitchAdText.setSelected(SettingPreference.getIsShowAd(Env.getContext()));
         mSwitchAdText.setOnClickListener(new OnClickListener() {
 
@@ -82,7 +82,6 @@ public class SettingActivity extends BaseActivity {
             }
         });
         
-        mSwitchVerticalText      = (TextView)       findViewById(R.id.switch_vertical_text);
         mSwitchVerticalText.setSelected(SettingPreference.getIsVertical(Env.getContext()));
         mSwitchVerticalText.setOnClickListener(new OnClickListener() {
             
@@ -98,7 +97,6 @@ public class SettingActivity extends BaseActivity {
             }
         });
         
-        mSwitchPicWifiText      = (TextView)       findViewById(R.id.switch_picinfwifi_text);
         mSwitchPicWifiText.setSelected(SettingPreference.getIsShowPicOnInWifi(Env.getContext()));
         mSwitchPicWifiText.setOnClickListener(new OnClickListener() {
             
@@ -114,7 +112,6 @@ public class SettingActivity extends BaseActivity {
             }
         });
         
-        mSwitchStayBgText      = (TextView)       findViewById(R.id.switch_staybg_text);
         mSwitchStayBgText.setSelected(SettingPreference.getIsStayBg(Env.getContext()));
         mSwitchStayBgText.setOnClickListener(new OnClickListener() {
             

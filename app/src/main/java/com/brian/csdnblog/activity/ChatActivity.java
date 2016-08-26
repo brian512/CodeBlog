@@ -25,13 +25,14 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class ChatActivity extends BaseActivity {
 
-    private TitleBar mTitleBar;
-    private ListView mListView = null;
-
-    private ChatToolLayout mChatToolLayout;
-
+    @BindView(R.id.title_bar) TitleBar mTitleBar;
+    @BindView(R.id.lv_chatlist) ListView mListView = null;
+    @BindView(R.id.input_ly) ChatToolLayout mChatToolLayout;
     private ChatListAdapter mAdapter = null;
 
     private ChatRobot mRobot = null;
@@ -53,8 +54,8 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_chat);
+        ButterKnife.bind(this);
 
         initUI();
 
@@ -73,10 +74,6 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void initUI() {
-        mTitleBar = (TitleBar) findViewById(R.id.title_bar);
-        mListView = (ListView) findViewById(R.id.lv_chatlist);
-        mChatToolLayout = (ChatToolLayout) findViewById(R.id.input_ly);
-
         mAdapter = new ChatListAdapter();
         mListView.setAdapter(mAdapter);
 

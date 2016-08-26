@@ -50,21 +50,20 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.Stack;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class BlogContentActivity extends BaseActivity implements OnFetchDataListener<Result<String>> {
 
     private static final String TAG = BlogContentActivity.class.getSimpleName();
 
-    private TitleBar mTitleBar;
-    
-    private WebView mWebView = null;
+    @BindView(R.id.title_bar) TitleBar mTitleBar;
+    @BindView(R.id.article_content) WebView mWebView = null;
+    @BindView(R.id.btn_favo) ImageView mBtnFavo;
+    @BindView(R.id.blogContentPro) ProgressBar mProgressBar; // 进度条
+    @BindView(R.id.reLoadImage) ImageView mReLoadImageView; // 重新加载的图片
+    @BindView(R.id.ad_group) FrameLayout mAdLayout; // 广告
 
-    private ImageView mBtnFavo;
-    
-    private ProgressBar mProgressBar; // 进度条
-
-    private ImageView mReLoadImageView; // 重新加载的图片
-    
-    private FrameLayout mAdLayout; // 广告
     private IQhInterstitialAd mAd;
 
     private IBlogHtmlParser mBlogParser = null;
@@ -107,6 +106,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_webview);
+        ButterKnife.bind(this);
 
         initUI();// 初始化界面
         initListener();
@@ -182,17 +182,8 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     
 
     private void initUI() {
-
-        mTitleBar = (TitleBar) findViewById(R.id.title_bar);
         mTitleBar.setRightImageResource(R.drawable.ic_share);
-        mBtnFavo = (ImageView) findViewById(R.id.btn_favo);
-        mProgressBar        = (ProgressBar)     findViewById(R.id.blogContentPro);
-
         // 点击图片重新加载
-        mReLoadImageView    = (ImageView)       findViewById(R.id.reLoadImage);
-
-        mWebView            = (WebView)         findViewById(R.id.article_content);
-
         mWebView.setWebViewClient(new MyWebViewClient());
         mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
