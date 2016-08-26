@@ -16,14 +16,15 @@
         android:layout_height="@dimen/head_height">
 
         <!-- 左侧按钮 -->
-        <TextView
+        <ImageView
             android:id="@+id/left_text"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="3dp"
-            android:background="@drawable/ic_back"
+            android:src="@drawable/ic_back"
+            android:background="?android:attr/selectableItemBackground"
             android:ellipsize="end"
             android:singleLine="true"
             android:textSize="16sp"
@@ -47,14 +48,15 @@
             android:textSize="20sp" />
 
         <!-- 右侧按钮 -->
-        <TextView
+        <ImageView
             android:id="@+id/right_text"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:background="@drawable/ic_share"
+            android:src="@drawable/ic_share"
+            android:background="?android:attr/selectableItemBackground"
             android:ellipsize="end"
             android:singleLine="true"
             android:textSize="16sp"

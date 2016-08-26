@@ -36,6 +36,7 @@
             android:id="@+id/bt_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:padding="5dp"
             android:textSize="18sp"

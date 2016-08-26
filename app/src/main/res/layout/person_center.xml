@@ -24,6 +24,7 @@
 
     <RelativeLayout
         android:id="@+id/chat"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_center_menu_height" >
 
@@ -56,6 +57,7 @@
 
     <RelativeLayout
         android:id="@+id/news"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_center_menu_height" >
 
@@ -89,6 +91,7 @@
 
     <RelativeLayout
         android:id="@+id/blog_favo"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_center_menu_height" >
 
@@ -122,6 +125,7 @@
 
     <RelativeLayout
         android:id="@+id/blog_history"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_center_menu_height" >
 
@@ -155,6 +159,7 @@
 
     <RelativeLayout
         android:id="@+id/select_article_type"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_center_menu_height" >
 
@@ -188,6 +193,7 @@
 
     <RelativeLayout
         android:id="@+id/checkUpdateView"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_center_menu_height" >
 
@@ -221,6 +227,7 @@
 
     <RelativeLayout
         android:id="@+id/aboutView"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_center_menu_height" >
 
@@ -254,6 +261,7 @@
 
     <RelativeLayout
         android:id="@+id/settings"
+        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_center_menu_height" >
 

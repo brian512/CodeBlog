@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_bloglist_item"
+    android:background="@drawable/bg_item_bloglist_ripple"
     android:orientation="vertical" >
+    <!--bg_bloglist_item-->
 
     <TextView
         android:id="@+id/title"

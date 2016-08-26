@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -22,8 +23,8 @@ public class TitleBar extends LinearLayout {
     /**
      * UI元素
      */
-    private TextView mLeftText;
-    private TextView mRightText;
+    private ImageView mLeftBtn;
+    private ImageView mRightBtn;
     private TextView mTitleText;
 
     public TitleBar(Context context, AttributeSet attrs, int defStyle) {
@@ -32,20 +33,18 @@ public class TitleBar extends LinearLayout {
     }
 
     public TitleBar(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initUI(context);
+        this(context, attrs, 0);
     }
 
     public TitleBar(Context context) {
-        super(context);
-        initUI(context);
+        this(context, null, 0);
     }
 
     private void initUI(Context ctx) {
         LayoutInflater.from(ctx).inflate(R.layout.layout_common_title_bar, this);
 
-        mLeftText = (TextView) findViewById(R.id.left_text);
-        mRightText = (TextView) findViewById(R.id.right_text);
+        mLeftBtn = (ImageView) findViewById(R.id.left_text);
+        mRightBtn = (ImageView) findViewById(R.id.right_text);
         mTitleText = (TextView) findViewById(R.id.title_text);
         setStatusBarVisible(BaseActivity.getTopActivity().isStatusBarTranslate());
     }
@@ -67,14 +66,14 @@ public class TitleBar extends LinearLayout {
      * @param l
      */
     public void setLeftListener(OnClickListener l) {
-        mLeftText.setOnClickListener(l);
+        mLeftBtn.setOnClickListener(l);
     }
 
     /**
      * 设置左边按钮的显示 默认是显示
      */
     public void setLeftImageVisible(int visible) {
-        mLeftText.setVisibility(visible);
+        mLeftBtn.setVisibility(visible);
     }
 
     /**
@@ -83,7 +82,7 @@ public class TitleBar extends LinearLayout {
      * @param resourceID
      */
     public void setLeftImageResource(int resourceID) {
-        mLeftText.setBackgroundResource(resourceID);
+        mLeftBtn.setImageResource(resourceID);
     }
 
     /**
@@ -92,14 +91,14 @@ public class TitleBar extends LinearLayout {
      * @param l
      */
     public void setRightListener(OnClickListener l) {
-        mRightText.setOnClickListener(l);
+        mRightBtn.setOnClickListener(l);
     }
 
     /**
      * 设置左边按钮的显示 默认不显示
      */
     public void setRightImageVisible(int visible) {
-        mRightText.setVisibility(visible);
+        mRightBtn.setVisibility(visible);
     }
 
     /**
@@ -108,7 +107,7 @@ public class TitleBar extends LinearLayout {
      * @param resourceID
      */
     public void setRightImageResource(int resourceID) {
-        mRightText.setBackgroundResource(resourceID);
+        mRightBtn.setImageResource(resourceID);
     }
 
     /**
@@ -149,8 +148,8 @@ public class TitleBar extends LinearLayout {
      * 
      * @return
      */
-    public TextView getRightButton() {
-        return mRightText;
+    public ImageView getRightButton() {
+        return mRightBtn;
     }
 
     /**
@@ -158,7 +157,7 @@ public class TitleBar extends LinearLayout {
      * 
      * @return
      */
-    public TextView getLeftButton() {
-        return mLeftText;
+    public ImageView getLeftButton() {
+        return mLeftBtn;
     }
 }
