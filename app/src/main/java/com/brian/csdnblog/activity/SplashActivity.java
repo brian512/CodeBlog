@@ -13,7 +13,6 @@ import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.PermissionUtil;
 import com.brian.csdnblog.util.PreferenceUtil;
 import com.brian.csdnblog.util.UIUtil;
-import com.oneapm.agent.android.OneApmAgent;
 import com.qhad.ads.sdk.adcore.Qhad;
 import com.umeng.analytics.MobclickAgent;
 
@@ -40,7 +39,6 @@ public class SplashActivity extends BaseActivity {
         // 打开调试模式
         MobclickAgent.setDebugMode(Config.isDebug);
         Qhad.setLogSwitch(this, false);
-        OneApmAgent.init(getApplicationContext()).setToken("3FDB8B95F6000180CD03B23EE6A6560B59").start();
     }
 
     private void jumpMainActivity() {

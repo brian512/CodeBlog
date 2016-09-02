@@ -140,13 +140,8 @@
     public static ** valueOf(java.lang.String);
 }
 
-#oneapm
 -keep class org.apache.http.impl.client.**
 -dontwarn org.apache.commons.**
 -dontwarn org.apache.http.**
--keep class com.blueware.** { *; }
--dontwarn com.blueware.**
--keep class com.oneapm.** {*;}
--dontwarn com.oneapm.**
 -keepattributes Exceptions, Signature, InnerClasses
 -keepattributes SourceFile, LineNumberTable

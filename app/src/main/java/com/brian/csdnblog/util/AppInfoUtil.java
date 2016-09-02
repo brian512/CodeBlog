@@ -27,7 +27,11 @@ public class AppInfoUtil {
     public static String getProcessName(Context context) {
         int pid = android.os.Process.myPid();
         ActivityManager mActivityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningAppProcessInfo appProcess : mActivityManager.getRunningAppProcesses()) {
+        List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = mActivityManager.getRunningAppProcesses();
+        if (runningAppProcesses == null || runningAppProcesses.isEmpty()) {
+            return null;
+        }
+        for (ActivityManager.RunningAppProcessInfo appProcess : runningAppProcesses) {
             if (appProcess.pid == pid) {
                 return appProcess.processName;
             }

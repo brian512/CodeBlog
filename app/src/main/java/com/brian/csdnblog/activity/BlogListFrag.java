@@ -47,6 +47,9 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Fragment页面
  */
@@ -55,9 +58,9 @@ public class BlogListFrag extends Fragment {
     private static final String TAG = BlogListFrag.class.getSimpleName();
 
     private View mRootLy;
-    private RefreshLayout mRefreshLayout;
-    private ListView mBlogListView;// 博客列表
-    private View mNoBlogView; // 无数据时显示
+    @BindView(R.id.swipe_container) RefreshLayout mRefreshLayout;
+    @BindView(R.id.blogListView) ListView mBlogListView;// 博客列表
+    @BindView(R.id.no_blog) View mNoBlogView; // 无数据时显示
     private View mFooterLayout;
 
     private boolean mRefreshable = true;
@@ -127,10 +130,9 @@ public class BlogListFrag extends Fragment {
         };
 
         mRootLy = inflater.inflate(R.layout.frag_bloglist, null);
-        mRefreshLayout = (RefreshLayout) mRootLy.findViewById(R.id.swipe_container);
-        mBlogListView = (ListView) mRootLy.findViewById(R.id.blogListView);
-        mRefreshLayout.setChildView(mBlogListView);
+        ButterKnife.bind(this, mRootLy);
 
+        mRefreshLayout.setChildView(mBlogListView);
         mRefreshLayout.setColorSchemeResources(R.color.blue,
                 R.color.green_yellow,
                 R.color.red,
@@ -149,7 +151,6 @@ public class BlogListFrag extends Fragment {
         mBlogListView.addFooterView(mFooterLayout);
         mBlogListView.setAdapter(mAdapter);// 设置适配器
 
-        mNoBlogView = mRootLy.findViewById(R.id.no_blog);
         mNoBlogView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

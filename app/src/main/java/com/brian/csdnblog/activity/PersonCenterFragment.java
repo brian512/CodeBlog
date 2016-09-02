@@ -26,25 +26,24 @@ import com.xiaomi.market.sdk.UpdateStatus;
 import com.xiaomi.market.sdk.XiaomiUpdateAgent;
 import com.xiaomi.market.sdk.XiaomiUpdateListener;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * 个人中心
  */
 public class PersonCenterFragment extends Fragment implements OnClickListener {
-
     private static final String TAG = "CSNDBlog_PersonCenterFragment";
 
-    private View viewCheckUpdate; // 检查更新
-    private View viewSelectType; // 设置类型
-    private View viewHistory;
-    private View viewFavo;
-    private View viewNews;
-    private View viewAbout;
-    private View viewSettings;
-    private View viewChat;
-
-    private TextView tvSelectType = null;
+    @BindView(R.id.checkUpdateView)     View mCheckUpdateLy; // 检查更新
+    @BindView(R.id.select_article_type) View mSelectTypeLy; // 设置类型
+    @BindView(R.id.blog_history)        View mHistoryLy;
+    @BindView(R.id.blog_favo)           View mFavoLy;
+    @BindView(R.id.news)                View mNewsLy;
+    @BindView(R.id.aboutView)           View mAboutLy;
+    @BindView(R.id.settings)            View mSettingsLy;
+    @BindView(R.id.chat)                View viewChat;
+    @BindView(R.id.tv_select_type)      TextView mSelectTypeView;
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -56,36 +55,24 @@ public class PersonCenterFragment extends Fragment implements OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.person_center, null);
         ButterKnife.bind(this, view);
-        initComponent(view);
+        initUI();
 
         return view;
     }
 
     /**
-     * 查找控件
-     * 
-     * @param view
+     * 初始化控件
      */
-    private void initComponent(View view) {
-        viewSelectType = view.findViewById(R.id.select_article_type);
-        viewCheckUpdate = view.findViewById(R.id.checkUpdateView);
-        viewHistory = view.findViewById(R.id.blog_history);
-        viewFavo = view.findViewById(R.id.blog_favo);
-        viewNews = view.findViewById(R.id.news);
-        viewAbout = view.findViewById(R.id.aboutView);
-        viewSettings = view.findViewById(R.id.settings);
-        viewChat = view.findViewById(R.id.chat);
+    private void initUI() {
+        mSelectTypeView.setText(TypeManager.getCurrCateName());
 
-        tvSelectType = (TextView) view.findViewById(R.id.tv_select_type);
-        tvSelectType.setText(TypeManager.getCurrCateName());
-
-        viewSelectType.setOnClickListener(this);
-        viewCheckUpdate.setOnClickListener(this);
-        viewFavo.setOnClickListener(this);
-        viewNews.setOnClickListener(this);
-        viewHistory.setOnClickListener(this);
-        viewAbout.setOnClickListener(this);
-        viewSettings.setOnClickListener(this);
+        mSelectTypeLy.setOnClickListener(this);
+        mCheckUpdateLy.setOnClickListener(this);
+        mFavoLy.setOnClickListener(this);
+        mNewsLy.setOnClickListener(this);
+        mHistoryLy.setOnClickListener(this);
+        mAboutLy.setOnClickListener(this);
+        mSettingsLy.setOnClickListener(this);
         viewChat.setOnClickListener(this);
     }
 
@@ -132,7 +119,7 @@ public class PersonCenterFragment extends Fragment implements OnClickListener {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     	TypeManager.setCateType(which);
-                    	tvSelectType.setText(TypeManager.getCurrCateName());
+                    	mSelectTypeView.setText(TypeManager.getCurrCateName());
                     }
                 });
             builder.show();

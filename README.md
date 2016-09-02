@@ -15,7 +15,6 @@ CodeBlog是为了方便在手机端阅读编程技术博文。集成展示了CSD
  - 友盟推送、统计、更新、在线参数；
  - EventBus
  - bugly异常收集；
- - oneapm性能分析；
  - 腾讯X5内核；
  - Gson进行序列化；
  - litepal数据库存储；
