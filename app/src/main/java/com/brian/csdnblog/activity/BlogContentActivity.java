@@ -13,6 +13,9 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -42,10 +45,6 @@ import com.brian.csdnblog.util.WeakRefHandler;
 import com.qhad.ads.sdk.adcore.Qhad;
 import com.qhad.ads.sdk.interfaces.IQhInterstitialAd;
 import com.tencent.connect.share.QQShare;
-import com.tencent.smtt.sdk.WebSettings;
-import com.tencent.smtt.sdk.WebSettings.LayoutAlgorithm;
-import com.tencent.smtt.sdk.WebView;
-import com.tencent.smtt.sdk.WebViewClient;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.Stack;
@@ -58,7 +57,8 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     private static final String TAG = BlogContentActivity.class.getSimpleName();
 
     @BindView(R.id.title_bar) TitleBar mTitleBar;
-    @BindView(R.id.article_content) WebView mWebView = null;
+    @BindView(R.id.article_content)
+    WebView mWebView = null;
     @BindView(R.id.btn_favo) ImageView mBtnFavo;
     @BindView(R.id.blogContentPro) ProgressBar mProgressBar; // 进度条
     @BindView(R.id.reLoadImage) ImageView mReLoadImageView; // 重新加载的图片
@@ -210,7 +210,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
 //        mWebView.getSettings().setLoadWithOverviewMode(true);
 
         // 方法二：
-        mWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.NARROW_COLUMNS);// 适应内容大小
+        mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);// 适应内容大小
 //        mWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);//适应屏幕，内容将自动缩放
     }
 
