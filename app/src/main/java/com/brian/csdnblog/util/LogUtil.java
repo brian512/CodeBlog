@@ -19,8 +19,8 @@ public class LogUtil {
 
     private static boolean LOGV = Config.isDebug;
     private static boolean LOGF = Config.isDebug;
-    private static boolean LOGD = true;
-    private static boolean LOGI = true;
+    private static boolean LOGD = Config.isDebug;
+    private static boolean LOGI = Config.isDebug;
     private static boolean LOGW = true;
     private static boolean LOGE = true;
 
