@@ -111,6 +111,16 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
             return "";
         }
     }
+
+    @Override
+    public String getBlogTitle(int type, String strHtml) {
+        try {
+            Document doc = Jsoup.parse(strHtml);
+            return doc.getElementsByTag("h1").text();
+        } catch (Exception e) {
+            return "";
+        }
+    }
     
     /**
      * 从网页数据中截取博客正文部分

@@ -161,6 +161,16 @@ public class JccHtmlParser implements IBlogHtmlParser {
     }
 
     @Override
+    public String getBlogTitle(int type, String strHtml) {
+        try {
+            Document doc = Jsoup.parse(strHtml);
+            return doc.getElementsByTag("h1").text();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    @Override
     /**
      * 若该链接是博文链接，则返回链接地址，若不是则返回空
      * @param urls

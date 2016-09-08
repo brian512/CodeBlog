@@ -2,8 +2,6 @@ package com.brian.csdnblog.util;
 
 import android.util.Log;
 
-import com.brian.csdnblog.Config;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -17,10 +15,10 @@ import java.util.Locale;
 public class LogUtil {
     private static boolean mIsDebugMode = false;// 获取堆栈信息会影响性能，发布应用时记得关闭DebugMode
 
-    private static boolean LOGV = Config.isDebug;
-    private static boolean LOGF = Config.isDebug;
-    private static boolean LOGD = Config.isDebug;
-    private static boolean LOGI = Config.isDebug;
+    private static boolean LOGV = true;
+    private static boolean LOGF = true;
+    private static boolean LOGD = true;
+    private static boolean LOGI = true;
     private static boolean LOGW = true;
     private static boolean LOGE = true;
 
@@ -92,32 +90,6 @@ public class LogUtil {
         }
     }
 
-//    private static String buildMessage(String format, Object... args) {
-//        String msg = (args == null) ? format : String.format(Locale.US, format,
-//                args);
-//        StackTraceElement[] trace = new Throwable().fillInStackTrace()
-//                .getStackTrace();
-//
-//        String caller = "<unknown>";
-//        // Walk up the stack looking for the first caller outside of VolleyLog.
-//        // It will be at least two frames up, so start there.
-//        for (int i = 2; i < trace.length; i++) {
-//            Class<?> clazz = trace[i].getClass();
-//            if (!clazz.equals(VolleyLog.class)) {
-//                String callingClass = trace[i].getClassName();
-//                callingClass = callingClass.substring(callingClass
-//                        .lastIndexOf('.') + 1);
-//                callingClass = callingClass.substring(callingClass
-//                        .lastIndexOf('$') + 1);
-//
-//                caller = callingClass + "." + trace[i].getMethodName();
-//                break;
-//            }
-//        }
-//        return String.format(Locale.US, "[%d] %s: %s", Thread.currentThread()
-//                .getId(), caller, msg);
-//    }
-
     private static String buildMessageSafe(String msg) {
         try {
             return LOGV ? buildMessage(msg) : msg;
@@ -159,8 +131,7 @@ public class LogUtil {
     private static boolean writeFile(String filePath, String tag, String content) {
         FileWriter fileWriter = null;
         try {
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd__HH.mm.ss",
-                    Locale.CHINA);
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd__HH.mm.ss", Locale.CHINA);
             String time = formatter.format(new Date());
             fileWriter = new FileWriter(filePath, true);
             fileWriter.write(String.format("\n<<<<<<<<<<<<<< %s <<<<<<<<<<<\n",

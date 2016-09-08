@@ -39,13 +39,13 @@ import com.brian.csdnblog.model.BlogInfo;
 import com.brian.csdnblog.model.SearchResult;
 import com.brian.csdnblog.parser.BlogHtmlParserFactory;
 import com.brian.csdnblog.parser.IBlogHtmlParser;
+import com.brian.csdnblog.util.FileUtil;
 import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.NetStatusUtil;
 import com.brian.csdnblog.util.WeakRefHandler;
 import com.qhad.ads.sdk.adcore.Qhad;
 import com.qhad.ads.sdk.interfaces.IQhInterstitialAd;
 import com.tencent.connect.share.QQShare;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.Stack;
 
@@ -57,8 +57,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     private static final String TAG = BlogContentActivity.class.getSimpleName();
 
     @BindView(R.id.title_bar) TitleBar mTitleBar;
-    @BindView(R.id.article_content)
-    WebView mWebView = null;
+    @BindView(R.id.article_content) WebView mWebView;
     @BindView(R.id.btn_favo) ImageView mBtnFavo;
     @BindView(R.id.blogContentPro) ProgressBar mProgressBar; // 进度条
     @BindView(R.id.reLoadImage) ImageView mReLoadImageView; // 重新加载的图片
@@ -71,15 +70,16 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     /**
      * 存放已打开过的链接
      */
-    private Stack<String> mBlogStack = null;
+    private Stack<String> mBlogStack = new Stack<>();
     
     /**
      * 当前页面的链接，初始与mBundleBlogURL相同，后续可能会在本页面跳转到其他链接
      */
     private String mCurrentUrl = null;
-    
+    private String mCurrentTitle = null;
+
     private BlogInfo mBlogInfo;
-    
+
     public static final String BUNDLE_EXTRAS_BLOGINFO = "bloginfo";
     
     public static void startActvity(Activity activity, SearchResult searchResult) {
@@ -119,6 +119,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
             return;
         }
         mTitleBar.setTitle(mBlogInfo.title);
+        mCurrentTitle = mBlogInfo.title;
 
         if (FavoBlogManager.getInstance().isFavo(mCurrentUrl)) {
             mBtnFavo.setSelected(true);
@@ -126,7 +127,6 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
             mBtnFavo.setSelected(false);
         }
 
-        mBlogStack = new Stack<>();
         // 开始请求数据
         if (TypeManager.getWebType(mBlogInfo.type) == TypeManager.TYPE_WEB_JCC) {
             DataFetcher.getInstance().fetchString(mCurrentUrl, "GB2312", this);
@@ -165,10 +165,10 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         if (!TextUtils.isEmpty(adSpaceid)) {
             mAd = Qhad.showInterstitial(this, adSpaceid, false);
         }
-        showAd(true);
+        toggleAdShow(true);
     }
     
-    private void showAd(boolean isShow) {
+    private void toggleAdShow(boolean isShow) {
         if (mAd != null && SettingPreference.getIsShowAd(Env.getContext())) {
             if (isShow) {
                 mAdLayout.setVisibility(View.VISIBLE);
@@ -235,7 +235,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
             public void onClick(View v) {
                 mReLoadImageView.setVisibility(View.GONE);
                 mProgressBar.setVisibility(View.VISIBLE);
-                showAd(true);
+                toggleAdShow(true);
                 
                 DataFetcher.getInstance().fetchString(mCurrentUrl, BlogContentActivity.this);
             }
@@ -258,25 +258,17 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-
-            if (mProgressBar.getVisibility() == View.VISIBLE) {
-                return true;
-            }
-
             if (mReLoadImageView.getVisibility() == View.VISIBLE) {
                 mReLoadImageView.setVisibility(View.GONE);
-            } else {
-                if (mBlogStack.size() > 1) {
-                    mBlogStack.pop();
-                } else {
-                    finish();
-                    return true;
-                }
+                mWebView.setVisibility(View.VISIBLE);
+                return true;
             }
-            if (mBlogStack.size() >= 1) {
+            if (mBlogStack.size() > 1) {
+                mBlogStack.pop();//把当前的博客移除
                 String html = mBlogStack.peek();
                 Message msg = mHandler.obtainMessage(MSG_UPDATE);
                 msg.obj = html;
+                mHandler.removeMessages(MSG_UPDATE);
                 mHandler.sendMessage(msg);
                 return true;
             } else {
@@ -295,18 +287,18 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         // 重写shouldOverrideUrlLoading方法，使点击链接后不使用其他的浏览器打开。
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            LogUtil.w("url=" + url);
 
-            LogUtil.w(TAG, "url=" + url);
-            
+            //使用这个parser就不能在不同的博客间跳转
+            // TODO 根据域名判断博客类型
             String blogUrl = mBlogParser.getBlogContentUrl(url);
             if (!TextUtils.isEmpty(blogUrl)) {
-                
                 if (blogUrl.equalsIgnoreCase(mCurrentUrl)) {
                     return true;
                 }
                 
                 mProgressBar.setVisibility(View.VISIBLE);
-                showAd(true);
+                toggleAdShow(true);
                 
                 mCurrentUrl = blogUrl;
                 DataFetcher.getInstance().fetchString(blogUrl, BlogContentActivity.this);
@@ -317,7 +309,6 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            
             boolean isBlockImage = SettingPreference.getIsShowPicOnInWifi(BlogContentActivity.this);
             
             boolean shouldLoadImg = NetStatusUtil.isWifiNet(Env.getContext()) || !isBlockImage;
@@ -333,7 +324,6 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
      * 分享博文给QQ好友
      */
     private void onClickShare() {
-        
         if (TextUtils.isEmpty(mBlogInfo.title)) {
             mBlogInfo.title = getString(R.string.app_name);
         }
@@ -355,23 +345,8 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this); // 统计时长
-        MobclickAgent.onPageStart(this.getClass().getName());
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd(this.getClass().getName());
-        MobclickAgent.onPause(this);
-    }
-    
-    @Override
     protected void onDestroy() {
         super.onDestroy();
-        
         Qhad.activityDestroy(this);
         
         mHandler.removeCallbacksAndMessages(null);
@@ -386,10 +361,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         mReLoadImageView.setVisibility(View.VISIBLE);
     }
     
-    private String content = "";
-    
     private static final int MSG_UPDATE = 1;
-    
     private Handler.Callback mCallback = new Handler.Callback() {
         
         @Override
@@ -401,9 +373,14 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
                     
                     mBtnFavo.setVisibility(View.VISIBLE);
                     mWebView.setVisibility(View.VISIBLE);
-                    content = (String) msg.obj;
+                    String content = (String) msg.obj;
                     mWebView.loadDataWithBaseURL(mBlogParser.getBlogBaseUrl(), content,
                             "text/html", "utf-8", null);
+
+                    mCurrentTitle = mBlogParser.getBlogTitle(mBlogInfo.type, content);
+                    if (!TextUtils.isEmpty(mCurrentTitle)) {
+                        mTitleBar.setTitle(mCurrentTitle);
+                    }
                     break;
             }
             return true;
@@ -413,23 +390,32 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
 
     @Override
     public void onFetchFinished(final Result<String> response) {
-        showAd(false);// 隐藏广告
-//        LogUtil.i("response=" + response.data);
+        toggleAdShow(false);// 隐藏广告
+        LogUtil.i("response=" + response.data);
         if (TextUtils.isEmpty(response.data)) {
             showErrorPage();
         } else {
             ThreadManager.getPoolProxy().execute(new Runnable() {
                 @Override
                 public void run() {
-//                    FileUtil.writeFile("/sdcard/blog", response.data);
+                    if (Config.isDebug) {
+                        FileUtil.writeFile("/sdcard/blogBefore", response.data);
+                    }
                     String contentHtml = mBlogParser.getBlogContent(mBlogInfo.type, response.data);
-//                    LogUtil.d("contentHtml=" + contentHtml);
+                    if (Config.isDebug) {
+                        FileUtil.writeFile("/sdcard/blogAfter", contentHtml);
+                    }
+
+                    if (TextUtils.isEmpty(contentHtml)) { // 解析失败则直接显示原网页
+                         contentHtml = response.data;
+                    }
+
                     mBlogStack.push(contentHtml);
-                    
+
                     Message msg = mHandler.obtainMessage(MSG_UPDATE);
                     msg.obj = contentHtml;
                     mHandler.sendMessage(msg);
-                }
+                } // end run
             });
         }
     }
@@ -445,7 +431,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
 //                
 //                break;
 //        }
-        mWebView.loadDataWithBaseURL(mBlogParser.getBlogBaseUrl(), content,
+        mWebView.loadDataWithBaseURL(mBlogParser.getBlogBaseUrl(), mBlogStack.peek(),
                 "text/html", "utf-8", null);
     }
 }

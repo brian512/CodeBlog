@@ -19,7 +19,9 @@ public interface IBlogHtmlParser {
      * @return
      */
     String getBlogContent(int type, String strHtml);
-    
+
+    String getBlogTitle(int type, String strHtml);
+
     String getBlogContentUrl(String... strs);
     
     /**
