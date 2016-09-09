@@ -20,48 +20,50 @@ public class TypeManager {
 
     // 需要与弹框列表顺序一致
     public static final int TYPE_CAT_MOBILE = 0x0;
-    public static final int TYPE_CAT_WEB = TYPE_CAT_MOBILE+1;
-    public static final int TYPE_CAT_DB = TYPE_CAT_WEB+1;
-    public static final int TYPE_CAT_YUNWEI = TYPE_CAT_DB+1;
-    public static final int TYPE_CAT_CLOUD = TYPE_CAT_YUNWEI+1;
-    public static final int TYPE_CAT_FRAME = TYPE_CAT_CLOUD+1;
+    public static final int TYPE_CAT_WEB = TYPE_CAT_MOBILE + 1;
+    public static final int TYPE_CAT_DB = TYPE_CAT_WEB + 1;
+    public static final int TYPE_CAT_YUNWEI = TYPE_CAT_DB + 1;
+    public static final int TYPE_CAT_CLOUD = TYPE_CAT_YUNWEI + 1;
+    public static final int TYPE_CAT_FRAME = TYPE_CAT_CLOUD + 1;
+    public static final int TYPE_CAT_BLOGER = 0xE;
     public static final int TYPE_CAT_DEFAULT = 0xF;
 
     public static int sCateType;
+
     static {
-    	initCateType();
+        initCateType();
     }
-    
+
     private static void initCateType() {
-    	sCateType = PreferenceUtil.getInt(Env.getContext(), PreferenceUtil.pre_key_article_type, 0);
+        sCateType = PreferenceUtil.getInt(Env.getContext(), PreferenceUtil.pre_key_article_type, 0);
         if (sCateType > Constants.TYPES_WORD.length) {
-        	sCateType = 0;
+            sCateType = 0;
         }
         UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_BLOG_CATE, Constants.TYPES_WORD[sCateType]);
     }
-    
+
     public static int initType(int webType) {
-        return (webType<<8) + 
-                (sCateType<<4) + 0;
+        return (webType << 8) +
+                (sCateType << 4) + 0;
     }
-    
+
     public static void setCateType(int cateType) {
-    	if (sCateType != cateType) {
-    		sCateType = cateType;
+        if (sCateType != cateType) {
+            sCateType = cateType;
             PreferenceUtil.setInt(Env.getContext(), PreferenceUtil.pre_key_article_type, cateType);
-            
+
             TypeChangeEvent event = new TypeChangeEvent();
             event.cateType = cateType;
             EventBus.getDefault().post(event);
             UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_BLOG_CATE, Constants.TYPES_WORD[cateType]);
         }
     }
-    
+
     public static String getCurrCateName() {
-    	return Constants.TYPES_WORD[sCateType];
+        return Constants.TYPES_WORD[sCateType];
     }
-    
-    
+
+
     public static int getWebType(int type) {
         return type >> 8;
     }
@@ -73,29 +75,27 @@ public class TypeManager {
     public static int getLanType(int type) {
         return (type & 0x000f);
     }
-    
+
     public static int updateWebType(int type, int webType) {
-        return (webType<<8) + 
-                (getCateType(type)<<4) + 
+        return (webType << 8) +
+                (getCateType(type) << 4) +
                 getLanType(type);
     }
-    
+
     public static int updateCateType(int type, int cateType) {
-        return (getWebType(type)<<8) + 
-                (cateType<<4) + 
+        return (getWebType(type) << 8) +
+                (cateType << 4) +
                 getLanType(type);
     }
-    
+
     public static int updateLanType(int type, int lanType) {
-        return (getWebType(type)<<8) + 
-                (getCateType(type)<<4) + 
+        return (getWebType(type) << 8) +
+                (getCateType(type) << 4) +
                 lanType;
     }
-    
+
     /**
      * 根据web和cate拼接
-     * @param type
-     * @return
      */
     public static String getBlogName(int type) {
         String name = "";
@@ -120,19 +120,19 @@ public class TypeManager {
                 name = "OSNEWS";
                 break;
             case TypeManager.TYPE_WEB_FAVO:
-            	name = "FAVO";
-            	break;
+                name = "FAVO";
+                break;
             case TypeManager.TYPE_WEB_HISTORY:
-            	name = "HISTORY";
-            	break;
+                name = "HISTORY";
+                break;
             case TypeManager.TYPE_WEB_OTHER:
             default:
-            	name = "OTHER";
-            	break;
+                name = "OTHER";
+                break;
         }
-        
+
         name += "_";
-        
+
         int catType = TypeManager.getCateType(type);
         switch (catType) {
             case TypeManager.TYPE_CAT_MOBILE:
@@ -153,9 +153,12 @@ public class TypeManager {
             case TypeManager.TYPE_CAT_YUNWEI:
                 name += "YUNWEI";
                 break;
+            case TypeManager.TYPE_CAT_BLOGER:
+                name += "BLOGER";
+                break;
             default:
-            	name += "default";
-            	break;
+                name += "default";
+                break;
         }
         return name;
     }

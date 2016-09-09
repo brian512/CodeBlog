@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.brian.common.view.CircleImageView;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.manager.Constants;
@@ -32,9 +33,12 @@ import butterknife.ButterKnife;
 /**
  * 个人中心
  */
-public class PersonCenterFragment extends Fragment implements OnClickListener {
+public class SidePageFragment extends Fragment implements OnClickListener {
     private static final String TAG = "CSNDBlog_PersonCenterFragment";
 
+    @BindView(R.id.bloger)              View mBlogerLy; // 博主
+    @BindView(R.id.bloger_head)         CircleImageView mBlogerHeadView; // 博主头像
+    @BindView(R.id.bloger_name)         TextView mBlogerNameView; // 博主名
     @BindView(R.id.checkUpdateView)     View mCheckUpdateLy; // 检查更新
     @BindView(R.id.select_article_type) View mSelectTypeLy; // 设置类型
     @BindView(R.id.blog_history)        View mHistoryLy;
@@ -66,6 +70,7 @@ public class PersonCenterFragment extends Fragment implements OnClickListener {
     private void initUI() {
         mSelectTypeView.setText(TypeManager.getCurrCateName());
 
+        mBlogerLy.setOnClickListener(this);
         mSelectTypeLy.setOnClickListener(this);
         mCheckUpdateLy.setOnClickListener(this);
         mFavoLy.setOnClickListener(this);
@@ -79,6 +84,10 @@ public class PersonCenterFragment extends Fragment implements OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+        case R.id.bloger: // 博主博文列表入口
+            UsageStatsManager.sendUsageData(UsageStatsManager.MENU_LIST, "bloger");
+            BlogerBlogListActivity.startActivity(getActivity(), 256, "brian512");
+            break;
         case R.id.aboutView: // 关于
             UsageStatsManager.sendUsageData(UsageStatsManager.MENU_LIST, "about");
             AboutActivity.startActivity(getActivity());

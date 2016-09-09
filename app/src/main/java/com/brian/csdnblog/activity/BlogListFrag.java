@@ -104,6 +104,14 @@ public class BlogListFrag extends Fragment {
                 holder.setText(R.id.title, item.title);
                 holder.setText(R.id.description, item.description);
                 holder.setText(R.id.msg, item.msg);
+                holder.getView(R.id.msg).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+//                        if (!TextUtils.isEmpty(item.blogerID)) {
+//                            BlogerBlogListActivity.startActivity(getActivity(), mType, item.blogerID);
+//                        }
+                    }
+                });
                 holder.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {

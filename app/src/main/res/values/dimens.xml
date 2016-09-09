@@ -16,7 +16,7 @@
     <dimen name="actionbar_height">45dip</dimen>
     <dimen name="actionbar_item_height">45dip</dimen>
     <dimen name="actionbar_item_width">45dip</dimen>
-    <dimen name="slidingmenu_offset">200dp</dimen>
+    <dimen name="slidingmenu_offset">100dp</dimen>
     <dimen name="list_padding">10dp</dimen>
     <dimen name="shadow_width">100dp</dimen>
     

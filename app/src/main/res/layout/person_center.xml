@@ -1,19 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/pc_bg"
     android:gravity="center_vertical"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/bloger"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/str_null"
-        android:src="@drawable/pc_divider_line"
-        android:visibility="invisible" />
+        android:layout_marginBottom="20dp"
+        android:background="?android:attr/selectableItemBackground">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:layout_centerInParent="true">
+
+            <com.brian.common.view.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/bloger_head"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:src="@drawable/icon_default_user"
+                app:border_color="#FFffffff"
+                app:border_width="@dimen/circle_border_width" />
+
+            <TextView
+                android:id="@+id/bloger_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:text="Brian512的博客"
+                android:textColor="@color/black"
+                android:textSize="21sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/user_center_menu_marginRight"
+            android:contentDescription="@string/str_null"
+            android:focusable="false"
+            android:src="@drawable/app_recommend_arrow" />
+    </RelativeLayout>
 
     <ImageView
         android:layout_width="wrap_content"
@@ -24,9 +59,9 @@
 
     <RelativeLayout
         android:id="@+id/chat"
-        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height" >
+        android:layout_height="@dimen/user_center_menu_height"
+        android:background="?android:attr/selectableItemBackground">
 
         <TextView
             android:layout_width="wrap_content"
@@ -57,9 +92,9 @@
 
     <RelativeLayout
         android:id="@+id/news"
-        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height" >
+        android:layout_height="@dimen/user_center_menu_height"
+        android:background="?android:attr/selectableItemBackground">
 
         <TextView
             android:id="@+id/tv_news"
@@ -91,9 +126,9 @@
 
     <RelativeLayout
         android:id="@+id/blog_favo"
-        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height" >
+        android:layout_height="@dimen/user_center_menu_height"
+        android:background="?android:attr/selectableItemBackground">
 
         <TextView
             android:id="@+id/tv_blog_favo"
@@ -125,9 +160,9 @@
 
     <RelativeLayout
         android:id="@+id/blog_history"
-        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height" >
+        android:layout_height="@dimen/user_center_menu_height"
+        android:background="?android:attr/selectableItemBackground">
 
         <TextView
             android:id="@+id/tv_blog_history"
@@ -150,7 +185,7 @@
             android:src="@drawable/app_recommend_arrow" />
     </RelativeLayout>
 
-	<ImageView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -159,9 +194,9 @@
 
     <RelativeLayout
         android:id="@+id/select_article_type"
-        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height" >
+        android:layout_height="@dimen/user_center_menu_height"
+        android:background="?android:attr/selectableItemBackground">
 
         <TextView
             android:id="@+id/tv_select_type"
@@ -183,7 +218,7 @@
             android:focusable="false"
             android:src="@drawable/app_recommend_arrow" />
     </RelativeLayout>
-    
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -193,9 +228,9 @@
 
     <RelativeLayout
         android:id="@+id/checkUpdateView"
-        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height" >
+        android:layout_height="@dimen/user_center_menu_height"
+        android:background="?android:attr/selectableItemBackground">
 
         <TextView
             android:id="@+id/tv9"
@@ -227,9 +262,9 @@
 
     <RelativeLayout
         android:id="@+id/aboutView"
-        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height" >
+        android:layout_height="@dimen/user_center_menu_height"
+        android:background="?android:attr/selectableItemBackground">
 
         <TextView
             android:id="@+id/tv10"
@@ -261,9 +296,9 @@
 
     <RelativeLayout
         android:id="@+id/settings"
-        android:background="?android:attr/selectableItemBackground"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height" >
+        android:layout_height="@dimen/user_center_menu_height"
+        android:background="?android:attr/selectableItemBackground">
 
         <TextView
             android:layout_width="wrap_content"

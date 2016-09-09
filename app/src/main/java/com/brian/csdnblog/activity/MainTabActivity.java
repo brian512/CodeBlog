@@ -102,7 +102,7 @@ public class MainTabActivity extends SlidingFragmentActivity {
         // 设置左侧滑动菜单
         setBehindContentView(R.layout.menu_frame_left);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.menu_frame, new PersonCenterFragment()).commit();
+                .replace(R.id.menu_frame, new SidePageFragment()).commit();
 
         // 实例化滑动菜单对象
         SlidingMenu sm = getSlidingMenu();

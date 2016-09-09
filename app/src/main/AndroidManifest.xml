@@ -64,6 +64,10 @@
         <activity
             android:name="com.brian.csdnblog.activity.BlogListActivity"
             android:screenOrientation="portrait"/>
+        <!-- 博主文章界面 -->
+        <activity
+            android:name="com.brian.csdnblog.activity.BlogerBlogListActivity"
+            android:screenOrientation="portrait"/>
         <!-- 关于界面 -->
         <activity
             android:name="com.brian.csdnblog.activity.AboutActivity"

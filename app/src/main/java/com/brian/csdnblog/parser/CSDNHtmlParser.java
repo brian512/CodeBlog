@@ -4,16 +4,12 @@ package com.brian.csdnblog.parser;
 import android.text.TextUtils;
 
 import com.brian.csdnblog.Env;
-import com.brian.csdnblog.R;
 import com.brian.csdnblog.manager.Constants;
+import com.brian.csdnblog.manager.TypeManager;
 import com.brian.csdnblog.model.BlogInfo;
-import com.brian.csdnblog.model.Bloger;
 import com.brian.csdnblog.model.SearchResult;
-import com.brian.csdnblog.util.FileUtil;
 import com.brian.csdnblog.util.JsoupUtil;
 import com.brian.csdnblog.util.LogUtil;
-import com.brian.csdnblog.util.PreferenceUtil;
-import com.brian.csdnblog.util.ResourceUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import org.jsoup.Jsoup;
@@ -39,6 +35,7 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
 
     private static final String URL_CSDN_BLOG_BASE = "http://blog.csdn.net";
     private static final String URL_CSDN_BLOG_HOME = "http://blog.csdn.net/type/newarticle.html?&page=1";
+    private static final String URL_CSDN_BLOGER_HOME = "http://blog.csdn.net/brian512/article/list/1";
 
 
     // 文章内容页
@@ -73,8 +70,13 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
     public List<BlogInfo> getBlogList(int type, String str) {
         try {
 //            FileUtil.writeFile("/sdcard/bloglist", str);
-            return doGetHotBlogItemList(type, str);
+            if (TypeManager.getCateType(type) == TypeManager.TYPE_CAT_BLOGER) {
+                return doGetBlogerItemList(type, str);
+            } else {
+                return doGetHotBlogItemList(type, str);
+            }
         } catch (Exception e) {
+            e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
             return null;
         }
@@ -83,12 +85,9 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
 
     /**
      * 使用Jsoup解析html文档
-     *
-     * @param str
-     * @return
      */
     private List<BlogInfo> doGetHotBlogItemList(int type, String str) {
-        List<BlogInfo> list = new ArrayList<BlogInfo>();
+        List<BlogInfo> list = new ArrayList<>();
         if (TextUtils.isEmpty(str)) {
             return list;
         }
@@ -110,10 +109,56 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
             String description = blogItem.getElementsByClass("blog_list_c").get(0).text();
             LogUtil.i(TAG, "description=" + description);
 
-            String msg = blogItem.getElementsByClass("nickname").get(0).text() + "  " + blogItem.getElementsByClass("blog_list_b_r").get(0).select("label").text();
+            String blogerID = blogItem.getElementsByClass("nickname").get(0).text();
+            String msg = blogerID + "  " + blogItem.getElementsByClass("blog_list_b_r").get(0).select("label").text();
             LogUtil.i(TAG, "msg=" + msg);
 
             String link = blogItem.select("h3").select("a").attr("href");
+            LogUtil.i(TAG, "link=" + link);
+
+            item.type = type;
+            item.title = title;
+            item.articleType = Constants.DEF_ARTICLE_TYPE.INT_ORIGINAL;
+            item.msg = msg;
+            item.description = description;
+            item.link = link;
+            item.dateStamp = String.valueOf(System.currentTimeMillis());
+            item.blogerID = blogerID;
+
+            list.add(item);
+        }
+        return list;
+    }
+
+    /**
+     * 使用Jsoup解析html文档
+     */
+    private List<BlogInfo> doGetBlogerItemList(int type, String str) {
+        List<BlogInfo> list = new ArrayList<>();
+        if (TextUtils.isEmpty(str)) {
+            return list;
+        }
+        // 获取文档对象
+        Document doc = Jsoup.parse(str);
+        // 获取class="article_item"的所有元素
+        Elements blogList = doc.getElementsByClass("article_item");//.get(0).children()
+        if (blogList == null || blogList.size() <= 0) {
+            return list;
+        }
+
+        for (Element blogItem : blogList) {
+            BlogInfo item = new BlogInfo();
+
+            String title = blogItem.getElementsByClass("article_title").get(0).text(); // 得到标题
+            LogUtil.i(TAG, "title=" + title);
+
+            String description = blogItem.getElementsByClass("article_description").get(0).text();
+            LogUtil.i(TAG, "description=" + description);
+
+            String msg = blogItem.getElementsByClass("article_manage").get(0).text();
+            LogUtil.i(TAG, "msg=" + msg);
+
+            String link = blogItem.getElementsByClass("article_title").get(0).select("a").attr("href");
             LogUtil.i(TAG, "link=" + link);
 
             item.type = type;
@@ -133,6 +178,7 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
         try {
             return doGetBlogContent(contentSrc);
         } catch (Exception e) {
+            e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
             return "";
         }
@@ -144,15 +190,14 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
             Document doc = Jsoup.parse(strHtml);
             return doc.getElementsByTag("h2").text();
         } catch (Exception e) {
+            e.printStackTrace();
+            MobclickAgent.reportError(Env.getContext(), e);
             return "";
         }
     }
 
     /**
      * 从网页数据中截取博客正文部分
-     *
-     * @param contentSrc
-     * @return
      */
     private String doGetBlogContent(String contentSrc) {
 
@@ -211,100 +256,25 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
         return JsoupUtil.sHtmlFormat.replace(JsoupUtil.CONTENT_HOLDER, detail.html());
     }
 
-    /**
-     * 获得博主个人资料
-     *
-     * @param str
-     * @return
-     */
-    public Bloger getBlogerInfo(String str) {
-
-        if (TextUtils.isEmpty(str)) {
-            return null;
-        }
-        try {
-            Bloger bloger = new Bloger();
-
-            // 获取文档内容
-            Document doc = Jsoup.parse(str);
-            Elements profiles = doc.getElementsByClass("panel");
-
-            Element profile = null;
-            for (Element element : profiles) {
-                if (element.select("ul.panel_head").text()
-                        .equals(ResourceUtil.getString(Env.getContext(), R.string.str_profile))) {
-                    profile = element;
-                    break;
-                }
-            }
-            // 未找到个人资料框
-            if (profile == null) {
-                return null;
-            }
-
-            Element profileBody = profile.select("ul.panel_body.profile").get(0);
-
-            Element userface = profileBody.getElementById("blog_userface");
-            String userfaceLink = userface.select("a").select("img").attr("src"); // 得到头像链接
-            String temp = userface.select("a").attr("href");
-            bloger.blogerID = temp.substring(temp.lastIndexOf("/") + 1);
-            String username = userface.getElementsByTag("a").get(1).text(); // 用户名
-
-            Element blog_rank = profileBody.getElementById("blog_rank");
-            Element blog_statistics = profileBody.getElementById("blog_statistics");
-
-            // 获取积分排名信息
-            Elements rankLi = blog_rank.select("li");
-            bloger.visit = rankLi.get(0).text();
-            bloger.credits = rankLi.get(1).text();
-            bloger.grade = getUserGrade(rankLi.get(2));
-            bloger.rank = rankLi.get(3).text();
-
-            // 获取博文信息
-            Elements blogLi = blog_statistics.select("li");
-            bloger.original = blogLi.get(0).text();
-            bloger.repost = blogLi.get(1).text();
-            bloger.translate = blogLi.get(2).text();
-            bloger.comment = blogLi.get(3).text();
-
-            bloger.faceURL = userfaceLink;
-            bloger.blogerName = username;
-            return bloger;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    /**
-     * 通过等级图片链接 获取用户等级
-     *
-     * @param rank
-     * @return
-     */
-    private String getUserGrade(Element rank) {
-        String gradeLink = rank.select("span").select("img").attr("src");
-        String grade = gradeLink.substring(gradeLink.indexOf("/blog")).substring(5, 6);
-        return "等级：BLOG " + grade;
-    }
-
     public List<SearchResult> getSearchResultList(String strResult) {
         try {
             return doGetSearchResultList(strResult);
         } catch (Exception e) {
+            e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
         }
-        return new ArrayList<SearchResult>();
+        return new ArrayList<>();
     }
 
     private List<SearchResult> doGetSearchResultList(String strResult) {
-        List<SearchResult> resultList = new ArrayList<SearchResult>();
+        List<SearchResult> resultList = new ArrayList<>();
         if (TextUtils.isEmpty(strResult)) {
             return resultList;
         }
         // 获取文档对象
         Document doc = Jsoup.parse(strResult);
         Elements results = doc.getElementsByClass("search-list");
-        SearchResult temp = null;
+        SearchResult temp;
         for (Element element : results) {
             temp = new SearchResult();
             temp.title = element.getElementsByTag("dt").first().text();
@@ -322,22 +292,15 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
         return resultList;
     }
 
-
-    public List<BlogInfo> getCachedBlogInfos(int type) {
-        String cachedStr = FileUtil.getFileContent(Env.getContext().getFilesDir() + "/cache_" + type);
-        if (TextUtils.isEmpty(cachedStr)) {
-            return new ArrayList<BlogInfo>();
-        } else {
-            return getBlogList(type, cachedStr);
-        }
-    }
-
     public String getUrlByType(int blogType, int page) {
         return getUrl(blogType, "" + page);
     }
 
     private String getUrl(int blogType, String page) {
-        int category = PreferenceUtil.getInt(Env.getContext(), PreferenceUtil.pre_key_article_type, 0);
+        int category = TypeManager.getCateType(blogType);
+        if (category == TypeManager.TYPE_CAT_BLOGER) {
+            return URL_CSDN_BLOGER_HOME.replace("/1", "/"+page);
+        }
         if (category >= TYPES_STR.length) {
             category = 0;
         }
@@ -360,9 +323,6 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
 
     /**
      * 若该链接是博文链接，则返回链接地址，若不是则返回空
-     *
-     * @param urls
-     * @return
      */
     public String getBlogContentUrl(String... urls) {
         String blogUrl = "";

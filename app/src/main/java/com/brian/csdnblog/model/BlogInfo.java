@@ -22,4 +22,6 @@ public class BlogInfo extends DataSupport implements Serializable {
     public String msg; // 消息
     public int articleType; // 博客类型，原创，翻译，转载
     public int type; // 博客类型，在TypeManager中定义
+
+    public String blogerID;
 }
