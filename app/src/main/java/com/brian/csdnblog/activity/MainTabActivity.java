@@ -15,11 +15,11 @@ import com.brian.csdnblog.Config;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.adapter.MainTabAdapter;
 import com.brian.csdnblog.manager.PushManager;
-import com.brian.csdnblog.manager.SettingPreference;
 import com.brian.csdnblog.manager.ShareManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
+import com.brian.csdnblog.preference.CommonPreference;
+import com.brian.csdnblog.preference.SettingPreference;
 import com.brian.csdnblog.util.LogUtil;
-import com.brian.csdnblog.util.PreferenceUtil;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnCloseListener;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenListener;
@@ -89,9 +89,9 @@ public class MainTabActivity extends SlidingFragmentActivity {
     private void recoveryUI() {
         int initPosition = mTabAdapter.getCount()/2;
 
-        if (PreferenceUtil.getPreferenceSetting(this, PreferenceUtil.pre_key_recoveryLastStatus, true)) {
+        if (CommonPreference.getInstance().isNeedRecoveryLastStatus()) {
             // 读取上次退出时停留的页面序号
-            initPosition = PreferenceUtil.getInt(this, PreferenceUtil.pre_key_indicator_position, initPosition);
+            initPosition = CommonPreference.getInstance().getIndicatorPosition(initPosition);
         }
         mViewpager.setCurrentItem(initPosition, false);
 
@@ -185,7 +185,7 @@ public class MainTabActivity extends SlidingFragmentActivity {
                 getSlidingMenu().toggle(true);
             } else {
 
-                boolean isRunInBack = SettingPreference.getIsStayBg(this);
+                boolean isRunInBack = SettingPreference.getInstance().getRunInBackEnable();
                 if (isRunInBack) {
                     moveTaskToBack(true);
                 } else {
@@ -222,7 +222,7 @@ public class MainTabActivity extends SlidingFragmentActivity {
 
     @Override
     protected void onStop() {
-        PreferenceUtil.setInt(this, PreferenceUtil.pre_key_indicator_position, mViewpager.getCurrentItem());
+        CommonPreference.getInstance().setIndicatorPosition(mViewpager.getCurrentItem());
         super.onStop();
     }
 
@@ -238,7 +238,7 @@ public class MainTabActivity extends SlidingFragmentActivity {
         super.onNewIntent(intent);
 
         // 若参数中无
-        int initPosition = intent.getIntExtra(PreferenceUtil.pre_key_indicator_position, 0);
+        int initPosition = CommonPreference.getInstance().getIndicatorPosition(0);
         mViewpager.setCurrentItem(initPosition, false);
 
         getIntent().putExtras(intent);// 共享数据

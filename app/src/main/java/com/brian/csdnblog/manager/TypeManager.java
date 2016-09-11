@@ -1,8 +1,7 @@
 package com.brian.csdnblog.manager;
 
-import com.brian.csdnblog.Env;
 import com.brian.csdnblog.model.TypeChangeEvent;
-import com.brian.csdnblog.util.PreferenceUtil;
+import com.brian.csdnblog.preference.CommonPreference;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -35,7 +34,7 @@ public class TypeManager {
     }
 
     private static void initCateType() {
-        sCateType = PreferenceUtil.getInt(Env.getContext(), PreferenceUtil.pre_key_article_type, 0);
+        sCateType = CommonPreference.getInstance().getArticleType();
         if (sCateType > Constants.TYPES_WORD.length) {
             sCateType = 0;
         }
@@ -50,7 +49,7 @@ public class TypeManager {
     public static void setCateType(int cateType) {
         if (sCateType != cateType) {
             sCateType = cateType;
-            PreferenceUtil.setInt(Env.getContext(), PreferenceUtil.pre_key_article_type, cateType);
+            CommonPreference.getInstance().setArticleType(cateType);
 
             TypeChangeEvent event = new TypeChangeEvent();
             event.cateType = cateType;

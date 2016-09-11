@@ -11,11 +11,10 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.brian.common.view.TitleBar;
-import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
-import com.brian.csdnblog.manager.SettingPreference;
 import com.brian.csdnblog.manager.ShareManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
+import com.brian.csdnblog.preference.SettingPreference;
 import com.umeng.analytics.MobclickAgent;
 
 import butterknife.BindView;
@@ -63,13 +62,13 @@ public class SettingActivity extends BaseActivity {
             }
         });
         
-        mSwitchAdText.setSelected(SettingPreference.getIsShowAd(Env.getContext()));
+        mSwitchAdText.setSelected(SettingPreference.getInstance().getAdsEnable());
         mSwitchAdText.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_LIST, "Ad");
-                if (SettingPreference.getIsShowAd(Env.getContext())) {
+                if (SettingPreference.getInstance().getAdsEnable()) {
                     showAdConfirmDialog();
                 } else {
                     boolean selected = mSwitchAdText.isSelected();
@@ -77,12 +76,12 @@ public class SettingActivity extends BaseActivity {
                     mSwitchAdText.setSelected(selected);
 
                     // 保存preference
-                    SettingPreference.setIsShowAd(Env.getContext(), selected);
+                    SettingPreference.getInstance().setAdsEnable(selected);
                 }
             }
         });
         
-        mSwitchVerticalText.setSelected(SettingPreference.getIsVertical(Env.getContext()));
+        mSwitchVerticalText.setSelected(true);
         mSwitchVerticalText.setOnClickListener(new OnClickListener() {
             
             @Override
@@ -93,11 +92,11 @@ public class SettingActivity extends BaseActivity {
                 mSwitchVerticalText.setSelected(selected);
                 
                 // 保存preference
-                SettingPreference.setIsVertical(Env.getContext(), selected);
+//                SettingPreference.setIsVertical(Env.getContext(), selected);
             }
         });
         
-        mSwitchPicWifiText.setSelected(SettingPreference.getIsShowPicOnInWifi(Env.getContext()));
+        mSwitchPicWifiText.setSelected(SettingPreference.getInstance().getLoadImgOnlyInWifiEnable());
         mSwitchPicWifiText.setOnClickListener(new OnClickListener() {
             
             @Override
@@ -108,11 +107,11 @@ public class SettingActivity extends BaseActivity {
                 mSwitchPicWifiText.setSelected(selected);
                 
                 // 保存preference
-                SettingPreference.setIsShowPicOnInWifi(Env.getContext(), selected);
+                SettingPreference.getInstance().setLoadImgOnlyInWifiEnable(selected);
             }
         });
         
-        mSwitchStayBgText.setSelected(SettingPreference.getIsStayBg(Env.getContext()));
+        mSwitchStayBgText.setSelected(SettingPreference.getInstance().getRunInBackEnable());
         mSwitchStayBgText.setOnClickListener(new OnClickListener() {
             
             @Override
@@ -123,7 +122,7 @@ public class SettingActivity extends BaseActivity {
                 mSwitchStayBgText.setSelected(selected);
                 
                 // 保存preference
-                SettingPreference.setIsStayBg(Env.getContext(), selected);
+                SettingPreference.getInstance().setRunInBackEnable(selected);
             }
         });
     }
@@ -141,7 +140,7 @@ public class SettingActivity extends BaseActivity {
                 mSwitchAdText.setSelected(selected);
 
                 // 保存preference
-                SettingPreference.setIsShowAd(Env.getContext(), selected);
+                SettingPreference.getInstance().setAdsEnable(selected);
             } 
         }) 
         .setNegativeButton("支持作者", new DialogInterface.OnClickListener() { 

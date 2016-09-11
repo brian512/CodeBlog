@@ -5,9 +5,9 @@ import android.text.TextUtils;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.manager.Constants;
 import com.brian.csdnblog.model.BlogInfo;
+import com.brian.csdnblog.preference.CommonPreference;
 import com.brian.csdnblog.util.JsoupUtil;
 import com.brian.csdnblog.util.LogUtil;
-import com.brian.csdnblog.util.PreferenceUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import org.jsoup.Jsoup;
@@ -190,7 +190,7 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
 
     @Override
     public String getUrlByType(int type, int page) {
-        int category = PreferenceUtil.getInt(Env.getContext(), PreferenceUtil.pre_key_article_type, 0);
+        int category = CommonPreference.getInstance().getArticleType();
         if (category >= TYPES_STR.length) {
             category = 0;
         }

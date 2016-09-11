@@ -3,7 +3,6 @@ package com.brian.csdnblog.activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,7 +29,6 @@ import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
 import com.brian.csdnblog.manager.FavoBlogManager;
 import com.brian.csdnblog.manager.HistoryBlogManager;
-import com.brian.csdnblog.manager.SettingPreference;
 import com.brian.csdnblog.manager.ShareManager;
 import com.brian.csdnblog.manager.ThreadManager;
 import com.brian.csdnblog.manager.TypeManager;
@@ -39,6 +37,7 @@ import com.brian.csdnblog.model.BlogInfo;
 import com.brian.csdnblog.model.SearchResult;
 import com.brian.csdnblog.parser.BlogHtmlParserFactory;
 import com.brian.csdnblog.parser.IBlogHtmlParser;
+import com.brian.csdnblog.preference.SettingPreference;
 import com.brian.csdnblog.util.FileUtil;
 import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.NetStatusUtil;
@@ -101,9 +100,9 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if (SettingPreference.getIsVertical(this)) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT); 
-        }
+//        if (SettingPreference.getIsVertical(this)) {
+//            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_webview);
         ButterKnife.bind(this);
@@ -169,7 +168,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     }
     
     private void toggleAdShow(boolean isShow) {
-        if (mAd != null && SettingPreference.getIsShowAd(Env.getContext())) {
+        if (mAd != null && SettingPreference.getInstance().getAdsEnable()) {
             if (isShow) {
                 mAdLayout.setVisibility(View.VISIBLE);
                 mAd.showAds(this);
@@ -309,7 +308,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
 
         @Override
         public void onPageFinished(WebView view, String url) {
-            boolean isBlockImage = SettingPreference.getIsShowPicOnInWifi(BlogContentActivity.this);
+            boolean isBlockImage = SettingPreference.getInstance().getLoadImgOnlyInWifiEnable();
             
             boolean shouldLoadImg = NetStatusUtil.isWifiNet(Env.getContext()) || !isBlockImage;
             mWebView.getSettings().setBlockNetworkImage(!shouldLoadImg);

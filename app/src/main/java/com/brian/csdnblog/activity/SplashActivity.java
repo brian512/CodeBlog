@@ -9,9 +9,9 @@ import android.support.annotation.NonNull;
 
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.R;
+import com.brian.csdnblog.preference.CommonPreference;
 import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.PermissionUtil;
-import com.brian.csdnblog.util.PreferenceUtil;
 import com.brian.csdnblog.util.UIUtil;
 import com.qhad.ads.sdk.adcore.Qhad;
 import com.umeng.analytics.MobclickAgent;
@@ -84,7 +84,7 @@ public class SplashActivity extends BaseActivity {
      */
     private boolean isFirstLaunch() {
         boolean isFirstLaunch = true;
-        int versionCode = PreferenceUtil.getInt(SplashActivity.this, PreferenceUtil.pre_key_version_code, -1);
+        int versionCode = CommonPreference.getInstance().getVersionCode();
 
         LogUtil.i(TAG, "version_code=" + versionCode);
 
@@ -105,7 +105,7 @@ public class SplashActivity extends BaseActivity {
 
         LogUtil.i(TAG, "versionCode=" + versionCode);
 
-        PreferenceUtil.setInt(SplashActivity.this, PreferenceUtil.pre_key_version_code, versionCode);
+        CommonPreference.getInstance().setVersionCode(versionCode);
     }
 
     @Override

@@ -25,7 +25,6 @@ import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
 import com.brian.csdnblog.manager.FavoBlogManager;
 import com.brian.csdnblog.manager.HistoryBlogManager;
-import com.brian.csdnblog.manager.SettingPreference;
 import com.brian.csdnblog.manager.ThreadManager;
 import com.brian.csdnblog.manager.TypeManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
@@ -33,6 +32,7 @@ import com.brian.csdnblog.model.BlogInfo;
 import com.brian.csdnblog.model.TypeChangeEvent;
 import com.brian.csdnblog.parser.BlogHtmlParserFactory;
 import com.brian.csdnblog.parser.IBlogHtmlParser;
+import com.brian.csdnblog.preference.SettingPreference;
 import com.brian.csdnblog.util.CommonAdapter;
 import com.brian.csdnblog.util.FileUtil;
 import com.brian.csdnblog.util.LogUtil;
@@ -146,7 +146,7 @@ public class BlogListFrag extends Fragment {
                 R.color.red,
                 R.color.yellow);
 
-        if (SettingPreference.getIsShowAd(Env.getContext())) {
+        if (SettingPreference.getInstance().getAdsEnable()) {
             FrameLayout adLy  = (FrameLayout) inflater.inflate(R.layout.layout_ad, null);
             String adSpaceid = Config.getAdBannerKey();
             if (!TextUtils.isEmpty(adSpaceid)) {
