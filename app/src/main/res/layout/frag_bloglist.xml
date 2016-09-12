@@ -1,35 +1,25 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.brian.common.view.RefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_bloglist" >
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
-    <com.brian.common.view.RefreshLayout
-        android:id="@+id/swipe_container"
+    <ListView
+        android:id="@+id/blogListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
-
-        <ListView
-            android:id="@+id/blogListView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@null"
-            android:dividerHeight="10dp"
-            android:scrollbars="none"
-            android:fadingEdge="none"/>
-    </com.brian.common.view.RefreshLayout>
-
-
+        android:divider="@null"
+        android:dividerHeight="10dp"
+        android:fadingEdge="none"
+        android:scrollbars="none" />
 
     <ImageView
         android:id="@+id/no_blog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:clickable="true"
         android:contentDescription="@string/str_null"
         android:src="@drawable/base_empty_view"
         android:visibility="gone" />
-
-</RelativeLayout>
+</com.brian.common.view.RefreshLayout>

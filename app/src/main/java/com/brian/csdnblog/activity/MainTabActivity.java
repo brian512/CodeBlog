@@ -73,8 +73,6 @@ public class MainTabActivity extends SlidingFragmentActivity {
         initSlidingMenu(savedInstanceState);
 
         initOnlineParams();
-
-        preInitX5Core();
     }
 
     private void initUI() {
@@ -254,24 +252,6 @@ public class MainTabActivity extends SlidingFragmentActivity {
                 OnlineConfigLog.d("OnlineConfig", "json=" + json);
             }
         });
-    }
-
-    private void preInitX5Core() {
-//        TbsDownloader.needDownload(Env.getContext(), false);
-//        QbSdk.allowThirdPartyAppDownload(true);
-//        if (!QbSdk.isTbsCoreInited()) {
-//            QbSdk.preInit(Env.getContext(), new QbSdk.PreInitCallback() {
-//                @Override
-//                public void onCoreInitFinished() {
-//                    LogUtil.e("onCoreInitFinished");
-//                }
-//
-//                @Override
-//                public void onViewInitFinished() {
-//                    LogUtil.e("onViewInitFinished");
-//                }
-//            });
-//        }
     }
 
 }

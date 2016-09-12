@@ -59,7 +59,7 @@
             android:name="com.brian.csdnblog.activity.BlogContentActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
-            android:screenOrientation="sensor"/>
+            android:screenOrientation="portrait"/>
         <!-- 博客列表界面 -->
         <activity
             android:name="com.brian.csdnblog.activity.BlogListActivity"

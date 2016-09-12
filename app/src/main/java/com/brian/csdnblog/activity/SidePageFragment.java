@@ -57,7 +57,7 @@ public class SidePageFragment extends Fragment implements OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.person_center, null);
+        View view = inflater.inflate(R.layout.slide_menu, null);
         ButterKnife.bind(this, view);
         initUI();
 

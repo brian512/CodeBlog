@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg_item_bloglist_ripple"
     android:orientation="vertical" >
-    <!--bg_bloglist_item-->
 
     <TextView
         android:id="@+id/title"
