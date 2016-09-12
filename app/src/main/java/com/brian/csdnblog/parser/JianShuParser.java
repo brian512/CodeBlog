@@ -47,7 +47,6 @@ public class JianShuParser implements IBlogHtmlParser {
         Elements blogList = blogs.getAllElements();
         for (Element blogItem : blogList) {
             BlogInfo item = new BlogInfo();
-
             item.title = blogItem.select("h4").select("a").text(); // 得到标题
             item.link = blogItem.select("h4").select("a").attr("href");
             item.description = blogItem.getElementsByClass("list-footer").get(0).text();
@@ -68,6 +67,7 @@ public class JianShuParser implements IBlogHtmlParser {
         try {
             return doGetBlogContent(strHtml);
         } catch (Exception e) {
+            e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
             return "";
         }
@@ -110,6 +110,7 @@ public class JianShuParser implements IBlogHtmlParser {
             Document doc = Jsoup.parse(strHtml);
             return doc.getElementsByTag("h1").text();
         } catch (Exception e) {
+            e.printStackTrace();
             return "";
         }
     }

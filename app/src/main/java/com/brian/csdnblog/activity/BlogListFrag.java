@@ -246,7 +246,6 @@ public class BlogListFrag extends Fragment {
             
             @Override
             public void onFetchFinished(final Result<String> response) {
-                
                 if (isRefresh) {
                     mRefreshLayout.setRefreshing(false);
                 } else {
@@ -258,7 +257,6 @@ public class BlogListFrag extends Fragment {
                         showNoBlog();
                     }
                 } else {
-                    
                     ThreadManager.getPoolProxy().execute(new Runnable() {
                         @Override
                         public void run() {

@@ -61,6 +61,7 @@ public class ITEyeHtmlParser implements IBlogHtmlParser {
         try {
             return doGetBlogList(type, strHtml);
         } catch (Exception e) {
+            e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
             return null;
         }
@@ -82,26 +83,19 @@ public class ITEyeHtmlParser implements IBlogHtmlParser {
         Elements blogList = blogs.getElementsByClass("content");
 
         for (Element blogItem : blogList) {
-
             BlogInfo item = new BlogInfo();
-
-            String title = blogItem.select("h3").select("a").text(); // 得到标题
-            String link = blogItem.select("h3").select("a").attr("href");
-
-            String description = blogItem.getElementsByIndexEquals(1).text();
+            item.title = blogItem.select("h3").select("a").text(); // 得到标题
+            item.link = blogItem.select("h3").select("a").attr("href");
+            item.description = blogItem.getElementsByIndexEquals(1).text();
 
             Element msgElement = blogItem.getElementsByClass("blog_info").get(0);
             msgElement.getElementsByClass("comment").remove();
             msgElement.getElementsByClass("view").remove();
             msgElement.getElementsByClass("digged").remove();
-            String msg = msgElement.text();
+            item.msg = msgElement.text();
 
             item.type = type;
-            item.title = title;
-            item.link = link;
             item.articleType = Constants.DEF_ARTICLE_TYPE.INT_ORIGINAL;
-            item.msg = msg;
-            item.description = description;
 
             list.add(item);
         }
@@ -112,6 +106,7 @@ public class ITEyeHtmlParser implements IBlogHtmlParser {
         try {
             return doGetBlogContent(contentSrc);
         } catch (Exception e) {
+            e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
             return "";
         }
@@ -123,6 +118,7 @@ public class ITEyeHtmlParser implements IBlogHtmlParser {
             Document doc = Jsoup.parse(strHtml);
             return doc.getElementsByTag("h2").text();
         } catch (Exception e) {
+            e.printStackTrace();
             return "";
         }
     }

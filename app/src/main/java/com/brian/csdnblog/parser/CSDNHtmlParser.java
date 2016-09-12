@@ -218,20 +218,12 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
         detail.getElementById("digg").remove();
 
         // 处理代码块-markdown
-        Elements elements = detail.select("pre[class=prettyprint]");
+        Elements elements = detail.select("pre");
         for (Element codeNode : elements) {
-            Elements childs = codeNode.getAllElements();
-            for (Element child : childs) {
-                if ("code".equals(child.tagName())) {//选出code标签
-                    //添加属性，使得markdown的代码与原始代码格式一致
-                    child.tagName("pre");
-                    child.attr("name", "code");
-                    child.html(child.text());//原始的源代码标签中，html直接就是源代码text
-                }
-            }
-//            String code = codeNode.toString().replace("\\<.*?>","");
-//            codeNode.html(code);
-//            LogUtil.e("codeNode=" + codeNode);
+            //添加属性，使得markdown的代码与原始代码格式一致
+            codeNode.tagName("pre");
+            codeNode.attr("name", "code");
+            codeNode.html(codeNode.text());//原始的源代码标签中，html直接就是源代码text
         }
         // 处理代码块-markdown
         elements = detail.getElementsByClass("codeText");

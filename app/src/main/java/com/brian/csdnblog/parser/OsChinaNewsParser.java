@@ -50,6 +50,7 @@ public class OsChinaNewsParser implements IBlogHtmlParser {
         try {
             return doGetNewsList(type, strHtml);
         } catch (Exception e) {
+            e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
             return null;
         }
@@ -63,7 +64,6 @@ public class OsChinaNewsParser implements IBlogHtmlParser {
 //        LogUtil.d("str=" + str);
         // 获取文档对象
         Document doc = Jsoup.parse(str);
-        // 获取class="article_item"的所有元素
         Element blogs = doc.getElementById("RecentNewsList");
         if (blogs == null) {
             return list;
@@ -71,21 +71,16 @@ public class OsChinaNewsParser implements IBlogHtmlParser {
         Elements blogList = blogs.getElementsByClass("List").get(0).getElementsByTag("li");
 
         for (Element blogItem : blogList) {
-
             BlogInfo item = new BlogInfo();
-            String title = blogItem.select("h2").select("a").text(); // 得到标题
-            String description = blogItem.getElementsByClass("detail").text();
-            String msg = blogItem.getElementsByClass("date").text();
-            String link = blogItem.select("h2").select("a").attr("href");
+            item.title = blogItem.select("h2").select("a").text(); // 得到标题
+            item.description = blogItem.getElementsByClass("detail").text();
+            item.msg = blogItem.getElementsByClass("date").text();
+            item.link = blogItem.select("h2").select("a").attr("href");
 
             item.type = type;
-            item.title = title;
-            item.link = link;
             item.articleType = Constants.DEF_ARTICLE_TYPE.INT_ORIGINAL;
-            item.msg = msg;
-            item.description = description;
 
-            if (link.startsWith("/") || link.contains("my.oschina.net")) {
+            if (item.link.startsWith("/") || item.link.contains("my.oschina.net")) {
                 list.add(item);
             }
         }
@@ -96,6 +91,7 @@ public class OsChinaNewsParser implements IBlogHtmlParser {
         try {
             return doGetBlogContent(contentSrc);
         } catch (Exception e) {
+            e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
             return "";
         }
@@ -107,6 +103,7 @@ public class OsChinaNewsParser implements IBlogHtmlParser {
             Document doc = Jsoup.parse(strHtml);
             return doc.getElementsByTag("h2").text();
         } catch (Exception e) {
+            e.printStackTrace();
             return "";
         }
     }

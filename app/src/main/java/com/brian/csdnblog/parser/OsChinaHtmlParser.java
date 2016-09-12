@@ -59,6 +59,7 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
         try {
             return doGetBlogList(type, strHtml);
         } catch (Exception e) {
+            e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
             return null;
         }
@@ -80,23 +81,14 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
         Elements blogList = blogs.getElementsByClass("BlogList").get(0).getElementsByTag("li");
 
         for (Element blogItem : blogList) {
-
             BlogInfo item = new BlogInfo();
-
-            String title = blogItem.select("h3").select("a").text(); // 得到标题
-
-            String description = blogItem.getElementsByTag("p").text();
-
-            String msg = blogItem.getElementsByClass("date").text();
-
-            String link = blogItem.select("h3").select("a").attr("href");
+            item.title = blogItem.select("h3").select("a").text(); // 得到标题
+            item.description = blogItem.getElementsByTag("p").text();
+            item.msg = blogItem.getElementsByClass("date").text();
+            item.link = blogItem.select("h3").select("a").attr("href");
 
             item.type = type;
-            item.title = title;
-            item.link = link;
             item.articleType = Constants.DEF_ARTICLE_TYPE.INT_ORIGINAL;
-            item.msg = msg;
-            item.description = description;
 
             list.add(item);
         }
@@ -118,6 +110,7 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
             Document doc = Jsoup.parse(strHtml);
             return doc.getElementsByTag("h1").text();
         } catch (Exception e) {
+            e.printStackTrace();
             return "";
         }
     }

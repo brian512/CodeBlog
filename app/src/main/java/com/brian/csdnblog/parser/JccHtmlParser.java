@@ -60,6 +60,7 @@ public class JccHtmlParser implements IBlogHtmlParser {
         try {
             return doGetBlogList(type, strHtml);
         } catch (Exception e) {
+            e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
             return null;
         }
@@ -101,6 +102,7 @@ public class JccHtmlParser implements IBlogHtmlParser {
         try {
             return doGetBlogContent(contentSrc);
         } catch (Exception e) {
+            e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
             return "";
         }
@@ -155,6 +157,7 @@ public class JccHtmlParser implements IBlogHtmlParser {
             Document doc = Jsoup.parse(strHtml);
             return doc.getElementsByTag("h1").text();
         } catch (Exception e) {
+            e.printStackTrace();
             return "";
         }
     }

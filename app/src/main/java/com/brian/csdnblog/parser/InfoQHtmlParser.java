@@ -58,6 +58,7 @@ public class InfoQHtmlParser implements IBlogHtmlParser {
         try {
             return doGetBlogList(type, strHtml);
         } catch (Exception e) {
+            e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
             return null;
         }
@@ -78,23 +79,14 @@ public class InfoQHtmlParser implements IBlogHtmlParser {
         }
 
         for (Element blogItem : blogList) {
-
             BlogInfo item = new BlogInfo();
-
-            String title = blogItem.select("h2").text(); // 得到标题
-
-            String description = blogItem.getElementsByTag("p").text();
-
-            String msg = blogItem.getElementsByClass("author").text();
-
-            String link = URL_BLOG_BASE + blogItem.select("h2").select("a").attr("href");
+            item.title = blogItem.select("h2").text(); // 得到标题
+            item.description = blogItem.getElementsByTag("p").text();
+            item.msg = blogItem.getElementsByClass("author").text();
+            item.link = URL_BLOG_BASE + blogItem.select("h2").select("a").attr("href");
 
             item.type = type;
-            item.title = title;
-            item.link = link;
             item.articleType = Constants.DEF_ARTICLE_TYPE.INT_ORIGINAL;
-            item.msg = msg;
-            item.description = description;
 
             list.add(item);
         }
@@ -105,6 +97,7 @@ public class InfoQHtmlParser implements IBlogHtmlParser {
         try {
             return doGetBlogContent(contentSrc);
         } catch (Exception e) {
+            e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
             return "";
         }
@@ -116,6 +109,7 @@ public class InfoQHtmlParser implements IBlogHtmlParser {
             Document doc = Jsoup.parse(strHtml);
             return doc.getElementsByTag("h2").text();
         } catch (Exception e) {
+            e.printStackTrace();
             return "";
         }
     }
@@ -155,15 +149,23 @@ public class InfoQHtmlParser implements IBlogHtmlParser {
         // 处理代码块-markdown
         Elements elements = detail.select("pre");
         for (Element codeNode : elements) {
-            Elements childs = codeNode.getAllElements();
-            for (Element child : childs) {
-                if ("code".equals(child.tagName())) {//选出code标签
-                    //添加属性，使得markdown的代码与原始代码格式一致
-                    codeNode.tagName("pre");
-                    codeNode.attr("name", "code");
-                    codeNode.html(child.text());//原始的源代码标签中，html直接就是源代码text
-                }
-            }
+//            Elements childs = codeNode.getAllElements();
+//            for (Element child : childs) {
+//                if ("code".equals(child.tagName())) {//选出code标签
+//                }
+//            }
+            //添加属性，使得markdown的代码与原始代码格式一致
+            codeNode.tagName("pre");
+            codeNode.attr("name", "code");
+            codeNode.html(codeNode.text());//原始的源代码标签中，html直接就是源代码text
+        }
+        // 处理代码块-markdown
+        elements = detail.select("code");
+        for (Element codeNode : elements) {
+            //添加属性，使得markdown的代码与原始代码格式一致
+            codeNode.tagName("pre");
+            codeNode.attr("name", "code");
+            codeNode.html(codeNode.text());//原始的源代码标签中，html直接就是源代码text
         }
         // 处理代码块
         Elements codeElements = detail.select("pre[name=code]");
