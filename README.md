@@ -33,17 +33,17 @@ v1.3.72
 
 ---
 使用到的技术点：
- - Netroid(Volley拓展库)用于网络请求；
- - Jsoup解析网页；
- - 友盟推送、统计、更新、在线参数；
- - EventBus
- - bugly异常收集；
- - 腾讯X5内核；
- - Gson进行序列化；
- - litepal数据库存储；
- - SwipebackLayout滑动退出activity；
- - TabLayout实现主页tab切换；
- - SlidingMenu实现侧滑栏；
+ - [Netroid](https://github.com/vince-styling/Netroid)(Volley拓展库)用于网络请求；
+ - [Jsoup](https://github.com/jhy/jsoup)解析网页；
+ - 友盟推送、统计、在线参数；
+ - 小米更新模板；
+ - [EventBus](https://github.com/greenrobot/EventBus)
+ - [bugly](https://bugly.qq.com/v2/)异常收集；
+ - [Gson](https://github.com/google/gson)进行序列化；
+ - [litepal](https://github.com/LitePalFramework/LitePal)数据库存储；
+ - [SwipebackLayout](https://github.com/ikew0ng/SwipeBackLayout)滑动退出activity；
+ - [TabLayout](http://blog.csdn.net/brian512/article/details/51793430)实现主页tab切换；
+ - [SlidingMenu](https://github.com/jfeinstein10/SlidingMenu)实现侧滑栏；
 
 ----------------
 加群讨论技术和功能，欢迎大家参与！
