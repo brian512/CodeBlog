@@ -21,7 +21,6 @@ import android.widget.TextView;
 
 import com.brian.common.view.RefreshLayout;
 import com.brian.common.view.TitleBar;
-import com.brian.common.view.ToastUtil;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.manager.DataFetcher;
@@ -32,6 +31,7 @@ import com.brian.csdnblog.manager.UsageStatsManager;
 import com.brian.csdnblog.model.SearchResult;
 import com.brian.csdnblog.parser.CSDNHtmlParser;
 import com.brian.csdnblog.util.CommonAdapter;
+import com.brian.csdnblog.util.ToastUtil;
 import com.brian.csdnblog.util.UIUtil;
 import com.brian.csdnblog.util.WeakRefHandler;
 
@@ -163,7 +163,7 @@ public class SearchActivity extends BaseActivity {
             loadListData(url);
             UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SEARCH, mInputText);
         } else {
-            ToastUtil.showToast("请输入适当关键字");
+            ToastUtil.showMsgS("请输入适当关键字");
         }
     }
 

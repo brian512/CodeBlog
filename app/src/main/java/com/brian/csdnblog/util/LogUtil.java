@@ -2,6 +2,12 @@ package com.brian.csdnblog.util;
 
 import android.util.Log;
 
+import com.brian.csdnblog.Config;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DateFormat;
@@ -13,7 +19,9 @@ import java.util.Locale;
  * @author brian @date 2015年7月24日
  */
 public class LogUtil {
-    private static boolean mIsDebugMode = false;// 获取堆栈信息会影响性能，发布应用时记得关闭DebugMode
+    private static boolean mIsDebugMode = Config.isDebug;// 获取堆栈信息会影响性能，发布应用时记得关闭DebugMode
+
+    private static final int JSON_INDENT = 2;
 
     private static boolean LOGV = true;
     private static boolean LOGF = true;
@@ -86,8 +94,30 @@ public class LogUtil {
             String logText = String.format(Locale.CHINA, CLASS_METHOD_LINE_FORMAT,
                     traceElement.getClassName(), traceElement.getMethodName(),
                     traceElement.getFileName(), traceElement.getLineNumber());
-            LogUtil.d(tag, logText);
+            d(tag, logText);
         }
+    }
+
+    public static void json(String tag, String json) {
+        if (!mIsDebugMode) return;
+        d(getTag(), getPrettyJson(json));
+    }
+
+    private static String getPrettyJson(String jsonStr) {
+        try {
+            jsonStr = jsonStr.trim();
+            if (jsonStr.startsWith("{")) {
+                JSONObject jsonObject = new JSONObject(jsonStr);
+                return jsonObject.toString(JSON_INDENT);
+            }
+            if (jsonStr.startsWith("[")) {
+                JSONArray jsonArray = new JSONArray(jsonStr);
+                return jsonArray.toString(JSON_INDENT);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "Invalid Json, Please Check: " + jsonStr;
     }
 
     private static String buildMessageSafe(String msg) {
@@ -98,13 +128,13 @@ public class LogUtil {
         return msg;
     }
     private static String buildMessage(String msg) {
-        StackTraceElement[] trace = new Throwable().fillInStackTrace()
-                .getStackTrace();
+        StackTraceElement[] trace = new Throwable().fillInStackTrace().getStackTrace();
         String caller = "";
         for (int i = 3; i < trace.length; i++) {
             Class<?> clazz = trace[i].getClass();
             if (!clazz.equals(LogUtil.class)) {
-                caller = "(L" + trace[i].getLineNumber() + ") " + trace[i].getMethodName();
+                caller = "(" + trace[i].getFileName() + ":" + trace[i].getLineNumber() + ") "
+                        + trace[i].getMethodName();
                 break;
             }
         }
@@ -113,15 +143,13 @@ public class LogUtil {
     }
 
     private static String getTag() {
-        StackTraceElement[] trace = new Throwable().fillInStackTrace()
-                .getStackTrace();
+        StackTraceElement[] trace = new Throwable().fillInStackTrace().getStackTrace();
         String callingClass = "";
         for (int i = 2; i < trace.length; i++) {
             Class<?> clazz = trace[i].getClass();
             if (!clazz.equals(LogUtil.class)) {
                 callingClass = trace[i].getClassName();
-                callingClass = callingClass.substring(callingClass
-                        .lastIndexOf('.') + 1);
+                callingClass = callingClass.substring(callingClass.lastIndexOf('.') + 1);
                 break;
             }
         }

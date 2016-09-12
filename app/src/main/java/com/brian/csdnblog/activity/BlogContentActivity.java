@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.brian.common.view.TitleBar;
-import com.brian.common.view.ToastUtil;
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
@@ -41,6 +40,7 @@ import com.brian.csdnblog.preference.SettingPreference;
 import com.brian.csdnblog.util.FileUtil;
 import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.NetStatusUtil;
+import com.brian.csdnblog.util.ToastUtil;
 import com.brian.csdnblog.util.WeakRefHandler;
 import com.qhad.ads.sdk.adcore.Qhad;
 import com.qhad.ads.sdk.interfaces.IQhInterstitialAd;
@@ -142,7 +142,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         try {
             mBlogInfo = (BlogInfo) getIntent().getExtras().getSerializable(BUNDLE_EXTRAS_BLOGINFO);
         } catch (Exception e) {
-            ToastUtil.showToast("oops，打开出错。。。");
+            ToastUtil.showMsgS("oops，打开出错。。。");
             return;
         }
         if (mBlogInfo == null || TextUtils.isEmpty(mBlogInfo.link)) {
