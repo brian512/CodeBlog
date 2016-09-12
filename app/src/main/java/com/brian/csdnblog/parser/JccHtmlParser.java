@@ -66,7 +66,7 @@ public class JccHtmlParser implements IBlogHtmlParser {
     }
     
     private List<BlogInfo> doGetBlogList(int type, String str) {
-        List<BlogInfo> list = new ArrayList<BlogInfo>();
+        List<BlogInfo> list = new ArrayList<>();
         if (TextUtils.isEmpty(str)) {
             return list;
         }
@@ -81,24 +81,16 @@ public class JccHtmlParser implements IBlogHtmlParser {
         Elements blogList = blogs.getElementsByClass("archive-item");
 
         for (Element blogItem : blogList) {
-
             BlogInfo item = new BlogInfo();
 
-            String title = blogItem.select("h3").select("a").text(); // 得到标题
-            
-            String link = blogItem.select("h3").select("a").attr("href");
-
-            String description = blogItem.getElementsByTag("p").text();
-
-            String msg = blogItem.getElementsByClass("list-user").get(0).text() 
+            item.title = blogItem.select("h3").select("a").text(); // 得到标题
+            item.link = blogItem.select("h3").select("a").attr("href");
+            item.description = blogItem.getElementsByTag("p").text();
+            item.msg = blogItem.getElementsByClass("list-user").get(0).text()
                     + "  " + blogItem.getElementsByClass("glyphicon-class").text();
 
             item.type = type;
-            item.title = title;
-            item.link = link;
             item.articleType = Constants.DEF_ARTICLE_TYPE.INT_ORIGINAL;
-            item.msg = msg;
-            item.description = description;
 
             list.add(item);
         }
@@ -116,9 +108,6 @@ public class JccHtmlParser implements IBlogHtmlParser {
     
     /**
      * 从网页数据中截取博客正文部分
-     * 
-     * @param contentSrc
-     * @return
      */
     private String doGetBlogContent(String contentSrc) {
         
@@ -177,7 +166,7 @@ public class JccHtmlParser implements IBlogHtmlParser {
      * @return
      */
      public String getBlogContentUrl(String... urls) {
-         String blogUrl = "";
+         String blogUrl;
          String url = urls[0];
          if (url.startsWith("/")) {
              blogUrl = URL_BLOG_BASE + url;

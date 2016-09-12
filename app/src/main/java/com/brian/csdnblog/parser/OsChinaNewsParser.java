@@ -56,7 +56,7 @@ public class OsChinaNewsParser implements IBlogHtmlParser {
     }
     
     private List<BlogInfo> doGetNewsList(int type, String str) {
-        List<BlogInfo> list = new ArrayList<BlogInfo>();
+        List<BlogInfo> list = new ArrayList<>();
         if (TextUtils.isEmpty(str)) {
             return list;
         }
@@ -113,9 +113,6 @@ public class OsChinaNewsParser implements IBlogHtmlParser {
     
     /**
      * 从网页数据中截取博客正文部分
-     * 
-     * @param contentSrc
-     * @return
      */
     private String doGetBlogContent(String contentSrc) {
         
@@ -184,6 +181,7 @@ public class OsChinaNewsParser implements IBlogHtmlParser {
                 detail = doc.getElementsByClass(name).get(0);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return detail;
     }
@@ -195,7 +193,7 @@ public class OsChinaNewsParser implements IBlogHtmlParser {
      * @return
      */
      public String getBlogContentUrl(String... urls) {
-         String blogUrl = "";
+         String blogUrl;
          String url = urls[0];
          if (url.startsWith("/")) {
              blogUrl = URL_BLOG_BASE + url;
