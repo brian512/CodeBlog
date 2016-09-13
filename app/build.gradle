@@ -20,7 +20,14 @@ android {
         versionName "1.3.75"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
+
     signingConfigs {
         debug {
             storeFile file("../release/debug.keystore")
