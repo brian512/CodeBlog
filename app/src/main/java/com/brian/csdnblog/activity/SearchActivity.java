@@ -36,7 +36,6 @@ import com.brian.csdnblog.util.UIUtil;
 import com.brian.csdnblog.util.WeakRefHandler;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -180,7 +179,7 @@ public class SearchActivity extends BaseActivity {
             mFooterLayout.setVisibility(View.VISIBLE);
         }
 
-        DataFetcher.getInstance().fetchString(loadUrl, TimeUnit.MINUTES.toMillis(30), new OnFetchDataListener<Result<String>>() {
+        DataFetcher.getInstance().fetchString(loadUrl, new OnFetchDataListener<Result<String>>() {
 
             @Override
             public void onFetchFinished(final Result<String> response) {

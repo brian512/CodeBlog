@@ -242,7 +242,7 @@ public class BlogListFrag extends Fragment {
         }
         LogUtil.i(TAG, "refreshUrl=" + url);
         
-        DataFetcher.getInstance().fetchString(url, Config.INTERVAL_REFRESH, true, null, new OnFetchDataListener<Result<String>>() {
+        DataFetcher.getInstance().fetchString(url, new OnFetchDataListener<Result<String>>() {
             
             @Override
             public void onFetchFinished(final Result<String> response) {

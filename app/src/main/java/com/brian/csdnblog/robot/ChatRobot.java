@@ -1,13 +1,5 @@
 package com.brian.csdnblog.robot;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.text.TextUtils;
 
 import com.brian.csdnblog.Config;
@@ -21,6 +13,14 @@ import com.brian.csdnblog.util.NetStatusUtil;
 import com.brian.csdnblog.util.RandomUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class ChatRobot {
 
@@ -218,7 +218,7 @@ public class ChatRobot {
         String url = getXiaoDouBiUrl(info);
         LogUtil.d("url=" + url);
         
-        DataFetcher.getInstance().fetchString(url, 1000L, new OnFetchDataListener<Result<String>>() {
+        DataFetcher.getInstance().fetchString(url, new OnFetchDataListener<Result<String>>() {
             @Override
             public void onFetchFinished(Result<String> result) {
                 String data = result.data;
@@ -246,7 +246,7 @@ public class ChatRobot {
             return;
         }
         
-        DataFetcher.getInstance().fetchString(url, 1000L, new OnFetchDataListener<Result<String>>() {
+        DataFetcher.getInstance().fetchString(url, new OnFetchDataListener<Result<String>>() {
             @Override
             public void onFetchFinished(Result<String> result) {
                 String data = result.data;
