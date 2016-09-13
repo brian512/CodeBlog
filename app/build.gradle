@@ -148,6 +148,5 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.3.0'
 
     compile 'com.android.support:design:24.2.0'
-    compile project(':netroidlibrary')
     compile project(':PushSDK')
 }
