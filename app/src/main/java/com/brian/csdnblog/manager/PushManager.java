@@ -100,9 +100,9 @@ public class PushManager {
 //             * http://dev.umeng.com/push/android/integration#1_6_3
 //             * */
 //            @Override
-//            public void dealWithCustomMessage(final Context context, final UMessage msg) {
-//                LogUtil.log(msg.toString());
-//                addPushMessage(msg);
+//            public void dealWithCustomMessage(final Context context, final UMessage extraMsg) {
+//                LogUtil.log(extraMsg.toString());
+//                addPushMessage(extraMsg);
 //            }
 
             @Override

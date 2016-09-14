@@ -4,7 +4,6 @@ package com.brian.csdnblog.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -20,6 +19,7 @@ import com.brian.common.view.RefreshLayout;
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
+import com.brian.csdnblog.datacenter.preference.SettingPreference;
 import com.brian.csdnblog.manager.DataFetcher;
 import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
@@ -32,7 +32,6 @@ import com.brian.csdnblog.model.BlogInfo;
 import com.brian.csdnblog.model.TypeChangeEvent;
 import com.brian.csdnblog.parser.BlogHtmlParserFactory;
 import com.brian.csdnblog.parser.IBlogHtmlParser;
-import com.brian.csdnblog.preference.SettingPreference;
 import com.brian.csdnblog.util.CommonAdapter;
 import com.brian.csdnblog.util.FileUtil;
 import com.brian.csdnblog.util.LogUtil;
@@ -102,8 +101,8 @@ public class BlogListFrag extends Fragment {
             @Override
             public void convert(ViewHolder holder, final BlogInfo item) {
                 holder.setText(R.id.title, item.title);
-                holder.setText(R.id.description, item.description);
-                holder.setText(R.id.msg, item.msg);
+                holder.setText(R.id.description, item.summary);
+                holder.setText(R.id.msg, item.extraMsg);
                 holder.getView(R.id.msg).setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -199,7 +198,7 @@ public class BlogListFrag extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (mRefreshLayout != null) {
             startRefresh();
@@ -376,7 +375,7 @@ public class BlogListFrag extends Fragment {
     
     @Override
     public void onDestroy() {
-        LogUtil.e("onDestroy");
+        LogUtil.d("onDestroy");
         super.onDestroy();
     }
     

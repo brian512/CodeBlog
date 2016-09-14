@@ -11,10 +11,10 @@ import org.jsoup.select.Elements;
 import android.text.TextUtils;
 
 import com.brian.csdnblog.Env;
-import com.brian.csdnblog.manager.Constants;
 import com.brian.csdnblog.model.BlogInfo;
 import com.brian.csdnblog.util.JsoupUtil;
 import com.brian.csdnblog.util.LogUtil;
+import com.brian.csdnblog.util.Md5;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -73,12 +73,12 @@ public class OsChinaNewsParser implements IBlogHtmlParser {
         for (Element blogItem : blogList) {
             BlogInfo item = new BlogInfo();
             item.title = blogItem.select("h2").select("a").text(); // 得到标题
-            item.description = blogItem.getElementsByClass("detail").text();
-            item.msg = blogItem.getElementsByClass("date").text();
+            item.summary = blogItem.getElementsByClass("detail").text();
+            item.extraMsg = blogItem.getElementsByClass("date").text();
             item.link = blogItem.select("h2").select("a").attr("href");
+            item.blogId = Md5.getMD5ofStr(item.link);
 
             item.type = type;
-            item.articleType = Constants.DEF_ARTICLE_TYPE.INT_ORIGINAL;
 
             if (item.link.startsWith("/") || item.link.contains("my.oschina.net")) {
                 list.add(item);

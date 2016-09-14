@@ -4,12 +4,11 @@ package com.brian.csdnblog.parser;
 import android.text.TextUtils;
 
 import com.brian.csdnblog.Env;
-import com.brian.csdnblog.manager.Constants;
 import com.brian.csdnblog.manager.TypeManager;
 import com.brian.csdnblog.model.BlogInfo;
 import com.brian.csdnblog.model.SearchResult;
 import com.brian.csdnblog.util.JsoupUtil;
-import com.brian.csdnblog.util.LogUtil;
+import com.brian.csdnblog.util.Md5;
 import com.umeng.analytics.MobclickAgent;
 
 import org.jsoup.Jsoup;
@@ -36,6 +35,8 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
     private static final String URL_CSDN_BLOG_BASE = "http://blog.csdn.net";
     private static final String URL_CSDN_BLOG_HOME = "http://blog.csdn.net/type/newarticle.html?&page=1";
     private static final String URL_CSDN_BLOGER_HOME = "http://blog.csdn.net/brian512/article/list/1";
+
+    public static final String URL_SEARCH = "http://so.csdn.net/so/search/s.do?p=1&t=blog&q=key_word";//&t=blog
 
 
     // 文章内容页
@@ -102,26 +103,14 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
         for (Element blogItem : blogList) {
 
             BlogInfo item = new BlogInfo();
-
-            String title = blogItem.select("h3").text(); // 得到标题
-            LogUtil.i(TAG, "title=" + title);
-
-            String description = blogItem.getElementsByClass("blog_list_c").get(0).text();
-            LogUtil.i(TAG, "description=" + description);
-
+            item.title = blogItem.select("h3").text(); // 得到标题
+            item.summary = blogItem.getElementsByClass("blog_list_c").get(0).text();
             String blogerID = blogItem.getElementsByClass("nickname").get(0).text();
-            String msg = blogerID + "  " + blogItem.getElementsByClass("blog_list_b_r").get(0).select("label").text();
-            LogUtil.i(TAG, "msg=" + msg);
-
-            String link = blogItem.select("h3").select("a").attr("href");
-            LogUtil.i(TAG, "link=" + link);
+            item.extraMsg = blogerID + "  " + blogItem.getElementsByClass("blog_list_b_r").get(0).select("label").text();
+            item.link = blogItem.select("h3").select("a").attr("href");
+            item.blogId = Md5.getMD5ofStr(item.link);
 
             item.type = type;
-            item.title = title;
-            item.articleType = Constants.DEF_ARTICLE_TYPE.INT_ORIGINAL;
-            item.msg = msg;
-            item.description = description;
-            item.link = link;
             item.dateStamp = String.valueOf(System.currentTimeMillis());
             item.blogerID = blogerID;
 
@@ -148,25 +137,13 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
 
         for (Element blogItem : blogList) {
             BlogInfo item = new BlogInfo();
-
-            String title = blogItem.getElementsByClass("article_title").get(0).text(); // 得到标题
-            LogUtil.i(TAG, "title=" + title);
-
-            String description = blogItem.getElementsByClass("article_description").get(0).text();
-            LogUtil.i(TAG, "description=" + description);
-
-            String msg = blogItem.getElementsByClass("article_manage").get(0).text();
-            LogUtil.i(TAG, "msg=" + msg);
-
-            String link = blogItem.getElementsByClass("article_title").get(0).select("a").attr("href");
-            LogUtil.i(TAG, "link=" + link);
-
+            item.title = blogItem.getElementsByClass("article_title").get(0).text(); // 得到标题
+            item.summary = blogItem.getElementsByClass("article_description").get(0).text();
+            item.extraMsg = blogItem.getElementsByClass("article_manage").get(0).text();
+            item.link = blogItem.getElementsByClass("article_title").get(0).select("a").attr("href");
+            item.blogId = Md5.getMD5ofStr(item.link);
+//            item.blogerID = Md5.getMD5ofStr(link);
             item.type = type;
-            item.title = title;
-            item.articleType = Constants.DEF_ARTICLE_TYPE.INT_ORIGINAL;
-            item.msg = msg;
-            item.description = description;
-            item.link = link;
             item.dateStamp = String.valueOf(System.currentTimeMillis());
 
             list.add(item);
@@ -304,7 +281,7 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
     }
 
     private String getSearchUrlByKeyword(String keyword, String page) {
-        String url = Constants.URL_SEARCH;
+        String url = URL_SEARCH;
         if (TextUtils.isEmpty(keyword)) {
             url = url.replace("key_word", "android");
         } else {

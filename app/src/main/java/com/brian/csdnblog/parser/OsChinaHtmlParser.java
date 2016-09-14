@@ -3,11 +3,11 @@ package com.brian.csdnblog.parser;
 import android.text.TextUtils;
 
 import com.brian.csdnblog.Env;
-import com.brian.csdnblog.manager.Constants;
+import com.brian.csdnblog.datacenter.preference.CommonPreference;
 import com.brian.csdnblog.model.BlogInfo;
-import com.brian.csdnblog.preference.CommonPreference;
 import com.brian.csdnblog.util.JsoupUtil;
 import com.brian.csdnblog.util.LogUtil;
+import com.brian.csdnblog.util.Md5;
 import com.umeng.analytics.MobclickAgent;
 
 import org.jsoup.Jsoup;
@@ -83,12 +83,12 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
         for (Element blogItem : blogList) {
             BlogInfo item = new BlogInfo();
             item.title = blogItem.select("h3").select("a").text(); // 得到标题
-            item.description = blogItem.getElementsByTag("p").text();
-            item.msg = blogItem.getElementsByClass("date").text();
+            item.summary = blogItem.getElementsByTag("p").text();
+            item.extraMsg = blogItem.getElementsByClass("date").text();
             item.link = blogItem.select("h3").select("a").attr("href");
+            item.blogId = Md5.getMD5ofStr(item.link);
 
             item.type = type;
-            item.articleType = Constants.DEF_ARTICLE_TYPE.INT_ORIGINAL;
 
             list.add(item);
         }

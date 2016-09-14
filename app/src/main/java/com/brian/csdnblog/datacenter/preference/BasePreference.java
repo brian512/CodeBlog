@@ -1,4 +1,4 @@
-package com.brian.csdnblog.preference;
+package com.brian.csdnblog.datacenter.preference;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;

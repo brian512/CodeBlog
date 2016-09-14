@@ -1,7 +1,7 @@
 package com.brian.csdnblog.manager;
 
 import com.brian.csdnblog.model.TypeChangeEvent;
-import com.brian.csdnblog.preference.CommonPreference;
+import com.brian.csdnblog.datacenter.preference.CommonPreference;
 
 import org.greenrobot.eventbus.EventBus;
 

@@ -13,9 +13,10 @@ import android.text.TextUtils;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.manager.Constants;
 import com.brian.csdnblog.model.BlogInfo;
-import com.brian.csdnblog.preference.CommonPreference;
+import com.brian.csdnblog.datacenter.preference.CommonPreference;
 import com.brian.csdnblog.util.JsoupUtil;
 import com.brian.csdnblog.util.LogUtil;
+import com.brian.csdnblog.util.Md5;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -86,16 +87,15 @@ public class ITEyeHtmlParser implements IBlogHtmlParser {
             BlogInfo item = new BlogInfo();
             item.title = blogItem.select("h3").select("a").text(); // 得到标题
             item.link = blogItem.select("h3").select("a").attr("href");
-            item.description = blogItem.getElementsByIndexEquals(1).text();
+            item.summary = blogItem.getElementsByIndexEquals(1).text();
+            item.blogId = Md5.getMD5ofStr(item.link);
 
             Element msgElement = blogItem.getElementsByClass("blog_info").get(0);
             msgElement.getElementsByClass("comment").remove();
             msgElement.getElementsByClass("view").remove();
             msgElement.getElementsByClass("digged").remove();
-            item.msg = msgElement.text();
-
+            item.extraMsg = msgElement.text();
             item.type = type;
-            item.articleType = Constants.DEF_ARTICLE_TYPE.INT_ORIGINAL;
 
             list.add(item);
         }

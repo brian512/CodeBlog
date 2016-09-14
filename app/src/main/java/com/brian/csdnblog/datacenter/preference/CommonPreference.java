@@ -1,4 +1,4 @@
-package com.brian.csdnblog.preference;
+package com.brian.csdnblog.datacenter.preference;
 
 /**
  * Created by Brian on 2016/9/11 0011.

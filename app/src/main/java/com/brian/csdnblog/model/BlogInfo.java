@@ -1,27 +1,27 @@
 
 package com.brian.csdnblog.model;
 
-import org.litepal.crud.DataSupport;
-
-import java.io.Serializable;
-
-
-
 /**
  * 博客实体类
  */
-public class BlogInfo extends DataSupport implements Serializable {
+public class BlogInfo extends BaseType {
     private static final long serialVersionUID = 1L;
     
-    public int id; // id
+    public String blogId; // MD5 of Link
     public String title; // 标题
     public String link; // 文章链接
     public String dateStamp; // 博客发布时间
-    public String description;// 文章摘要
-    public String content; // 文章内容
-    public String msg; // 消息
-    public int articleType; // 博客类型，原创，翻译，转载
+    public String summary;// 文章摘要
+    public String localPath; // 文章缓存文件路径
+    public String extraMsg; // 消息
     public int type; // 博客类型，在TypeManager中定义
-
     public String blogerID;
+
+    public static String toJson(BlogInfo info) {
+        return getGson().toJson(info);
+    }
+
+    public static BlogInfo fromJson(String blogJson) {
+        return getGson().fromJson(blogJson, BlogInfo.class);
+    }
 }

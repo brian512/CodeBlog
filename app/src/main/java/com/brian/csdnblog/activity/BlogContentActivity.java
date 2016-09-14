@@ -2,6 +2,7 @@
 package com.brian.csdnblog.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -23,6 +24,7 @@ import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
+import com.brian.csdnblog.datacenter.preference.SettingPreference;
 import com.brian.csdnblog.manager.DataFetcher;
 import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
@@ -36,7 +38,6 @@ import com.brian.csdnblog.model.BlogInfo;
 import com.brian.csdnblog.model.SearchResult;
 import com.brian.csdnblog.parser.BlogHtmlParserFactory;
 import com.brian.csdnblog.parser.IBlogHtmlParser;
-import com.brian.csdnblog.preference.SettingPreference;
 import com.brian.csdnblog.util.FileUtil;
 import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.NetStatusUtil;
@@ -85,8 +86,8 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         BlogInfo blogInfo = new BlogInfo();
         blogInfo.link = searchResult.link;
         blogInfo.title = searchResult.title;
-        blogInfo.description = searchResult.searchDetail;
-        blogInfo.msg = searchResult.authorTime;
+        blogInfo.summary = searchResult.searchDetail;
+        blogInfo.extraMsg = searchResult.authorTime;
         startActvity(activity, blogInfo);
     }
     
@@ -186,31 +187,36 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         mWebView.setWebViewClient(new MyWebViewClient());
         mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
-        mWebView.getSettings().setJavaScriptEnabled(true);
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
 
-        mWebView.getSettings().setDefaultTextEncodingName("utf-8");
-        mWebView.getSettings().setAppCacheEnabled(true);// 设置启动缓存
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        webSettings.setDefaultTextEncodingName("utf-8");
+        webSettings.setAppCacheEnabled(true);// 设置启动缓存
+        webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        final String cachePath = getApplicationContext().getDir("cache", Context.MODE_PRIVATE).getPath();
+        webSettings.setAppCachePath(cachePath);
+        webSettings.setAppCacheMaxSize(5*1024*1024);
+        webSettings.setDomStorageEnabled(true);
 
         if(Build.VERSION.SDK_INT >= 19) {
-            mWebView.getSettings().setLoadsImagesAutomatically(true);
+            webSettings.setLoadsImagesAutomatically(true);
         } else {
-            mWebView.getSettings().setLoadsImagesAutomatically(false);
+            webSettings.setLoadsImagesAutomatically(false);
         }
 
-        mWebView.getSettings().setBlockNetworkImage(true);// 拦截图片的加载，网页加载完成后再去除拦截
+        webSettings.setBlockNetworkImage(true);// 拦截图片的加载，网页加载完成后再去除拦截
 
-        // mWebView.getSettings().setDisplayZoomControls(true);// 设置显示缩放按钮
-        // mWebView.getSettings().setBuiltInZoomControls(true);
-        mWebView.getSettings().setSupportZoom(true); // 支持缩放
+        // webSettings.setDisplayZoomControls(true);// 设置显示缩放按钮
+        // webSettings.setBuiltInZoomControls(true);
+        webSettings.setSupportZoom(true); // 支持缩放
 
         // 方法一：
-        mWebView.getSettings().setUseWideViewPort(true);//让webview读取网页设置的viewport，pc版网页
-//        mWebView.getSettings().setLoadWithOverviewMode(true);
+        webSettings.setUseWideViewPort(true);//让webview读取网页设置的viewport，pc版网页
+//        webSettings.setLoadWithOverviewMode(true);
 
         // 方法二：
-        mWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);// 适应内容大小
-//        mWebView.getSettings().setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);//适应屏幕，内容将自动缩放
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);// 适应内容大小
+//        webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);//适应屏幕，内容将自动缩放
     }
 
     private void initListener() {
@@ -326,13 +332,13 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         if (TextUtils.isEmpty(mBlogInfo.title)) {
             mBlogInfo.title = getString(R.string.app_name);
         }
-        if (TextUtils.isEmpty(mBlogInfo.description)) {
-            mBlogInfo.description = getString(R.string.app_description);
+        if (TextUtils.isEmpty(mBlogInfo.summary)) {
+            mBlogInfo.summary = getString(R.string.app_description);
         }
         
         final Bundle bundle = new Bundle();
         bundle.putString(QQShare.SHARE_TO_QQ_TITLE, mBlogInfo.title);
-        bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, mBlogInfo.description);
+        bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, mBlogInfo.summary);
         bundle.putString(QQShare.SHARE_TO_QQ_TARGET_URL, mCurrentUrl);
         ShareManager.getInstance().shareBlogToQQ(BlogContentActivity.this, bundle);
     }
@@ -347,7 +353,11 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     protected void onDestroy() {
         super.onDestroy();
         Qhad.activityDestroy(this);
-        
+
+        mWebView.stopLoading();
+        mWebView.onPause();
+        mWebView.destroy();
+
         mHandler.removeCallbacksAndMessages(null);
     }
     

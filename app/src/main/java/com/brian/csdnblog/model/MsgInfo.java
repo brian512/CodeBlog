@@ -1,8 +1,6 @@
 package com.brian.csdnblog.model;
 
-import org.litepal.crud.DataSupport;
-
-public class MsgInfo extends DataSupport {
+public class MsgInfo extends BaseType {
 
     public static final int SELF = 0;
     public static final int ROBOT = 1;

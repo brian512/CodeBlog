@@ -73,19 +73,7 @@ public class ShareManager {
         bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, activity.getString(R.string.app_name));
         shareToQQ(activity, bundle, new BaseUiListener());
     }
-    
-    public void shareBrianToQQ(Activity activity) {
-        final Bundle bundle = new Bundle();
-        bundle.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
-        bundle.putString(QQShare.SHARE_TO_QQ_TITLE, activity.getString(R.string.app_name));
-        bundle.putString(QQShare.SHARE_TO_QQ_SUMMARY, activity.getString(R.string.app_description));
-        bundle.putString(QQShare.SHARE_TO_QQ_TARGET_URL, Constants.URL_CSDN_BLOG_DEFAULT);
-        bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, Constants.URL_CSDN_LOGO);
-        bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, activity.getString(R.string.app_name));
-        shareToQQ(activity, bundle, new BaseUiListener());
-    }
-    
-    
+
     /**
      * 分享需要的
      */

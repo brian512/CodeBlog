@@ -1,6 +1,7 @@
 
 package com.brian.csdnblog;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 
@@ -13,9 +14,7 @@ import com.brian.csdnblog.util.ConfigHelper;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 
-import org.litepal.LitePalApplication;
-
-public class App extends LitePalApplication {
+public class App extends Application {
 
     public static final String PROCESS_NAME_MAIN = "com.brian.csdnblog";
 
@@ -66,7 +65,7 @@ public class App extends LitePalApplication {
     }
 
     public void exit() {
-        MobclickAgent.onKillProcess(getContext());
+        MobclickAgent.onKillProcess(getApplicationContext());
         System.exit(0);
         android.os.Process.killProcess(android.os.Process.myPid());
     }

@@ -58,13 +58,13 @@ public class UsageStatsManager {
 //
 //    private static Handler sHandler = new Handler(sHandlerThread.getLooper()) {
 //        @SuppressWarnings("unchecked")
-//        public void handleMessage(Message msg) {
-//            switch (msg.what) {
+//        public void handleMessage(Message extraMsg) {
+//            switch (extraMsg.what) {
 //            case MSG_USAGEDATA_ADD:
 //                if (mUsageDatas == null) {
 //                }
-//                if (msg.obj != null && msg.obj instanceof HashMap) {
-//                    addUsageData((HashMap<String, Object>) msg.obj);
+//                if (extraMsg.obj != null && extraMsg.obj instanceof HashMap) {
+//                    addUsageData((HashMap<String, Object>) extraMsg.obj);
 //                }
 //                break;
 //            case MSG_USAGEDATA_SEND:

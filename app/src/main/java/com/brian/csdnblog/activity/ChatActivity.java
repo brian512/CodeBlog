@@ -37,7 +37,7 @@ public class ChatActivity extends BaseActivity {
 
     private ChatRobot mRobot = null;
 
-    public static final String BUNDLE_EXTRAS_MSG = "msg";
+    public static final String BUNDLE_EXTRAS_MSG = "extraMsg";
     public static void startActivity(Activity activity, String msg) {
         Intent intent = new Intent();
         intent.setClass(activity, ChatActivity.class);

@@ -14,7 +14,7 @@ import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.manager.ShareManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
-import com.brian.csdnblog.preference.SettingPreference;
+import com.brian.csdnblog.datacenter.preference.SettingPreference;
 import com.umeng.analytics.MobclickAgent;
 
 import butterknife.BindView;
