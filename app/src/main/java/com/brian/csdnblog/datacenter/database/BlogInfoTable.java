@@ -27,25 +27,31 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
     public static final String TITLE = "title";
     public static final String LINK = "link";
     public static final String BLOGER_ID = "bloger_id";
+    public static final String BLOGER_JSON = "bloger_json";
     public static final String SUMMARY = "summary";
     public static final String LOACAL_PATH = "local_path";
     public static final String DATESTAMP = "datestamp";
+    public static final String VISITTIME = "visit_time";
     public static final String EXTRA_MSG = "extra_msg";
     public static final String TYPE = "type";
+    public static final String FAVO = "isFavo";
 
 
     // 创建帖子表的sql语言
     protected static final String SQL_CREATE_TABLE = "create table if not exists " + TABLE_NAME
             + " ( "
             + ID + " integer primary key autoincrement, "
-            + BLOG_ID + " text, "
+            + BLOG_ID + " text UNIQUE, "
             + TITLE + " text, "
             + LINK + " text, "
             + BLOGER_ID + " text, "
+            + BLOGER_JSON + " text, "
             + SUMMARY + " text, "
             + LOACAL_PATH + " text, "
+            + VISITTIME + " integer, "
             + DATESTAMP + " text, "
             + EXTRA_MSG + " text, "
+            + FAVO + " integer, "
             + TYPE + " integer "
             + " ) ";
 
@@ -74,11 +80,11 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
         // TODO 实现升级逻辑
     }
 
-    public void saveAsyc(final BlogInfo info) {
+    public void saveBlogAsyc(final BlogInfo info) {
         ThreadManager.getPoolProxy().execute(new Runnable() {
             @Override
             public void run() {
-                save(info);
+                saveBlog(info);
             }
         });
     }
@@ -86,7 +92,7 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
     /**
      * 插入新的消息
      */
-    public boolean save(BlogInfo info) {
+    public boolean saveBlog(BlogInfo info) {
         if (info == null) {
             return false;
         }
@@ -95,8 +101,29 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
         String[] selectionArgs = new String[]{info.blogId};
 
         ContentValues values = toContentValues(info);
-        return insertOrUpdate(TABLE_NAME, selection, selectionArgs, values);
+        return insertOrUpdate(TABLE_NAME, selection, selectionArgs, values, false);
     }
+
+    public boolean doFavo(BlogInfo info) {
+        if (info == null) {
+            return false;
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(FAVO, info.isFavo);
+        return update(info.blogId, values);
+    }
+
+    private boolean update(String blogID, ContentValues values) {
+        if (values == null || TextUtils.isEmpty(blogID)) {
+            return false;
+        }
+
+        String selection = BLOG_ID + " = ? ";
+        String[] selectionArgs = new String[]{blogID};
+        return update(TABLE_NAME, selection, selectionArgs, values);
+    }
+
 
     public boolean delete(BlogInfo info) {
         if (info == null) {
@@ -163,6 +190,26 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
         return query(TABLE_NAME, selection, selectionArgs);
     }
 
+    public List<BlogInfo> getFavoList() {
+        String orderBy = VISITTIME + " desc ";
+        String selection = FAVO + " = ? ";
+        String[] selectionArgs = new String[]{String.valueOf(1)};
+
+        String limit = null;
+
+        return queryList(TABLE_NAME, selection, selectionArgs, orderBy, limit);
+    }
+
+    public List<BlogInfo> getHistoryList() {
+        String orderBy = VISITTIME + " desc ";
+        String selection = FAVO + " != ? ";
+        String[] selectionArgs = new String[]{String.valueOf(1)};
+
+        String limit = null;
+
+        return queryList(TABLE_NAME, selection, selectionArgs, orderBy, limit);
+    }
+
     public List<BlogInfo> queryList(int type) {
         return queryList(type, 0, 0);
     }
@@ -175,11 +222,9 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
             return null;
         }
 
-        String orderBy = DATESTAMP + " desc ";
-        String selection = null;
-        String[] selectionArgs = null;
-//        String selection = TYPE + " = ? ";
-//        String[] selectionArgs = new String[]{String.valueOf(type)};
+        String orderBy = VISITTIME + " desc ";
+        String selection = TYPE + " = ? ";
+        String[] selectionArgs = new String[]{String.valueOf(type)};
 
         String limit = null;
         if (num > 0) {
@@ -197,11 +242,14 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
             values.put(TITLE, info.title);
             values.put(LINK, info.link);
             values.put(BLOGER_ID, info.blogerID);
+            values.put(BLOGER_JSON, info.blogerJson);
             values.put(SUMMARY, info.summary);
             values.put(LOACAL_PATH, info.localPath);
             values.put(DATESTAMP, info.dateStamp);
+            values.put(VISITTIME, info.visitTime);
             values.put(EXTRA_MSG, info.extraMsg);
             values.put(TYPE, info.type);
+            values.put(FAVO, info.isFavo?1:0);
             return values;
         }
         return null;
@@ -217,11 +265,14 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
                 blogInfo.title = cursor.getString(cursor.getColumnIndex(TITLE));
                 blogInfo.link = cursor.getString(cursor.getColumnIndex(LINK));
                 blogInfo.blogerID = cursor.getString(cursor.getColumnIndex(BLOGER_ID));
+                blogInfo.blogerJson = cursor.getString(cursor.getColumnIndex(BLOGER_JSON));
                 blogInfo.summary = cursor.getString(cursor.getColumnIndex(SUMMARY));
                 blogInfo.localPath = cursor.getString(cursor.getColumnIndex(LOACAL_PATH));
                 blogInfo.dateStamp = cursor.getString(cursor.getColumnIndex(DATESTAMP));
+                blogInfo.visitTime = cursor.getInt(cursor.getColumnIndex(VISITTIME));
                 blogInfo.extraMsg = cursor.getString(cursor.getColumnIndex(EXTRA_MSG));
                 blogInfo.type = cursor.getInt(cursor.getColumnIndex(TYPE));
+                blogInfo.isFavo = cursor.getInt(cursor.getColumnIndex(TYPE)) == 1;
                 list.add(blogInfo);
             } while (cursor.moveToNext());
         }

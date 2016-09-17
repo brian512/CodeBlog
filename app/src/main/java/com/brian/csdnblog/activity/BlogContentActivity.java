@@ -28,7 +28,7 @@ import com.brian.csdnblog.datacenter.preference.SettingPreference;
 import com.brian.csdnblog.manager.DataFetcher;
 import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
-import com.brian.csdnblog.manager.FavoBlogManager;
+import com.brian.csdnblog.manager.DataManager;
 import com.brian.csdnblog.manager.HistoryBlogManager;
 import com.brian.csdnblog.manager.ShareManager;
 import com.brian.csdnblog.manager.ThreadManager;
@@ -121,22 +121,16 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         mTitleBar.setTitle(mBlogInfo.title);
         mCurrentTitle = mBlogInfo.title;
 
-        if (FavoBlogManager.getInstance().isFavo(mCurrentUrl)) {
-            mBtnFavo.setSelected(true);
-        } else {
-            mBtnFavo.setSelected(false);
-        }
-
         // 开始请求数据
         if (TypeManager.getWebType(mBlogInfo.type) == TypeManager.TYPE_WEB_JCC) {
-            DataFetcher.getInstance().fetchString(mCurrentUrl, "GB2312", this);
+            HistoryBlogManager.getInstance().fetchBlogContent(mCurrentUrl, "GB2312", this);
         } else {
-            DataFetcher.getInstance().fetchString(mCurrentUrl, this);
+            HistoryBlogManager.getInstance().fetchBlogContent(mCurrentUrl, this);
         }
 
         mProgressBar.setVisibility(View.VISIBLE);
         
-        HistoryBlogManager.getInstance().addBlog(mBlogInfo);
+        HistoryBlogManager.getInstance().saveBlog(mBlogInfo);
     }
 
     private void initBlogInfo() {
@@ -250,11 +244,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
             @Override
             public void onClick(View v) {
                 boolean hasFavoed = mBtnFavo.isSelected();
-                if (!hasFavoed) {
-                    FavoBlogManager.getInstance().addBlog(mBlogInfo);
-                } else {
-                    FavoBlogManager.getInstance().removeBlog(mCurrentUrl);
-                }
+                HistoryBlogManager.getInstance().doFavo(mBlogInfo, !hasFavoed);
                 mBtnFavo.setSelected(!hasFavoed);
             }
         });
@@ -306,7 +296,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
                 toggleAdShow(true);
                 
                 mCurrentUrl = blogUrl;
-                DataFetcher.getInstance().fetchString(blogUrl, BlogContentActivity.this);
+                HistoryBlogManager.getInstance().fetchBlogContent(blogUrl, BlogContentActivity.this);
                 return true;
             }
             return false;
@@ -381,6 +371,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
                     mProgressBar.setVisibility(View.GONE);
                     
                     mBtnFavo.setVisibility(View.VISIBLE);
+                    mBtnFavo.setSelected(HistoryBlogManager.getInstance().isFavo(mBlogInfo));
                     mWebView.setVisibility(View.VISIBLE);
                     String content = (String) msg.obj;
                     mWebView.loadDataWithBaseURL(mBlogParser.getBlogBaseUrl(), content,
@@ -411,12 +402,14 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
                         FileUtil.writeFile("/sdcard/blogBefore", response.data);
                     }
                     String contentHtml = mBlogParser.getBlogContent(mBlogInfo.type, response.data);
-                    if (Config.isDebug) {
-                        FileUtil.writeFile("/sdcard/blogAfter", contentHtml);
-                    }
-
                     if (TextUtils.isEmpty(contentHtml)) { // 解析失败则直接显示原网页
-                         contentHtml = response.data;
+                        contentHtml = response.data;
+                    }
+                    if (response.url.equalsIgnoreCase(mBlogInfo.link)) {
+                        String cachePath = DataManager.getBlogCachePath(mBlogInfo.blogId);
+                        mBlogInfo.localPath = cachePath;
+                        FileUtil.writeFile(cachePath, contentHtml);
+                        HistoryBlogManager.getInstance().saveBlog(mBlogInfo);
                     }
 
                     mBlogStack.push(contentHtml);

@@ -23,7 +23,7 @@ public abstract class BaseTable<T> {
     /**
      * 插入一行数据前，判断数据库中是否已经存在，如果存在就更新它，不存在就插入
      */
-    protected boolean insertOrUpdate(String tableName, String selection, String[] selectionArgs, ContentValues values) {
+    protected boolean insertOrUpdate(String tableName, String selection, String[] selectionArgs, ContentValues values, boolean isForceUpdate) {
         boolean flag = false;
         synchronized (DataBaseHelper.getInstance().getLock()) {
             SQLiteDatabase database = DataBaseHelper.getInstance().getWritableDatabase();
@@ -34,6 +34,46 @@ public abstract class BaseTable<T> {
                 // 不存在则写入数据库
                 if (cursor == null || !cursor.moveToFirst()) {
                     flag = database.insert(tableName, null, values) >= 0;
+                } else {
+                    if (isForceUpdate) {
+                        flag = database.update(tableName, values, selection, selectionArgs) > 0;
+                    } else {
+                        flag = true;
+                    }
+                }
+            } catch (Exception e) {
+                if (DEBUG) {
+                    e.printStackTrace();
+                }
+                flag = false;
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+
+                if (database.isOpen()) {
+                    database.close();
+                }
+            }
+        }
+        LogUtil.log("result : " + flag);
+        return flag;
+    }
+
+    /**
+     * 更新数据
+     */
+    protected boolean update(String tableName, String selection, String[] selectionArgs, ContentValues values) {
+        boolean flag = false;
+        synchronized (DataBaseHelper.getInstance().getLock()) {
+            SQLiteDatabase database = DataBaseHelper.getInstance().getWritableDatabase();
+            Cursor cursor = null;
+            try {
+                cursor = database.query(tableName, null, selection, selectionArgs, null, null, null);
+
+                // 不存在则标记更新失败
+                if (cursor == null || !cursor.moveToFirst()) {
+                    flag = false;
                 } else {
                     flag = database.update(tableName, values, selection, selectionArgs) > 0;
                 }

@@ -23,14 +23,29 @@ public class BlogerTable extends BaseTable<Bloger> {
     // 文章表字段ID
     private static final String ID = "id";
     public static final String BLOGER_ID = "bloger_id";
+    public static final String BLOGER_TYPE = "blog_type";
+    public static final String URL_HOME = "url_home";
+    public static final String URL_HEAD = "url_head";
+    public static final String NICK_NAME = "nick_name";
+    public static final String BIO = "bio";
     public static final String DATESTAMP_FOLLOW = "time_follow";
+    public static final String COUNT_BLOG = "blog_count";
+    public static final String FOLLOW = "isFollowed";
 
 
     // 创建表的sql语言
     protected static final String SQL_CREATE_TABLE = "create table if not exists " + TABLE_NAME
             + " ( "
             + ID + " integer primary key autoincrement, "
-            + BLOGER_ID + " text"
+            + BLOGER_ID + " text UNIQUE, "
+            + URL_HOME + " text, "
+            + URL_HEAD + " text, "
+            + NICK_NAME + " text, "
+            + BIO + " text, "
+            + DATESTAMP_FOLLOW + " text, "
+            + FOLLOW + " integer, "
+            + BLOGER_TYPE + " integer, "
+            + COUNT_BLOG + " integer "
             + " ) ";
 
     private static BlogerTable mInstance;
@@ -71,7 +86,7 @@ public class BlogerTable extends BaseTable<Bloger> {
         String[] selectionArgs = new String[]{info.blogerID};
 
         ContentValues values = toContentValues(info);
-        return insertOrUpdate(TABLE_NAME, selection, selectionArgs, values);
+        return insertOrUpdate(TABLE_NAME, selection, selectionArgs, values, false);
     }
 
     /**
@@ -129,6 +144,14 @@ public class BlogerTable extends BaseTable<Bloger> {
         if (info != null) {
             ContentValues values = new ContentValues();
             values.put(BLOGER_ID, info.blogerID);
+            values.put(BLOGER_TYPE, info.blogerType);
+            values.put(URL_HEAD, info.headUrl);
+            values.put(URL_HOME, info.homePageUrl);
+            values.put(BIO, info.bio);
+            values.put(DATESTAMP_FOLLOW, info.dateStampFollow);
+            values.put(NICK_NAME, info.nickName);
+            values.put(COUNT_BLOG, info.blogCount);
+            values.put(FOLLOW, info.isFollowed?1:0);
             return values;
         }
         return null;
@@ -137,11 +160,19 @@ public class BlogerTable extends BaseTable<Bloger> {
     @Override
     protected void readCursor(ArrayList<Bloger> list, Cursor cursor) throws JSONException {
         if (cursor != null && cursor.moveToFirst()) {
-            Bloger blogInfo;
+            Bloger blogerInfo;
             do {
-                blogInfo = new Bloger();
-                blogInfo.blogerID = cursor.getString(cursor.getColumnIndex(BLOGER_ID));
-                list.add(blogInfo);
+                blogerInfo = new Bloger();
+                blogerInfo.blogerID = cursor.getString(cursor.getColumnIndex(BLOGER_ID));
+                blogerInfo.headUrl = cursor.getString(cursor.getColumnIndex(URL_HEAD));
+                blogerInfo.homePageUrl = cursor.getString(cursor.getColumnIndex(URL_HOME));
+                blogerInfo.bio = cursor.getString(cursor.getColumnIndex(BIO));
+                blogerInfo.nickName = cursor.getString(cursor.getColumnIndex(NICK_NAME));
+                blogerInfo.dateStampFollow = cursor.getInt(cursor.getColumnIndex(DATESTAMP_FOLLOW));
+                blogerInfo.blogCount = cursor.getInt(cursor.getColumnIndex(COUNT_BLOG));
+                blogerInfo.isFollowed = cursor.getInt(cursor.getColumnIndex(FOLLOW)) == 1;
+                blogerInfo.blogerType = cursor.getInt(cursor.getColumnIndex(BLOGER_TYPE));
+                list.add(blogerInfo);
             } while (cursor.moveToNext());
         }
     }

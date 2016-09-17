@@ -23,7 +23,6 @@ import com.brian.csdnblog.datacenter.preference.SettingPreference;
 import com.brian.csdnblog.manager.DataFetcher;
 import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
-import com.brian.csdnblog.manager.FavoBlogManager;
 import com.brian.csdnblog.manager.HistoryBlogManager;
 import com.brian.csdnblog.manager.ThreadManager;
 import com.brian.csdnblog.manager.TypeManager;
@@ -166,7 +165,7 @@ public class BlogListFrag extends Fragment {
         });
 
         if (TypeManager.getWebType(mType) == TypeManager.TYPE_WEB_FAVO) {
-            mAdapter.addDatas(FavoBlogManager.getInstance().getFavoBlogList());
+            mAdapter.addDatas(HistoryBlogManager.getInstance().getFavoBlogList());
             mRefreshable = false;
         } else if (TypeManager.getWebType(mType) == TypeManager.TYPE_WEB_HISTORY) {
             mAdapter.addDatas(HistoryBlogManager.getInstance().getHistoryBlogList());

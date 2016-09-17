@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.manager.TypeManager;
 import com.brian.csdnblog.model.BlogInfo;
+import com.brian.csdnblog.model.Bloger;
 import com.brian.csdnblog.model.SearchResult;
 import com.brian.csdnblog.util.JsoupUtil;
 import com.brian.csdnblog.util.Md5;
@@ -25,8 +26,9 @@ import java.util.List;
  * @author huamm
  */
 public class CSDNHtmlParser implements IBlogHtmlParser {
-
     private static final String TAG = CSDNHtmlParser.class.getSimpleName();
+
+    private static final int TYPE = TypeManager.initType(TypeManager.TYPE_WEB_CSDN);
 
     private static String[] TYPES_STR = {
             "mobile", "web", "database", "cloud", "system", "enterprise"
@@ -101,18 +103,29 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
         }
 
         for (Element blogItem : blogList) {
-
             BlogInfo item = new BlogInfo();
             item.title = blogItem.select("h3").text(); // 得到标题
             item.summary = blogItem.getElementsByClass("blog_list_c").get(0).text();
-            String blogerID = blogItem.getElementsByClass("nickname").get(0).text();
-            item.extraMsg = blogerID + "  " + blogItem.getElementsByClass("blog_list_b_r").get(0).select("label").text();
+            String nickName = blogItem.getElementsByClass("nickname").get(0).text();
+            item.extraMsg = nickName + "  " + blogItem.getElementsByClass("blog_list_b_r").get(0).select("label").text();
             item.link = blogItem.select("h3").select("a").attr("href");
             item.blogId = Md5.getMD5ofStr(item.link);
-
             item.type = type;
             item.dateStamp = String.valueOf(System.currentTimeMillis());
-            item.blogerID = blogerID;
+
+            String homePageUrl = blogItem.getElementsByClass("nickname").get(0).select("a").attr("href");
+            if (!TextUtils.isEmpty(homePageUrl)) {
+                Bloger bloger = new Bloger();
+                bloger.blogerType = TYPE;
+                bloger.nickName = nickName;
+                bloger.headUrl = blogItem.getElementsByClass("nickname").get(0).select("img").attr("src");
+                bloger.homePageUrl = homePageUrl;
+                bloger.blogerID = Md5.getMD5ofStr(bloger.homePageUrl);
+
+//                BlogerTable.getInstance().insert(bloger);//保存用户信息
+                item.blogerJson = bloger.toJson();
+                item.blogerID = bloger.blogerID;
+            }
 
             list.add(item);
         }
@@ -142,7 +155,6 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
             item.extraMsg = blogItem.getElementsByClass("article_manage").get(0).text();
             item.link = blogItem.getElementsByClass("article_title").get(0).select("a").attr("href");
             item.blogId = Md5.getMD5ofStr(item.link);
-//            item.blogerID = Md5.getMD5ofStr(link);
             item.type = type;
             item.dateStamp = String.valueOf(System.currentTimeMillis());
 

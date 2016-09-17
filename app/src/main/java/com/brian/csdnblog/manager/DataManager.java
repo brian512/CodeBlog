@@ -17,6 +17,9 @@ public class DataManager {
     public static final String PATH_DIR_PREFERENCE = PATH_DIR_ROOT + "/shared_prefs";
     public static final String PATH_DIR_CACHE_PIC = PATH_DIR_CACHE;
 
+    public static final String PATH_DIR_CACHE_BLOG = PATH_DIR_DATA + "/blogs";
+
+
     private static DataManager sDataManager = null;
 
     public static DataManager getInstance() {
@@ -44,6 +47,10 @@ public class DataManager {
 //        SPUtil.setParam(App.sAppContext, SPUtil.KEY_VERSION, App.sVersionCode);
     }
 
+
+    public static String getBlogCachePath(String fileName) {
+        return PATH_DIR_CACHE_BLOG + "/" + fileName;
+    }
 
     /**
      * 仅清除cache目录
