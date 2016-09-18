@@ -10,29 +10,17 @@
         android:layout_alignParentTop="true"
          />
 
-    <com.brian.common.view.CircleImageView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/title_bar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/user_head_marginTop"
-        android:src="@drawable/icon_default_user"
-        app:border_color="#FFffffff"
-        app:border_width="@dimen/circle_border_width" />
-
     <TextView
         android:id="@+id/blogTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/logo"
-        android:layout_centerHorizontal="true"
+        android:layout_below="@id/title_bar"
+        android:padding="15dp"
+        android:lineSpacingExtra="4dp"
         android:layout_marginTop="14dp"
-        android:text="@string/user_name"
+        android:text="@string/app_description"
         android:textColor="@color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textSize="18sp"/>
 
     <TableLayout
         android:id="@+id/contact"
@@ -41,20 +29,16 @@
         android:layout_below="@+id/blogTV"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
-        android:layout_marginTop="55dp" >
+        android:layout_marginTop="20dp" >
 
         <TableRow android:layout_margin="5dp" >
-
             <TextView
+                android:id="@+id/qq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="QQ群  :"
-                android:textColor="@color/black"
-                android:textSize="@dimen/user_center_size_info" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_qq"
+                android:drawablePadding="10dp"
+                android:autoLink="web"
                 android:text="194067225"
                 android:textColor="@color/black"
                 android:textIsSelectable="true"
@@ -62,18 +46,12 @@
         </TableRow>
 
         <TableRow android:layout_margin="5dp" >
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="github: "
-                android:textColor="@color/black"
-                android:textSize="@dimen/user_center_size_info" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:autoLink="email"
+                android:drawableLeft="@drawable/ic_github"
+                android:drawablePadding="10dp"
+                android:autoLink="web"
                 android:text="https://github.com/brian512/CodeBlog"
                 android:textIsSelectable="true"
                 android:textColor="@color/black"
@@ -81,18 +59,12 @@
         </TableRow>
 
         <TableRow android:layout_margin="5dp" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="BLOG: "
-                android:textColor="@color/black"
-                android:textSize="@dimen/user_center_size_info" />
-
             <TextView
                 android:id="@+id/blogLink"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_blog"
+                android:drawablePadding="10dp"
                 android:autoLink="web"
                 android:textIsSelectable="true"
                 android:text="@string/brian_blog"
@@ -105,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/contact"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:text="欢迎大家的参与！"
         android:textColor="@color/black" />
 

@@ -29,7 +29,7 @@
             android:layout_centerHorizontal="true"
             app:tabTextAppearance="@style/TabLayoutTextAppearance"
             app:tabSelectedTextColor="@color/com_text_white"
-            app:tabTextColor="@color/com_divider_gray_1"/>
+            app:tabTextColor="#88ffffff"/>
 
         <!-- 右侧按钮 -->
         <ImageView

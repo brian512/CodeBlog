@@ -3,6 +3,8 @@ package com.brian.csdnblog.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -23,6 +25,8 @@ public class AboutActivity extends BaseActivity {
     @BindView(R.id.title_bar) TitleBar mTitleBar;
     @BindView(R.id.blogLink) TextView mAuthorLinkText;
     @BindView(R.id.madeby) TextView mMadeByText;
+    @BindView(R.id.blogTV) TextView mAppDesText;
+    @BindView(R.id.qq) TextView mQQText;
 
     public static void startActivity(Activity activity) {
         Intent intent = new Intent();
@@ -48,6 +52,9 @@ public class AboutActivity extends BaseActivity {
         if (!TextUtils.isEmpty(versionName)) {
             mMadeByText.setText(mMadeByText.getText() + "  " + versionName);
         }
+
+        mAppDesText.setText("    " + getString(R.string.app_description));
+        mQQText.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
     }
 
     private void initListener() {
@@ -73,6 +80,14 @@ public class AboutActivity extends BaseActivity {
             public void onClick(View v) {
                 // 友盟统计分享事件
                 UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_LOOKUP_BLOGER);
+            }
+        });
+
+        mQQText.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url="mqqwpa://im/chat?chat_type=group&uin=194067225";
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
             }
         });
     }

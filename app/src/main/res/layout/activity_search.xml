@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_bloglist" >
+    android:layout_height="match_parent" >
 
     <com.brian.common.view.TitleBar
         android:id="@+id/title_bar"
@@ -16,19 +15,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/title_bar"
-        android:padding="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:background="#efefef"
         android:orientation="horizontal" >
 
         <EditText
             android:id="@+id/et_search"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="45dp"
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp"
             android:paddingLeft="4dp"
             android:singleLine="true"
+            android:textSize="18sp"
             android:hint="关键字"
-            android:background="@drawable/bg_search_input"
             android:layout_weight="1"
             android:imeOptions="actionSearch"
             android:imeActionLabel="搜索"/>
