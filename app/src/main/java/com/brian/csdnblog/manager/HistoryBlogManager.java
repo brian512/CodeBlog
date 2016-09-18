@@ -60,6 +60,7 @@ public class HistoryBlogManager {
         if (blogInfo == null) {
             return;
         }
+        FileUtil.deleteFile(DataManager.getBlogCachePath(Md5.getMD5ofStr(blogInfo.blogId)));
         BlogInfoTable.getInstance().delete(blogInfo);
     }
 

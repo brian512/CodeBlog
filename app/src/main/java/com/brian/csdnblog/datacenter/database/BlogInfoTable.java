@@ -41,7 +41,7 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
     protected static final String SQL_CREATE_TABLE = "create table if not exists " + TABLE_NAME
             + " ( "
             + ID + " integer primary key autoincrement, "
-            + BLOG_ID + " text UNIQUE, "
+            + BLOG_ID + " text UNIQUE NOT NULL, "
             + TITLE + " text, "
             + LINK + " text, "
             + BLOGER_ID + " text, "
@@ -104,16 +104,34 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
         return insertOrUpdate(TABLE_NAME, selection, selectionArgs, values, false);
     }
 
+    public boolean saveOrUpdateBlog(BlogInfo info) {
+        if (info == null) {
+            return false;
+        }
+
+        String selection = BLOG_ID + " = ? ";
+        String[] selectionArgs = new String[]{info.blogId};
+
+        ContentValues values = toContentValues(info);
+        return insertOrUpdate(TABLE_NAME, selection, selectionArgs, values, true);
+    }
+
+    /**
+     * 收藏或取消收藏博文，更新数据库中的info.isFavo字段
+     */
     public boolean doFavo(BlogInfo info) {
         if (info == null) {
             return false;
         }
 
         ContentValues values = new ContentValues();
-        values.put(FAVO, info.isFavo);
+        values.put(FAVO, info.isFavo?1:0);
         return update(info.blogId, values);
     }
 
+    /**
+     * 更新blog信息，使用封装好的ContentValues
+     */
     private boolean update(String blogID, ContentValues values) {
         if (values == null || TextUtils.isEmpty(blogID)) {
             return false;
@@ -272,7 +290,7 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
                 blogInfo.visitTime = cursor.getInt(cursor.getColumnIndex(VISITTIME));
                 blogInfo.extraMsg = cursor.getString(cursor.getColumnIndex(EXTRA_MSG));
                 blogInfo.type = cursor.getInt(cursor.getColumnIndex(TYPE));
-                blogInfo.isFavo = cursor.getInt(cursor.getColumnIndex(TYPE)) == 1;
+                blogInfo.isFavo = cursor.getInt(cursor.getColumnIndex(FAVO)) == 1;
                 list.add(blogInfo);
             } while (cursor.moveToNext());
         }

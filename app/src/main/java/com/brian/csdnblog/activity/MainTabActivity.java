@@ -56,6 +56,7 @@ public class MainTabActivity extends SlidingFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setSwipeBackEnable(false);
         setContentView(R.layout.activity_main_tab);
         ButterKnife.bind(this);
 

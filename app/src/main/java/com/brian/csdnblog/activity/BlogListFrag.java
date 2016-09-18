@@ -165,10 +165,10 @@ public class BlogListFrag extends Fragment {
         });
 
         if (TypeManager.getWebType(mType) == TypeManager.TYPE_WEB_FAVO) {
-            mAdapter.addDatas(HistoryBlogManager.getInstance().getFavoBlogList());
+            mAdapter.initListWithDatas(HistoryBlogManager.getInstance().getFavoBlogList());
             mRefreshable = false;
         } else if (TypeManager.getWebType(mType) == TypeManager.TYPE_WEB_HISTORY) {
-            mAdapter.addDatas(HistoryBlogManager.getInstance().getHistoryBlogList());
+            mAdapter.initListWithDatas(HistoryBlogManager.getInstance().getHistoryBlogList());
             mRefreshable = false;
         } else {
             mRefreshable = true;

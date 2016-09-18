@@ -37,7 +37,7 @@ public class BlogerTable extends BaseTable<Bloger> {
     protected static final String SQL_CREATE_TABLE = "create table if not exists " + TABLE_NAME
             + " ( "
             + ID + " integer primary key autoincrement, "
-            + BLOGER_ID + " text UNIQUE, "
+            + BLOGER_ID + " text UNIQUE NOT NULL, "
             + URL_HOME + " text, "
             + URL_HEAD + " text, "
             + NICK_NAME + " text, "
