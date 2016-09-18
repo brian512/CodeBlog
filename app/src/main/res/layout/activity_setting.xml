@@ -13,7 +13,7 @@
         android:id="@+id/switch_show_ad_text"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@drawable/com_item_bg_selector"
+        android:background="?android:attr/selectableItemBackground"
         android:drawablePadding="8dp"
         android:drawableRight="@drawable/setting_switch_selector"
         android:gravity="center_vertical"
@@ -33,7 +33,7 @@
         android:id="@+id/switch_vertical_text"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@drawable/com_item_bg_selector"
+        android:background="?android:attr/selectableItemBackground"
         android:drawablePadding="8dp"
         android:drawableRight="@drawable/setting_switch_selector"
         android:gravity="center_vertical"
@@ -53,7 +53,7 @@
         android:id="@+id/switch_picinfwifi_text"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@drawable/com_item_bg_selector"
+        android:background="?android:attr/selectableItemBackground"
         android:drawablePadding="8dp"
         android:drawableRight="@drawable/setting_switch_selector"
         android:gravity="center_vertical"
@@ -73,7 +73,7 @@
         android:id="@+id/switch_staybg_text"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@drawable/com_item_bg_selector"
+        android:background="?android:attr/selectableItemBackground"
         android:drawablePadding="8dp"
         android:drawableRight="@drawable/setting_switch_selector"
         android:gravity="center_vertical"
@@ -82,6 +82,25 @@
         android:text="退出时是否保留后台"
         android:textColor="@color/com_text_tx1"
         android:textSize="@dimen/com_text_size_content" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="20dp"
+        android:background="@color/com_divider_gray_0" />
+
+    <TextView
+        android:id="@+id/market"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="去应用市场评分"
+        android:drawableRight="@drawable/app_recommend_arrow"
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="20dp"
+        android:textColor="@color/com_text_tx1"
+        android:textSize="@dimen/com_text_size_content"/>
 
     <ImageView
         android:layout_width="match_parent"

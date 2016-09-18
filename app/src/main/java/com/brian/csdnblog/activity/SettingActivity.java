@@ -15,6 +15,7 @@ import com.brian.csdnblog.R;
 import com.brian.csdnblog.manager.ShareManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
+import com.brian.csdnblog.util.MarketUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import butterknife.BindView;
@@ -30,6 +31,7 @@ public class SettingActivity extends BaseActivity {
     @BindView(R.id.switch_vertical_text) TextView mSwitchVerticalText;
     @BindView(R.id.switch_picinfwifi_text) TextView mSwitchPicWifiText;
     @BindView(R.id.switch_staybg_text) TextView mSwitchStayBgText;
+    @BindView(R.id.market) TextView mMarketText;
 
     public static void startActivity(Activity activity) {
         Intent intent = new Intent();
@@ -123,6 +125,13 @@ public class SettingActivity extends BaseActivity {
                 
                 // 保存preference
                 SettingPreference.getInstance().setRunInBackEnable(selected);
+            }
+        });
+
+        mMarketText.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MarketUtils.launchAppDetail(getPackageName(), "");
             }
         });
     }
