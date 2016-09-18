@@ -13,14 +13,10 @@ import com.brian.common.view.ChatToolLayout;
 import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.adapter.ChatListAdapter;
-import com.brian.csdnblog.manager.PushManager;
 import com.brian.csdnblog.manager.ThreadManager;
-import com.brian.csdnblog.manager.UsageStatsManager;
-import com.brian.csdnblog.model.MsgInfo;
+import com.brian.csdnblog.model.ChatMsgInfo;
 import com.brian.csdnblog.robot.ChatRobot;
 import com.brian.csdnblog.robot.ChatRobot.OnReplyListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +59,7 @@ public class ChatActivity extends BaseActivity {
         if (TextUtils.isEmpty(initMsg)) {
             initMsg = mRobot.getRandomWelcome();
         }
-        mAdapter.addChatItem(new MsgInfo(MsgInfo.ROBOT, initMsg));
+        mAdapter.addChatItem(new ChatMsgInfo(ChatMsgInfo.ROBOT, initMsg));
 
         ThreadManager.getPoolProxy().execute(new Runnable() {
             @Override
@@ -92,7 +88,7 @@ public class ChatActivity extends BaseActivity {
         mChatToolLayout.setOnSendTextListener(new ChatToolLayout.OnSendTextListener() {
             @Override
             public void onSendText(String text) {
-                mAdapter.addChatItem(new MsgInfo(MsgInfo.SELF, text));
+                mAdapter.addChatItem(new ChatMsgInfo(ChatMsgInfo.SELF, text));
 
                 mListView.setSelection(mAdapter.getCount());
 
@@ -110,7 +106,7 @@ public class ChatActivity extends BaseActivity {
         ChatRobot.getInstance().getMessage(text, new OnReplyListener() {
             @Override
             public void onReply(String reply) {
-                mAdapter.addChatItem(new MsgInfo(MsgInfo.ROBOT, reply));
+                mAdapter.addChatItem(new ChatMsgInfo(ChatMsgInfo.ROBOT, reply));
             }
         });
     }
@@ -122,14 +118,14 @@ public class ChatActivity extends BaseActivity {
     }
 
     private void formatChatList() {
-        List<MsgInfo> chatList = mAdapter.getChatList();
+        List<ChatMsgInfo> chatList = mAdapter.getChatList();
         if (chatList == null || chatList.size() <= 1) {
             return;
         }
         ArrayList<String> list = new ArrayList<>(chatList.size());
-        for (MsgInfo chatInfo : chatList) {
+        for (ChatMsgInfo chatInfo : chatList) {
             list.add(chatInfo.toString());
         }
-        UsageStatsManager.reportErrorToUmeng(new Gson().toJson(list, new TypeToken<ArrayList<String>>() {}.getType()) + "\n DeviceToken=" + PushManager.getInstance().getDeviceToken());
+//        UsageStatsManager.reportErrorToUmeng(new Gson().toJson(list, new TypeToken<ArrayList<String>>() {}.getType()) + "\n DeviceToken=" + PushManager.getInstance().getDeviceToken());
     }
 }

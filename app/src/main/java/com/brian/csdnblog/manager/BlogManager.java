@@ -34,6 +34,9 @@ public class BlogManager {
         if (blogInfo == null) {
             return;
         }
+        if (TextUtils.isEmpty(blogInfo.blogId)) {
+            blogInfo.blogId = Md5.getMD5ofStr(blogInfo.link);
+        }
         blogInfo.visitTime = System.currentTimeMillis();
         BlogInfoTable.getInstance().saveBlog(blogInfo);
     }

@@ -21,9 +21,8 @@ public class IntentJumpManager {
                 BlogContentActivity.startActvity(BaseActivity.getTopActivity(), pushInfo.blogInfo);
                 break;
             case PushInfo.TYPE_REPLY_CHAT:
-                ChatActivity.startActivity(BaseActivity.getTopActivity(), pushInfo.msg);
-                break;
             case PushInfo.TYPE_REPLY_FEEDBACK:
+                ChatActivity.startActivity(BaseActivity.getTopActivity(), pushInfo.chatMsg);
                 break;
             case PushInfo.TYPE_NOTIFY:
                 showNotifyMessage(pushInfo.notifyMsgInfo);

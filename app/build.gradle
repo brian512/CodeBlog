@@ -147,5 +147,4 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.3.0'
 
     compile 'com.android.support:design:24.2.1'
-    compile project(':PushSDK')
 }

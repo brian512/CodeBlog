@@ -16,36 +16,36 @@ import android.widget.Toast;
 
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
-import com.brian.csdnblog.model.MsgInfo;
+import com.brian.csdnblog.model.ChatMsgInfo;
 import com.brian.csdnblog.util.ViewHolderUtil;
 
 public class ChatListAdapter extends BaseAdapter {
 
-    private List<MsgInfo> mChatList = new ArrayList<MsgInfo>();
+    private List<ChatMsgInfo> mChatList = new ArrayList<ChatMsgInfo>();
     
     public ChatListAdapter() {
     }
     
-    public ChatListAdapter(List<MsgInfo> chatList) {
+    public ChatListAdapter(List<ChatMsgInfo> chatList) {
         mChatList = chatList;
     }
     
-    public void setChatList(List<MsgInfo> chatList) {
+    public void setChatList(List<ChatMsgInfo> chatList) {
         mChatList = chatList;
         notifyDataSetChanged();
     }
     
-    public void addChatItem(MsgInfo info) {
+    public void addChatItem(ChatMsgInfo info) {
         mChatList.add(info);
         notifyDataSetChanged();
     }
     
-    public void attachList(List<MsgInfo> chatList) {
+    public void attachList(List<ChatMsgInfo> chatList) {
         mChatList.addAll(chatList);
         notifyDataSetChanged();
     }
     
-    public void insertList(List<MsgInfo> chatList) {
+    public void insertList(List<ChatMsgInfo> chatList) {
         mChatList.addAll(0, chatList);
         notifyDataSetChanged();
     }
@@ -54,7 +54,7 @@ public class ChatListAdapter extends BaseAdapter {
         return mChatList == null || mChatList.isEmpty();
     }
     
-    public List<MsgInfo> getChatList() {
+    public List<ChatMsgInfo> getChatList() {
         return mChatList;
     }
     
@@ -80,8 +80,8 @@ public class ChatListAdapter extends BaseAdapter {
     
     @Override
     public int getItemViewType(int position) {
-        MsgInfo info = mChatList.get(position);
-        if (info.id == MsgInfo.SELF) {
+        ChatMsgInfo info = mChatList.get(position);
+        if (info.id == ChatMsgInfo.SELF) {
             return 1;
         } else {
             return 0;

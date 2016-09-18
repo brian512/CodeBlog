@@ -1,6 +1,6 @@
 package com.brian.csdnblog.model;
 
-public class MsgInfo extends BaseType {
+public class ChatMsgInfo extends BaseType {
 
     public static final int SELF = 0;
     public static final int ROBOT = 1;
@@ -9,7 +9,7 @@ public class MsgInfo extends BaseType {
     public int id;
     public String text;
     
-    public MsgInfo(int id, String text) {
+    public ChatMsgInfo(int id, String text) {
         this.id = id;
         this.text = text;
     }

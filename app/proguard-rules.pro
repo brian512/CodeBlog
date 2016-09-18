@@ -145,3 +145,6 @@
 -dontwarn org.apache.http.**
 -keepattributes Exceptions, Signature, InnerClasses
 -keepattributes SourceFile, LineNumberTable
+
+#小米推送
+-keep class com.brian.csdnblog.receiver.MiPushMessageReceiver {*;}

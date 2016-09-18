@@ -13,7 +13,6 @@ import android.view.WindowManager;
 import com.brian.csdnblog.RefWatcherHelper;
 import com.brian.csdnblog.util.LogUtil;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.message.PushAgent;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
@@ -31,8 +30,6 @@ public class BaseActivity extends SwipeBackActivity {
         super.onCreate(savedInstanceState);
 
         sTopActivity = this;
-
-        PushAgent.getInstance(this).onAppStart();
     }
     
     @Override
