@@ -9,7 +9,7 @@ import android.view.View.OnClickListener;
 
 import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;
-import com.brian.csdnblog.manager.HistoryBlogManager;
+import com.brian.csdnblog.manager.BlogManager;
 import com.brian.csdnblog.manager.TypeManager;
 
 import butterknife.BindView;
@@ -60,9 +60,9 @@ public class BlogListActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (mType == TYPE_FAVO) {
-                    HistoryBlogManager.getInstance().clearByType(TYPE_FAVO);
+                    BlogManager.getInstance().clearByType(TYPE_FAVO);
                 } else if (mType == TYPE_HISTORY) {
-                    HistoryBlogManager.getInstance().clear();
+                    BlogManager.getInstance().clear();
                 }
                 mListFrag.clearList();
             }

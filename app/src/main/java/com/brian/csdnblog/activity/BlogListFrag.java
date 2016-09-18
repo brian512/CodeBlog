@@ -23,7 +23,7 @@ import com.brian.csdnblog.datacenter.preference.SettingPreference;
 import com.brian.csdnblog.manager.DataFetcher;
 import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
-import com.brian.csdnblog.manager.HistoryBlogManager;
+import com.brian.csdnblog.manager.BlogManager;
 import com.brian.csdnblog.manager.ThreadManager;
 import com.brian.csdnblog.manager.TypeManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
@@ -68,6 +68,8 @@ public class BlogListFrag extends Fragment {
     private CommonAdapter<BlogInfo> mAdapter;// 列表适配器
 
     private int mCurrentPage = 1;
+
+    private boolean mIsEnd = false;// 标记是否已经加载完所有数据
 
     private int mType = -1;
     
@@ -165,10 +167,10 @@ public class BlogListFrag extends Fragment {
         });
 
         if (TypeManager.getWebType(mType) == TypeManager.TYPE_WEB_FAVO) {
-            mAdapter.initListWithDatas(HistoryBlogManager.getInstance().getFavoBlogList());
+            mAdapter.initListWithDatas(BlogManager.getInstance().getFavoBlogList(0));
             mRefreshable = false;
         } else if (TypeManager.getWebType(mType) == TypeManager.TYPE_WEB_HISTORY) {
-            mAdapter.initListWithDatas(HistoryBlogManager.getInstance().getHistoryBlogList());
+            mAdapter.initListWithDatas(BlogManager.getInstance().getHistoryBlogList(0));
             mRefreshable = false;
         } else {
             mRefreshable = true;
@@ -190,6 +192,20 @@ public class BlogListFrag extends Fragment {
                 if (mRefreshable) {
                     loadData(false);
                 } else {
+                    if (!mIsEnd) {
+                        List<BlogInfo> list = null;
+                        if (TypeManager.getWebType(mType) == TypeManager.TYPE_WEB_FAVO) {
+                            list = BlogManager.getInstance().getFavoBlogList(mCurrentPage);
+                        } else if (TypeManager.getWebType(mType) == TypeManager.TYPE_WEB_HISTORY) {
+                            list = BlogManager.getInstance().getHistoryBlogList(mCurrentPage);
+                        }
+                        if (list == null || list.isEmpty()) {
+                            mIsEnd = true;
+                        } else {
+                            mCurrentPage++;
+                            mAdapter.addDatas(list);
+                        }
+                    }
                     mRefreshLayout.setLoading(false);
                 }
             }

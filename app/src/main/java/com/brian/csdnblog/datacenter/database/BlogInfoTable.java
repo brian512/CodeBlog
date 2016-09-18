@@ -93,10 +93,6 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
      * 插入新的消息
      */
     public boolean saveBlog(BlogInfo info) {
-        if (info == null) {
-            return false;
-        }
-
         String selection = BLOG_ID + " = ? ";
         String[] selectionArgs = new String[]{info.blogId};
 
@@ -105,10 +101,6 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
     }
 
     public boolean saveOrUpdateBlog(BlogInfo info) {
-        if (info == null) {
-            return false;
-        }
-
         String selection = BLOG_ID + " = ? ";
         String[] selectionArgs = new String[]{info.blogId};
 
@@ -120,12 +112,17 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
      * 收藏或取消收藏博文，更新数据库中的info.isFavo字段
      */
     public boolean doFavo(BlogInfo info) {
-        if (info == null) {
-            return false;
-        }
-
         ContentValues values = new ContentValues();
         values.put(FAVO, info.isFavo?1:0);
+        return update(info.blogId, values);
+    }
+
+    /**
+     * 收藏或取消收藏博文，更新数据库中的info.isFavo字段
+     */
+    public boolean updateBlogCachePath(BlogInfo info) {
+        ContentValues values = new ContentValues();
+        values.put(LOACAL_PATH, info.localPath);
         return update(info.blogId, values);
     }
 
@@ -133,10 +130,6 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
      * 更新blog信息，使用封装好的ContentValues
      */
     private boolean update(String blogID, ContentValues values) {
-        if (values == null || TextUtils.isEmpty(blogID)) {
-            return false;
-        }
-
         String selection = BLOG_ID + " = ? ";
         String[] selectionArgs = new String[]{blogID};
         return update(TABLE_NAME, selection, selectionArgs, values);
@@ -144,9 +137,6 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
 
 
     public boolean delete(BlogInfo info) {
-        if (info == null) {
-            return false;
-        }
         return delete(info.blogId);
     }
 
@@ -184,10 +174,6 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
      * 查询指定id的信息
      */
     public BlogInfo query(String blogId) {
-        if (TextUtils.isEmpty(blogId)) {
-            return null;
-        }
-
         String selection = BLOG_ID + " = ? ";
         String[] selectionArgs = new String[]{blogId};
 
@@ -198,32 +184,28 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
      * 查询指定id博主的信息
      */
     public BlogInfo queryByBlogerId(String blogerId) {
-        if (TextUtils.isEmpty(blogerId)) {
-            return null;
-        }
-
         String selection = BLOGER_ID + " = ? ";
         String[] selectionArgs = new String[]{blogerId};
 
         return query(TABLE_NAME, selection, selectionArgs);
     }
 
-    public List<BlogInfo> getFavoList() {
+    public List<BlogInfo> getFavoList(int start, int num) {
         String orderBy = VISITTIME + " desc ";
         String selection = FAVO + " = ? ";
         String[] selectionArgs = new String[]{String.valueOf(1)};
 
-        String limit = null;
+        String limit = String.format(Locale.ENGLISH, " %d, %d ", start, num);
 
         return queryList(TABLE_NAME, selection, selectionArgs, orderBy, limit);
     }
 
-    public List<BlogInfo> getHistoryList() {
+    public List<BlogInfo> getHistoryList(int start, int num) {
         String orderBy = VISITTIME + " desc ";
         String selection = FAVO + " != ? ";
         String[] selectionArgs = new String[]{String.valueOf(1)};
 
-        String limit = null;
+        String limit = String.format(Locale.ENGLISH, " %d, %d ", start, num);
 
         return queryList(TABLE_NAME, selection, selectionArgs, orderBy, limit);
     }

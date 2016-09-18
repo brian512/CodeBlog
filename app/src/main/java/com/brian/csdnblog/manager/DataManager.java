@@ -2,6 +2,8 @@
 package com.brian.csdnblog.manager;
 
 import com.brian.csdnblog.Env;
+import com.brian.csdnblog.datacenter.dataupdate.V76;
+import com.brian.csdnblog.datacenter.preference.CommonPreference;
 import com.brian.csdnblog.util.FileUtil;
 import com.brian.csdnblog.util.LogUtil;
 
@@ -37,16 +39,18 @@ public class DataManager {
     }
 
     public void onVersionCodeUpgrade() {
-//        int oldVersion = SPUtil.getParam(App.sAppContext, SPUtil.KEY_VERSION, 0);
-        int oldVersion = 0;
+        int oldVersion = CommonPreference.getInstance().getVersionCode();
         LogUtil.v(TAG, "oldVersion=" + oldVersion);
-        if (oldVersion == Env.getVersionCode()) {
+        if (oldVersion == Env.getVersionCode() || oldVersion == 0) {
+            // 当前版本，或第一个版本不需要处理
             return;
-        } else if (oldVersion <= 1) {
+        } else if (oldVersion < 75) { // 防止跳过了这个版本，所以需要在往后的每个版本中进行如此的数据处理
+                                        // 并且每次有数据更改都得增加else分支处理数据
+            V76.updateData();
+        } else  {
+            // do nothing
         }
-//        SPUtil.setParam(App.sAppContext, SPUtil.KEY_VERSION, App.sVersionCode);
     }
-
 
     public static String getBlogCachePath(String fileName) {
         return PATH_DIR_CACHE_BLOG + "/" + fileName;

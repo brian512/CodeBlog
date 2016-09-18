@@ -10,24 +10,20 @@ import com.brian.csdnblog.util.Md5;
 
 import java.util.List;
 
-public class HistoryBlogManager {
+public class BlogManager {
 
-//    private static final int MAX_CACHE_COUNT = 50;
+    private static final int PAGE_COUNT = 15;
 
-//    private static String FILE_NAME_CACHE = "history_list";
-//    private static String FILE_NAME_CACHE = "favo_list";
+    private static BlogManager sInstance;
 
-    private static HistoryBlogManager sInstance;
-
-    private HistoryBlogManager() {
-//        FILE_NAME_CACHE = Env.getContext().getFilesDir() + "/" + FILE_NAME_CACHE;
+    private BlogManager() {
     }
 
-    public static HistoryBlogManager getInstance() {
+    public static BlogManager getInstance() {
         if (sInstance == null) {
-            synchronized (HistoryBlogManager.class) {
+            synchronized (BlogManager.class) {
                 if (sInstance == null) {
-                    sInstance = new HistoryBlogManager();
+                    sInstance = new BlogManager();
                 }
             }
         }
@@ -39,21 +35,35 @@ public class HistoryBlogManager {
             return;
         }
         blogInfo.visitTime = System.currentTimeMillis();
-        BlogInfoTable.getInstance().saveBlogAsyc(blogInfo);
+        BlogInfoTable.getInstance().saveBlog(blogInfo);
     }
 
-    public void doFavo(BlogInfo blogInfo, boolean isFavo) {
+    public boolean doFavo(BlogInfo blogInfo, boolean isFavo) {
+        if (blogInfo == null) {
+            return false;
+        }
         blogInfo.isFavo = isFavo;
-        BlogInfoTable.getInstance().doFavo(blogInfo);
+        UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_FAVO, TypeManager.getBlogName(blogInfo.type));
+        return BlogInfoTable.getInstance().doFavo(blogInfo);
     }
 
     public boolean isFavo(BlogInfo blogInfo) {
+        if (blogInfo == null) {
+            return false;
+        }
         BlogInfo info = BlogInfoTable.getInstance().query(blogInfo.blogId);
         if (info == null) {
             LogUtil.w("this blog is not exist!");
             return false;
         }
         return info.isFavo;
+    }
+
+    public boolean updateBlogCachePath(BlogInfo blogInfo) {
+        if (blogInfo == null || TextUtils.isEmpty(blogInfo.localPath)) {
+            return false;
+        }
+        return BlogInfoTable.getInstance().updateBlogCachePath(blogInfo);
     }
 
     public void removeBlog(BlogInfo blogInfo) {
@@ -72,12 +82,12 @@ public class HistoryBlogManager {
         BlogInfoTable.getInstance().deleteBlogsByType(type);
     }
 
-    public List<BlogInfo> getHistoryBlogList() {
-        return BlogInfoTable.getInstance().getHistoryList();
+    public List<BlogInfo> getHistoryBlogList(int page) {
+        return BlogInfoTable.getInstance().getHistoryList(PAGE_COUNT*page, PAGE_COUNT);
     }
 
-    public List<BlogInfo> getFavoBlogList() {
-        return BlogInfoTable.getInstance().getFavoList();
+    public List<BlogInfo> getFavoBlogList(int page) {
+        return BlogInfoTable.getInstance().getFavoList(PAGE_COUNT*page, PAGE_COUNT);
     }
 
     public void fetchBlogContent(String url, DataFetcher.OnFetchDataListener<DataFetcher.Result<String>> listener) {

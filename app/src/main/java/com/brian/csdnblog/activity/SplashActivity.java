@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.datacenter.preference.CommonPreference;
+import com.brian.csdnblog.manager.DataManager;
 import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.PermissionUtil;
 import com.brian.csdnblog.util.UIUtil;
@@ -26,6 +27,8 @@ public class SplashActivity extends BaseActivity {
 
         if (isFirstLaunch()) {
             createShortCut();// 创建桌面快捷方式
+
+            DataManager.getInstance().onVersionCodeUpgrade();
 
             updateVersionCode();// 更新版本号
         }
@@ -104,7 +107,6 @@ public class SplashActivity extends BaseActivity {
         int versionCode = UIUtil.getVersionCode(SplashActivity.this);
 
         LogUtil.i(TAG, "versionCode=" + versionCode);
-
         CommonPreference.getInstance().setVersionCode(versionCode);
     }
 

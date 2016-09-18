@@ -29,7 +29,7 @@ import com.brian.csdnblog.manager.DataFetcher;
 import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
 import com.brian.csdnblog.manager.DataManager;
-import com.brian.csdnblog.manager.HistoryBlogManager;
+import com.brian.csdnblog.manager.BlogManager;
 import com.brian.csdnblog.manager.ShareManager;
 import com.brian.csdnblog.manager.ThreadManager;
 import com.brian.csdnblog.manager.TypeManager;
@@ -123,14 +123,14 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
 
         // 开始请求数据
         if (TypeManager.getWebType(mBlogInfo.type) == TypeManager.TYPE_WEB_JCC) {
-            HistoryBlogManager.getInstance().fetchBlogContent(mCurrentUrl, "GB2312", this);
+            BlogManager.getInstance().fetchBlogContent(mCurrentUrl, "GB2312", this);
         } else {
-            HistoryBlogManager.getInstance().fetchBlogContent(mCurrentUrl, this);
+            BlogManager.getInstance().fetchBlogContent(mCurrentUrl, this);
         }
 
         mProgressBar.setVisibility(View.VISIBLE);
         
-        HistoryBlogManager.getInstance().saveBlog(mBlogInfo);
+        BlogManager.getInstance().saveBlog(mBlogInfo);
     }
 
     private void initBlogInfo() {
@@ -244,7 +244,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
             @Override
             public void onClick(View v) {
                 boolean hasFavoed = mBtnFavo.isSelected();
-                HistoryBlogManager.getInstance().doFavo(mBlogInfo, !hasFavoed);
+                BlogManager.getInstance().doFavo(mBlogInfo, !hasFavoed);
                 mBtnFavo.setSelected(!hasFavoed);
             }
         });
@@ -296,7 +296,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
                 toggleAdShow(true);
                 
                 mCurrentUrl = blogUrl;
-                HistoryBlogManager.getInstance().fetchBlogContent(blogUrl, BlogContentActivity.this);
+                BlogManager.getInstance().fetchBlogContent(blogUrl, BlogContentActivity.this);
                 return true;
             }
             return false;
@@ -371,7 +371,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
                     mProgressBar.setVisibility(View.GONE);
                     
                     mBtnFavo.setVisibility(View.VISIBLE);
-                    mBtnFavo.setSelected(HistoryBlogManager.getInstance().isFavo(mBlogInfo));
+                    mBtnFavo.setSelected(BlogManager.getInstance().isFavo(mBlogInfo));
                     mWebView.setVisibility(View.VISIBLE);
                     String content = (String) msg.obj;
                     mWebView.loadDataWithBaseURL(mBlogParser.getBlogBaseUrl(), content,
@@ -409,7 +409,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
                         String cachePath = DataManager.getBlogCachePath(mBlogInfo.blogId);
                         mBlogInfo.localPath = cachePath;
                         FileUtil.writeFile(cachePath, contentHtml);
-                        HistoryBlogManager.getInstance().saveBlog(mBlogInfo);
+                        BlogManager.getInstance().saveBlog(mBlogInfo);
                     }
 
                     mBlogStack.push(contentHtml);
