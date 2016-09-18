@@ -10,8 +10,12 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
+
+import com.brian.csdnblog.Env;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,6 +27,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.UUID;
 
 
 /**
@@ -30,6 +35,21 @@ import java.util.ArrayList;
  */
 public class DeviceUtil {
 
+    private static String uniqueId;
+    public static String getUUID() {
+        if (!TextUtils.isEmpty(uniqueId)) {
+            return uniqueId;
+        }
+        final TelephonyManager tm = (TelephonyManager) Env.getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        final String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + Settings.Secure.getString(Env.getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        uniqueId = Md5.getMD5ofStr(deviceUuid.toString());
+        LogUtil.d("uuid=" + uniqueId);
+        return uniqueId;
+    }
 
     /**
      * 获取分辨率，格式：640x480

@@ -14,9 +14,13 @@ import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.adapter.ChatListAdapter;
 import com.brian.csdnblog.manager.ThreadManager;
+import com.brian.csdnblog.manager.UsageStatsManager;
 import com.brian.csdnblog.model.ChatMsgInfo;
 import com.brian.csdnblog.robot.ChatRobot;
 import com.brian.csdnblog.robot.ChatRobot.OnReplyListener;
+import com.brian.csdnblog.util.DeviceUtil;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,6 +130,6 @@ public class ChatActivity extends BaseActivity {
         for (ChatMsgInfo chatInfo : chatList) {
             list.add(chatInfo.toString());
         }
-//        UsageStatsManager.reportErrorToUmeng(new Gson().toJson(list, new TypeToken<ArrayList<String>>() {}.getType()) + "\n DeviceToken=" + PushManager.getInstance().getDeviceToken());
+        UsageStatsManager.reportErrorToUmeng(new Gson().toJson(list, new TypeToken<ArrayList<String>>() {}.getType()) + "\n DeviceToken=" + DeviceUtil.getUUID());
     }
 }

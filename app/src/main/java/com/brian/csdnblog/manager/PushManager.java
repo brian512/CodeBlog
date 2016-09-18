@@ -8,6 +8,7 @@ import com.brian.csdnblog.model.BlogInfo;
 import com.brian.csdnblog.model.NotifyMsgInfo;
 import com.brian.csdnblog.model.PushInfo;
 import com.brian.csdnblog.model.UpdateInfo;
+import com.brian.csdnblog.util.DeviceUtil;
 import com.brian.csdnblog.util.LogUtil;
 import com.google.gson.Gson;
 import com.xiaomi.channel.commonutils.logger.LoggerInterface;
@@ -55,6 +56,7 @@ public class PushManager {
 
     public void initPushMsg(Context context) {
         MiPushClient.registerPush(context, "2882303761517322008", "5871732210008");
+        MiPushClient.setUserAccount(context, DeviceUtil.getUUID(), null);
         //打开Log
         LoggerInterface newLogger = new LoggerInterface() {
             @Override
