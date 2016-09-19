@@ -225,8 +225,6 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
             @Override
             public void onClick(View v) {
                 onClickShare();
-                // 友盟统计分享事件
-                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SHARE, "article");
             }
         });
         mReLoadImageView.setOnClickListener(new OnClickListener() {

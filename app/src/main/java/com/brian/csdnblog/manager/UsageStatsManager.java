@@ -14,13 +14,13 @@ import java.util.HashMap;
  * @author brian @date 2015-9-8
  */
 public class UsageStatsManager {
-    private static final String TAG = "UsageStatsManager";
     private static final boolean DEBUG = Config.isDebug;
 
 
     public static final String USAGE_SHARE = "share";
     public static final String USAGE_LOOKUP_BLOGER = "lookup_bloger";
-    
+    public static final String USAGE_LOOKUP_QQ = "lookup_qq";
+
     public static final String USAGE_BLOG_CATE = "blog_cate";
     public static final String USAGE_MAIN_TAB = "main_tab";
     public static final String USAGE_BLOG_COUNT = "blog_count";
@@ -35,12 +35,8 @@ public class UsageStatsManager {
     public static final String EXP_EMPTY_LIST = "empty_list";
     public static final String EXP_EMPTY_SEARCH = "empty_search";
     
-    
     public static final String SETTING_LIST = "setting_list";
     public static final String SETTING_AD = "setting_ad";
-    public static final String SETTING_SCREEN = "setting_screen";
-    public static final String SETTING_WIFIPIC = "setting_wifipic";
-    public static final String SETTING_BACKGROUND = "setting_background";
 
 //    private static ArrayList<HashMap<String, Object>> mUsageDatas = null;
 //    private static final int MAX_CACHE_SIZE = 10;
@@ -94,13 +90,12 @@ public class UsageStatsManager {
         if (TextUtils.isEmpty(key)) {
             return;
         }
-        HashMap<String, String> values = new HashMap<String, String>();
+        HashMap<String, String> values = new HashMap<>();
         values.put(key, value.toString());
         doSendUsageDataToUmeng(key, values);
     }
 
-    private static void doSendUsageDataToUmeng(final String key,
-            final HashMap<String, String> values) {
+    private static void doSendUsageDataToUmeng(final String key, final HashMap<String, String> values) {
         LogUtil.d("key=" + key + ";values=" + values);
         if (DEBUG) {
             return;

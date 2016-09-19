@@ -10,6 +10,9 @@ import java.util.concurrent.TimeUnit;
 
 public class Config {
 
+    /**
+     * 正式版本打包时自动更改为false
+     */
     public static boolean isDebug = true;
     
     public static final boolean DEBUG_BUGTAGS_ENABLE = isDebug;
@@ -85,7 +88,6 @@ public class Config {
     public static String getBlogListJson() {
         return getConfigParams(KEY_BLOG_LIST);
     }
-    
 
     private static String getConfigParams(String key) {
         return OnlineConfigAgent.getInstance().getConfigParams(Env.getContext(), key);

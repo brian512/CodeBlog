@@ -70,8 +70,6 @@ public class AboutActivity extends BaseActivity {
             public void onClick(View v) {
                 // 分享app
                 ShareManager.getInstance().shareAppToQQ(AboutActivity.this);
-                // 友盟统计分享事件
-                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SHARE, "app");
             }
         });
 
@@ -88,6 +86,7 @@ public class AboutActivity extends BaseActivity {
             public void onClick(View v) {
                 String url="mqqwpa://im/chat?chat_type=group&uin=194067225";
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_LOOKUP_QQ);
             }
         });
     }

@@ -65,6 +65,7 @@ public class ShareManager {
         bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, Constants.URL_CSDN_LOGO);
         bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, activity.getString(R.string.app_name));
         shareToQQ(activity, bundle, new BaseUiListener());
+        UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SHARE, "app");
     }
     
     public void shareBlogToQQ(Activity activity, Bundle bundle) {
@@ -72,6 +73,7 @@ public class ShareManager {
         bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, Constants.URL_CSDN_LOGO);
         bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, activity.getString(R.string.app_name));
         shareToQQ(activity, bundle, new BaseUiListener());
+        UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SHARE, "article");
     }
 
     /**
