@@ -85,6 +85,14 @@ public class BlogManager {
         BlogInfoTable.getInstance().deleteBlogsByType(type);
     }
 
+    public void clearHistoryList() {
+        BlogInfoTable.getInstance().deleteHistoryBlogs();
+    }
+
+    public void clearFavoList() {
+        BlogInfoTable.getInstance().deleteFavoBlogs();
+    }
+
     public List<BlogInfo> getHistoryBlogList(int page) {
         return BlogInfoTable.getInstance().getHistoryList(PAGE_COUNT*page, PAGE_COUNT);
     }

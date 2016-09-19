@@ -1,6 +1,8 @@
 package com.brian.csdnblog.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -59,12 +61,9 @@ public class BlogListActivity extends BaseActivity {
         mTitleBar.setRightListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mType == TYPE_FAVO) {
-                    BlogManager.getInstance().clearByType(TYPE_FAVO);
-                } else if (mType == TYPE_HISTORY) {
-                    BlogManager.getInstance().clear();
+                if (!mListFrag.isListEmpty()) {
+                    showClearConfirmDialog();
                 }
-                mListFrag.clearList();
             }
         });
         
@@ -87,5 +86,26 @@ public class BlogListActivity extends BaseActivity {
         mListFrag.setType(type);
         trans.add(R.id.list, mListFrag, null);
         trans.commit();
+    }
+
+    private void showClearConfirmDialog() {
+        new AlertDialog.Builder(this).setTitle("确认清空列表数据吗？")
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setPositiveButton("Just Do IT!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (mType == TYPE_FAVO) {
+                            BlogManager.getInstance().clearFavoList();
+                        } else if (mType == TYPE_HISTORY) {
+                            BlogManager.getInstance().clearHistoryList();
+                        }
+                        mListFrag.clearList();
+                    }
+                })
+                .setNegativeButton("不删，手抖了", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                }).show();
     }
 }

@@ -228,40 +228,6 @@
         android:src="@drawable/pc_divider_line" />
 
     <RelativeLayout
-        android:id="@+id/checkUpdateView"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height"
-        android:background="?android:attr/selectableItemBackground">
-
-        <TextView
-            android:id="@+id/tv9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
-            android:text="@string/check_update"
-            android:textColor="@color/black"
-            android:textSize="@dimen/user_center_size_menu" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/user_center_menu_marginRight"
-            android:contentDescription="@string/str_null"
-            android:focusable="false"
-            android:src="@drawable/app_recommend_arrow" />
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/str_null"
-        android:src="@drawable/pc_divider_line" />
-
-    <RelativeLayout
         android:id="@+id/aboutView"
         android:layout_width="match_parent"
         android:layout_height="@dimen/user_center_menu_height"

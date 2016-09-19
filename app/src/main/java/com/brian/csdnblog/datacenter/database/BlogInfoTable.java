@@ -163,6 +163,18 @@ public class BlogInfoTable extends BaseTable<BlogInfo> {
         return delete(TABLE_NAME, selection, selectionArgs);
     }
 
+    public boolean deleteHistoryBlogs() {
+        String selection = FAVO + " = ? ";
+        String[] selectionArgs = new String[]{String.valueOf(0)};
+        return delete(TABLE_NAME, selection, selectionArgs);
+    }
+
+    public boolean deleteFavoBlogs() {
+        String selection = FAVO + " = ? ";
+        String[] selectionArgs = new String[]{String.valueOf(1)};
+        return delete(TABLE_NAME, selection, selectionArgs);
+    }
+
     /**
      * 清空当前记录
      */

@@ -90,6 +90,25 @@
         android:background="@color/com_divider_gray_0" />
 
     <TextView
+        android:id="@+id/update"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="检查更新"
+        android:drawableRight="@drawable/app_recommend_arrow"
+        android:background="?android:attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="20dp"
+        android:textColor="@color/com_text_tx1"
+        android:textSize="@dimen/com_text_size_content"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="20dp"
+        android:background="@color/com_divider_gray_0" />
+
+    <TextView
         android:id="@+id/market"
         android:layout_width="match_parent"
         android:layout_height="48dp"

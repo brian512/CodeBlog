@@ -14,11 +14,12 @@ import com.brian.common.view.DrawerArrowDrawable;
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.adapter.MainTabAdapter;
-import com.brian.csdnblog.manager.PushManager;
-import com.brian.csdnblog.manager.ShareManager;
-import com.brian.csdnblog.manager.UsageStatsManager;
 import com.brian.csdnblog.datacenter.preference.CommonPreference;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
+import com.brian.csdnblog.manager.PushManager;
+import com.brian.csdnblog.manager.ShareManager;
+import com.brian.csdnblog.manager.UpdateManager;
+import com.brian.csdnblog.manager.UsageStatsManager;
 import com.brian.csdnblog.util.LogUtil;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnCloseListener;
@@ -29,7 +30,6 @@ import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.umeng.onlineconfig.OnlineConfigLog;
 import com.umeng.onlineconfig.UmengOnlineConfigureListener;
-import com.xiaomi.market.sdk.XiaomiUpdateAgent;
 
 import org.json.JSONObject;
 
@@ -60,9 +60,8 @@ public class MainTabActivity extends SlidingFragmentActivity {
         setContentView(R.layout.activity_main_tab);
         ButterKnife.bind(this);
 
-        // 小米更新
-        XiaomiUpdateAgent.update(this, Config.isDebug);
-        XiaomiUpdateAgent.setCheckUpdateOnlyWifi(false);
+        // 初始化更新模块
+        UpdateManager.getInstance().initUpdate();
 
         MobclickAgent.enableEncrypt(true);
 

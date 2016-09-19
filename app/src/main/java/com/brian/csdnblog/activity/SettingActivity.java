@@ -11,10 +11,12 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.brian.common.view.TitleBar;
+import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
-import com.brian.csdnblog.manager.ShareManager;
-import com.brian.csdnblog.manager.UsageStatsManager;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
+import com.brian.csdnblog.manager.ShareManager;
+import com.brian.csdnblog.manager.UpdateManager;
+import com.brian.csdnblog.manager.UsageStatsManager;
 import com.brian.csdnblog.util.MarketUtils;
 import com.umeng.analytics.MobclickAgent;
 
@@ -23,15 +25,14 @@ import butterknife.ButterKnife;
 
 public class SettingActivity extends BaseActivity {
 
-    private static final String TAG = SettingActivity.class.getSimpleName();
+    @BindView(R.id.title_bar)               TitleBar mTitleBar;
 
-    @BindView(R.id.title_bar) TitleBar mTitleBar;
-
-    @BindView(R.id.switch_show_ad_text) TextView mSwitchAdText;
-    @BindView(R.id.switch_vertical_text) TextView mSwitchVerticalText;
-    @BindView(R.id.switch_picinfwifi_text) TextView mSwitchPicWifiText;
-    @BindView(R.id.switch_staybg_text) TextView mSwitchStayBgText;
-    @BindView(R.id.market) TextView mMarketText;
+    @BindView(R.id.switch_show_ad_text)     TextView mSwitchAdText;
+    @BindView(R.id.switch_vertical_text)    TextView mSwitchVerticalText;
+    @BindView(R.id.switch_picinfwifi_text)  TextView mSwitchPicWifiText;
+    @BindView(R.id.switch_staybg_text)      TextView mSwitchStayBgText;
+    @BindView(R.id.market)                  TextView mMarketText;
+    @BindView(R.id.update)                  TextView mCheckUpdateText;
 
     public static void startActivity(Activity activity) {
         Intent intent = new Intent();
@@ -131,7 +132,16 @@ public class SettingActivity extends BaseActivity {
         mMarketText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_LIST, "market");
                 MarketUtils.launchAppDetail(getPackageName(), "");
+            }
+        });
+
+        mCheckUpdateText.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_LIST, "update");
+                UpdateManager.getInstance().checkUpdate(Env.getContext());
             }
         });
     }

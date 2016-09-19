@@ -373,7 +373,11 @@ public class BlogListFrag extends Fragment {
             mAdapter.removeAllDatas();
         }
     }
-    
+
+    public boolean isListEmpty() {
+        return mAdapter == null || mAdapter.isEmpty();
+    }
+
     @Override
     public void onStart() {
         super.onStart();
