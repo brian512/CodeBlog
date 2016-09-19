@@ -44,7 +44,7 @@ public class DataManager {
         if (oldVersion == Env.getVersionCode() || oldVersion == 0) {
             // 当前版本，或第一个版本不需要处理
             return;
-        } else if (oldVersion < 75) { // 防止跳过了这个版本，所以需要在往后的每个版本中进行如此的数据处理
+        } else if (oldVersion <= 75) { // 防止跳过了这个版本，所以需要在往后的每个版本中进行如此的数据处理
                                         // 并且每次有数据更改都得增加else分支处理数据
             V76.updateData();
         } else  {

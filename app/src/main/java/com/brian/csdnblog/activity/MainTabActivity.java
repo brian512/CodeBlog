@@ -60,8 +60,8 @@ public class MainTabActivity extends SlidingFragmentActivity {
         setContentView(R.layout.activity_main_tab);
         ButterKnife.bind(this);
 
-        // 友盟更新
-        XiaomiUpdateAgent.update(this);
+        // 小米更新
+        XiaomiUpdateAgent.update(this, Config.isDebug);
         XiaomiUpdateAgent.setCheckUpdateOnlyWifi(false);
 
         MobclickAgent.enableEncrypt(true);

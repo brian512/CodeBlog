@@ -22,11 +22,12 @@ public class V76 {
     public static final String FILE_NAME_CACHE_FAVO = Env.getContext().getFilesDir() + "/favo_list";
 
     public static void updateData() {
-        convertData(FILE_NAME_CACHE_HISTORY, false);
+        // 现存储收藏的文章，否则会被历史文章覆盖
         convertData(FILE_NAME_CACHE_FAVO, true);
+        convertData(FILE_NAME_CACHE_HISTORY, false);
 
-        FileUtil.deleteFile(FILE_NAME_CACHE_HISTORY);
         FileUtil.deleteFile(FILE_NAME_CACHE_FAVO);
+        FileUtil.deleteFile(FILE_NAME_CACHE_HISTORY);
     }
 
     private static void convertData(String dataPath, boolean isFavo) {
@@ -35,8 +36,8 @@ public class V76 {
             List<BlogInfoOld> blogs = new Gson().fromJson(json.toString(),
                     new TypeToken<List<BlogInfoOld>>() {} .getType());
             if (blogs != null && !blogs.isEmpty()) {
-                for (BlogInfoOld info : blogs) {
-                    BlogManager.getInstance().saveBlog(convertBlogInfo(info, isFavo));
+                for (int i=blogs.size()-1; i >= 0; i--) {
+                    BlogManager.getInstance().saveBlog(convertBlogInfo(blogs.get(i), isFavo));
                 }
             }
         }
