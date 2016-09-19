@@ -206,6 +206,11 @@ public class OsChinaNewsParser implements IBlogHtmlParser {
     }
 
     @Override
+    public String getBlogerUrl(String homeUrl, int page) {
+        return null;
+    }
+
+    @Override
     public String getBlogBaseUrl() {
         return URL_BLOG_BASE;
     }

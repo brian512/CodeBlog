@@ -40,7 +40,9 @@ public class ITEyeHtmlParser implements IBlogHtmlParser {
     private static final String URL_BLOG_BASE = "http://www.iteye.com/blogs/";
     
     private static final String URL_BLOG_LIST = "http://www.iteye.com/blogs/category/mobile?page=1";
-    
+
+    private static final String URL_BLOGER_HOME_PAGE_SUFF = "?page=2";
+
     private static ITEyeHtmlParser sInstance = null;
     
     private ITEyeHtmlParser() {}
@@ -189,6 +191,15 @@ public class ITEyeHtmlParser implements IBlogHtmlParser {
             category = 0;
         }
         return URL_BLOG_LIST.replace("mobile", TYPES_STR[category]).replace("page=1", "page="+page);
+    }
+
+    @Override
+    public String getBlogerUrl(String homeUrl, int page) {
+        if (!homeUrl.endsWith("/")) {
+            homeUrl += "/";
+        }
+        homeUrl += URL_BLOGER_HOME_PAGE_SUFF;
+        return homeUrl.replace("page=1", "page="+page);
     }
 
     @Override

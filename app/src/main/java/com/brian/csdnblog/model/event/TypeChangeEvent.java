@@ -1,4 +1,4 @@
-package com.brian.csdnblog.model;
+package com.brian.csdnblog.model.event;
 
 public class TypeChangeEvent {
 

@@ -140,8 +140,7 @@ dependencies {
     compile 'me.imid.swipebacklayout.lib:library:1.0.0'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'com.squareup.okio:okio:1.7.0'
-    compile 'com.squareup.wire:wire-runtime:2.1.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 
     compile 'com.jakewharton:butterknife:8.3.0'
     apt 'com.jakewharton:butterknife-compiler:8.3.0'

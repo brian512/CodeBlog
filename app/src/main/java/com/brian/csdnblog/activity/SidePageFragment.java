@@ -13,12 +13,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.brian.common.view.CircleImageView;
+import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
+import com.brian.csdnblog.manager.BlogerManager;
 import com.brian.csdnblog.manager.Constants;
 import com.brian.csdnblog.manager.TypeManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
+import com.brian.csdnblog.model.Bloger;
+import com.brian.csdnblog.model.event.CurrBlogerEvent;
 import com.brian.csdnblog.util.LogUtil;
+import com.squareup.picasso.Picasso;
 import com.umeng.analytics.MobclickAgent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,6 +77,11 @@ public class SidePageFragment extends Fragment implements OnClickListener {
         mAboutLy.setOnClickListener(this);
         mSettingsLy.setOnClickListener(this);
         viewChat.setOnClickListener(this);
+
+        Bloger bloger = BlogerManager.getsInstance().getCurrBloger();
+        mBlogerNameView.setText(bloger.nickName + "的博客");
+        LogUtil.log("headUrl=" + bloger.headUrl);
+        Picasso.with(Env.getContext()).load(bloger.headUrl).into(mBlogerHeadView);
     }
 
     @Override
@@ -76,7 +89,8 @@ public class SidePageFragment extends Fragment implements OnClickListener {
         switch (view.getId()) {
             case R.id.bloger: // 博主博文列表入口
                 UsageStatsManager.sendUsageData(UsageStatsManager.MENU_LIST, "bloger");
-                BlogerBlogListActivity.startActivity(getActivity(), 256, "brian512");
+                Bloger bloger = BlogerManager.getsInstance().getCurrBloger();
+                BlogerBlogListActivity.startActivity(getActivity(), bloger.blogerType, bloger);
                 break;
             case R.id.aboutView: // 关于
                 UsageStatsManager.sendUsageData(UsageStatsManager.MENU_LIST, "about");
@@ -141,6 +155,28 @@ public class SidePageFragment extends Fragment implements OnClickListener {
         super.onPause();
         LogUtil.i("onPause");
         MobclickAgent.onPageEnd(this.getClass().getName());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().register(this);
+        super.onStop();
+    }
+
+    /**
+     * EventBus回调
+     */
+    @Subscribe
+    public void onEventMainThread(CurrBlogerEvent event) {
+        mBlogerNameView.setText(event.bloger.nickName + "的博客");
+        LogUtil.log("headUrl=" + event.bloger.headUrl);
+        Picasso.with(Env.getContext()).load(event.bloger.headUrl).into(mBlogerHeadView);
     }
 
 }

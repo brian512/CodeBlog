@@ -36,7 +36,7 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
 
     private static final String URL_CSDN_BLOG_BASE = "http://blog.csdn.net";
     private static final String URL_CSDN_BLOG_HOME = "http://blog.csdn.net/type/newarticle.html?&page=1";
-    private static final String URL_CSDN_BLOGER_HOME = "http://blog.csdn.net/brian512/article/list/1";
+    private static final String URL_BLOGER_HOME_PAGE_SUFF = "article/list/1";
 
     public static final String URL_SEARCH = "http://so.csdn.net/so/search/s.do?p=1&t=blog&q=key_word";//&t=blog
 
@@ -118,9 +118,9 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
                 Bloger bloger = new Bloger();
                 bloger.blogerType = TYPE;
                 bloger.nickName = nickName;
-                bloger.headUrl = blogItem.getElementsByClass("nickname").get(0).select("img").attr("src");
+                bloger.headUrl = blogItem.getElementsByClass("head").get(0).select("img").attr("src");
                 bloger.homePageUrl = homePageUrl;
-                bloger.blogerID = Md5.getMD5ofStr(bloger.homePageUrl);
+                bloger.blogerID = Bloger.getBlogerId(bloger.homePageUrl);
 
 //                BlogerTable.getInstance().insert(bloger);//保存用户信息
                 item.blogerJson = bloger.toJson();
@@ -281,11 +281,17 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
         return getUrl(blogType, "" + page);
     }
 
+    @Override
+    public String getBlogerUrl(String homeUrl, int page) {
+        if (!homeUrl.endsWith("/")) {
+            homeUrl += "/";
+        }
+        homeUrl += URL_BLOGER_HOME_PAGE_SUFF;
+        return homeUrl.replace("/1", "/"+page);
+    }
+
     private String getUrl(int blogType, String page) {
         int category = TypeManager.getCateType(blogType);
-        if (category == TypeManager.TYPE_CAT_BLOGER) {
-            return URL_CSDN_BLOGER_HOME.replace("/1", "/"+page);
-        }
         if (category >= TYPES_STR.length) {
             category = 0;
         }

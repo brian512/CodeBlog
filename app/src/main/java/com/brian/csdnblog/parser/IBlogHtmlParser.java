@@ -26,6 +26,8 @@ public interface IBlogHtmlParser {
      * @param page 页码
      */
     String getUrlByType(int type, int page);
-    
+
+    String getBlogerUrl(String homeUrl, int page);
+
     String getBlogBaseUrl();
 }

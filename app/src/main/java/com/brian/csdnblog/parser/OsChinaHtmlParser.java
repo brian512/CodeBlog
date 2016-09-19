@@ -37,7 +37,9 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
     private static final String URL_BLOG_BASE = "http://www.oschina.net/";
     
     private static final String URL_BLOG_LIST = "http://www.oschina.net/blog?type=428602&p=1";
-    
+
+    private static final String URL_BLOGER_HOME_PAGE_SUFF = "blog?sort=time&p=1";
+
     private static OsChinaHtmlParser sInstance = null;
     
     private OsChinaHtmlParser() {}
@@ -185,6 +187,15 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
             category = 0;
         }
         return URL_BLOG_LIST.replace("428602", TYPES_STR[category]).replace("p=1", "p="+page);
+    }
+
+    @Override
+    public String getBlogerUrl(String homeUrl, int page) {
+        if (!homeUrl.endsWith("/")) {
+            homeUrl += "/";
+        }
+        homeUrl += URL_BLOGER_HOME_PAGE_SUFF;
+        return homeUrl.replace("p=1", "p="+page);
     }
 
     @Override

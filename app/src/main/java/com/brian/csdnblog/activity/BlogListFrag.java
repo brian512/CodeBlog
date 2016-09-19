@@ -5,7 +5,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,26 +17,29 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.brian.common.view.RefreshLayout;
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
+import com.brian.csdnblog.manager.BlogManager;
 import com.brian.csdnblog.manager.DataFetcher;
 import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
-import com.brian.csdnblog.manager.BlogManager;
 import com.brian.csdnblog.manager.ThreadManager;
 import com.brian.csdnblog.manager.TypeManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
 import com.brian.csdnblog.model.BlogInfo;
-import com.brian.csdnblog.model.TypeChangeEvent;
+import com.brian.csdnblog.model.Bloger;
+import com.brian.csdnblog.model.event.TypeChangeEvent;
 import com.brian.csdnblog.parser.BlogHtmlParserFactory;
 import com.brian.csdnblog.parser.IBlogHtmlParser;
 import com.brian.csdnblog.util.CommonAdapter;
 import com.brian.csdnblog.util.FileUtil;
 import com.brian.csdnblog.util.LogUtil;
+import com.brian.csdnblog.util.ResourceUtil;
 import com.brian.csdnblog.util.WeakRefHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -67,6 +73,8 @@ public class BlogListFrag extends Fragment {
     
     private CommonAdapter<BlogInfo> mAdapter;// 列表适配器
 
+    private Bloger mBloger;
+
     private int mCurrentPage = 1;
 
     private boolean mIsEnd = false;// 标记是否已经加载完所有数据
@@ -98,18 +106,31 @@ public class BlogListFrag extends Fragment {
 
     private void initUI(LayoutInflater inflater) {
         mAdapter = new CommonAdapter<BlogInfo>(Env.getContext(), null, R.layout.item_list_blog) {
-    
+            private ForegroundColorSpan mColorSpanName = new ForegroundColorSpan(ResourceUtil.getColor(R.color.light_blue));
             @Override
             public void convert(ViewHolder holder, final BlogInfo item) {
                 holder.setText(R.id.title, item.title);
                 holder.setText(R.id.description, item.summary);
-                holder.setText(R.id.msg, item.extraMsg);
-                holder.getView(R.id.msg).setOnClickListener(new OnClickListener() {
+                TextView nameView = holder.getView(R.id.msg);
+
+                SpannableStringBuilder builder = new SpannableStringBuilder(item.extraMsg);
+                Bloger bloger = Bloger.fromJson(item.blogerJson);
+                if (bloger != null && !TextUtils.isEmpty(bloger.nickName)) {
+                    int indexStart = item.extraMsg.indexOf(bloger.nickName);
+                    builder.setSpan(mColorSpanName, indexStart, indexStart + bloger.nickName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                nameView.setText(builder);
+
+                nameView.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-//                        if (!TextUtils.isEmpty(item.blogerID)) {
-//                            BlogerBlogListActivity.startActivity(getActivity(), mType, item.blogerID);
-//                        }
+                        if (!TextUtils.isEmpty(item.blogerID)) {
+                            LogUtil.log(item.blogerJson);
+                            Bloger bloger = Bloger.fromJson(item.blogerJson);
+                            if (bloger != null) {
+                                BlogerBlogListActivity.startActivity(getActivity(), mType, bloger);
+                            }
+                        }
                     }
                 });
                 holder.setOnClickListener(new OnClickListener() {
@@ -249,9 +270,17 @@ public class BlogListFrag extends Fragment {
         mNoBlogView.setVisibility(View.GONE);
         String url;
         if (isRefresh) {
-            url = mBlogParser.getUrlByType(mType, 1);
+            if (mBloger != null) {
+                url = mBlogParser.getBlogerUrl(mBloger.homePageUrl, 1);
+            } else {
+                url = mBlogParser.getUrlByType(mType, 1);
+            }
         } else {
-            url = mBlogParser.getUrlByType(mType, mCurrentPage + 1);
+            if (mBloger != null) {
+                url = mBlogParser.getBlogerUrl(mBloger.homePageUrl, mCurrentPage + 1);
+            } else {
+                url = mBlogParser.getUrlByType(mType, mCurrentPage + 1);
+            }
             mFooterLayout.setVisibility(View.VISIBLE);
         }
         LogUtil.i(TAG, "refreshUrl=" + url);
@@ -367,6 +396,10 @@ public class BlogListFrag extends Fragment {
     public void setPageName(String pageName) {
         mPageName = pageName;
     }
+
+    public void setBloger(Bloger bloger) {
+        mBloger = bloger;
+    }
     
     public void clearList() {
         if (mAdapter != null) {
@@ -383,6 +416,10 @@ public class BlogListFrag extends Fragment {
         super.onStart();
         LogUtil.d("onStart");
         EventBus.getDefault().register(this);
+
+        if (getArguments() != null) {
+            mBloger = (Bloger) getArguments().getSerializable(BlogerBlogListActivity.EXTRA_KEY_BLOGER);
+        }
     }
     
     @Override

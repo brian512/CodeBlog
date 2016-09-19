@@ -25,7 +25,7 @@
                 android:id="@+id/bloger_head"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:src="@drawable/icon_default_user"
+                android:src="@drawable/ic_launcher"
                 app:border_color="#FFffffff"
                 app:border_width="@dimen/circle_border_width" />
 
