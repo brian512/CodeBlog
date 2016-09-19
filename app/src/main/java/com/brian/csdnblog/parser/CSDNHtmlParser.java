@@ -194,7 +194,12 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
         Document doc = Jsoup.parse(contentSrc);
 
         // 获取class="details"的元素
-        Element detail = doc.getElementsByClass("details").get(0);
+        Elements details = doc.getElementsByClass("details");
+        if (details == null || details.isEmpty()) {
+            details = doc.getElementsByClass("markdown_views");
+        }
+        Element detail =details.get(0);
+
         // 将标题1换为标题2
         detail.getElementsByTag("h1").tagName("h2");
 
@@ -204,7 +209,6 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
         detail.getElementsByClass("bdsharebuttonbox").remove();
         detail.getElementsByClass("similar_article").remove();
         detail.getElementsByClass("digg").remove();
-        detail.getElementById("digg").remove();
 
         // 处理代码块-markdown
         Elements elements = detail.select("pre");
