@@ -129,6 +129,7 @@ public class BlogListFrag extends Fragment {
                             Bloger bloger = Bloger.fromJson(item.blogerJson);
                             if (bloger != null) {
                                 BlogerBlogListActivity.startActivity(getActivity(), mType, bloger);
+                                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_BLOGER_ENTR, "bloglist");
                             }
                         }
                     }

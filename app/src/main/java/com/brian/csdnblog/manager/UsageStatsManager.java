@@ -25,7 +25,9 @@ public class UsageStatsManager {
     public static final String USAGE_MAIN_TAB = "main_tab";
     public static final String USAGE_BLOG_COUNT = "blog_count";
     public static final String USAGE_FAVO = "blog_favo";
-    
+
+    public static final String USAGE_BLOGER_ENTR = "bloger_entrance";
+
     public static final String MENU_LIST = "menu_list";
     public static final String USAGE_SEARCH = "search";
     public static final String USAGE_FEEDBACK = "feedback";

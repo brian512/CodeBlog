@@ -83,16 +83,13 @@ public class SplashActivity extends BaseActivity {
 
     /**
      * 通过当前的版本号与preference记录的版本号进行比对
-     *
-     * @return
      */
     private boolean isFirstLaunch() {
-        boolean isFirstLaunch = true;
         int versionCode = CommonPreference.getInstance().getVersionCode();
-
         LogUtil.i(TAG, "version_code=" + versionCode);
 
-        if (versionCode < UIUtil.getVersionCode(SplashActivity.this)) {
+        boolean isFirstLaunch;
+        if (versionCode < UIUtil.getVersionCode(getApplication())) {
             isFirstLaunch = true;
         } else {
             isFirstLaunch = false;

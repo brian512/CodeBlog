@@ -126,7 +126,7 @@ public class TypeManager {
                 break;
             case TypeManager.TYPE_WEB_OTHER:
             default:
-                name = "OTHER";
+                name = "OTHER" + webType;
                 break;
         }
 

@@ -4,6 +4,7 @@ package com.brian.csdnblog;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.StrictMode;
 
 import com.brian.csdnblog.activity.MainTabActivity;
 import com.brian.csdnblog.manager.BrianUncaughtExceptionHandler;
@@ -38,6 +39,7 @@ public class App extends Application {
 //                MobclickAgent.setCatchUncaughtExceptions(true);
             }
             PushManager.getInstance().initPushMsg(this);
+            setStrictModeEnable(Config.isDebug);
         }
     }
 
@@ -62,6 +64,24 @@ public class App extends Application {
         // app start here
         Env.setAppStartTime();
         super.attachBaseContext(base);
+    }
+
+    private void setStrictModeEnable(boolean enable) {
+        if (!enable) {
+            return;
+        }
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+                .detectDiskReads()
+                .detectDiskWrites()
+                .detectNetwork()
+                .penaltyLog()
+                .build());
+
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .penaltyLog()
+                .penaltyDeath()
+                .build());
     }
 
     public void exit() {
