@@ -1,7 +1,6 @@
 package com.brian.csdnblog.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -10,8 +9,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.brian.csdnblog.R;
 import com.brian.csdnblog.RefWatcherHelper;
 import com.brian.csdnblog.util.LogUtil;
+import com.brian.csdnblog.util.ResourceUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
@@ -153,7 +154,7 @@ public class BaseActivity extends SwipeBackActivity {
                 // 部分机型的statusbar会有半透明的黑色背景
                 win.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                 win.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-                win.setStatusBarColor(Color.TRANSPARENT);// SDK21
+                win.setStatusBarColor(ResourceUtil.getColor(R.color.light_blue));// SDK21
 
                 isStatusBarTranslate = true;
             }

@@ -111,7 +111,7 @@ public class MainTabActivity extends SlidingFragmentActivity {
         sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);// 设置触摸屏幕的模式，从边上滑动才有效
         sm.setFadeDegree(0.8f);// 设置渐入渐出效果的值,1.0为全黑
         sm.setBehindScrollScale(0.5f);// 设置下方视图的在滚动时的缩放比例，1.0为从左往右推过来（无覆盖效果）
-        sm.setBackgroundResource(R.drawable.pc_bg);
+//        sm.setBackgroundResource(R.drawable.pc_bg);
         sm.setOnOpenListener(new OnOpenListener() {
             @Override
             public void onOpen() {

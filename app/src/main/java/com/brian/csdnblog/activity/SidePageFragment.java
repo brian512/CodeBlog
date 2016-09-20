@@ -51,6 +51,7 @@ public class SidePageFragment extends Fragment implements OnClickListener {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
         LogUtil.i("onActivityCreated");
     }
 
@@ -158,15 +159,9 @@ public class SidePageFragment extends Fragment implements OnClickListener {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onDestroy() {
         EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().register(this);
-        super.onStop();
+        super.onDestroy();
     }
 
     /**

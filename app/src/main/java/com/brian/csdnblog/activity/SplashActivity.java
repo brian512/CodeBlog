@@ -22,6 +22,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setIsFullScreen(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
