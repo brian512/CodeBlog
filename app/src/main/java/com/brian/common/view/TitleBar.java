@@ -62,8 +62,6 @@ public class TitleBar extends LinearLayout {
 
     /**
      * 左边按钮点击
-     * 
-     * @param l
      */
     public void setLeftListener(OnClickListener l) {
         mLeftBtn.setOnClickListener(l);
@@ -78,8 +76,6 @@ public class TitleBar extends LinearLayout {
 
     /**
      * 设置左边按钮图标 默认是返回键
-     * 
-     * @param resourceID
      */
     public void setLeftImageResource(int resourceID) {
         mLeftBtn.setImageResource(resourceID);
@@ -87,8 +83,6 @@ public class TitleBar extends LinearLayout {
 
     /**
      * 右边按钮点击
-     * 
-     * @param l
      */
     public void setRightListener(OnClickListener l) {
         mRightBtn.setOnClickListener(l);
@@ -103,8 +97,6 @@ public class TitleBar extends LinearLayout {
 
     /**
      * 设置右边按钮图标 没有默认图标，需要自己设置
-     * 
-     * @param resourceID
      */
     public void setRightImageResource(int resourceID) {
         mRightBtn.setImageResource(resourceID);
@@ -119,8 +111,6 @@ public class TitleBar extends LinearLayout {
 
     /**
      * 设置标题
-     * 
-     * @param resourceID
      */
     public void setTitleResource(int resourceID) {
         mTitleText.setText(resourceID);
@@ -128,8 +118,6 @@ public class TitleBar extends LinearLayout {
 
     /**
      * 设置title是否显示 默认显示title，没有文字
-     * 
-     * @param visible
      */
     public void setTitleVisible(int visible) {
         mTitleText.setVisibility(visible);
@@ -145,8 +133,6 @@ public class TitleBar extends LinearLayout {
 
     /**
      * 获取右边按钮
-     * 
-     * @return
      */
     public ImageView getRightButton() {
         return mRightBtn;
@@ -154,8 +140,6 @@ public class TitleBar extends LinearLayout {
 
     /**
      * 获取左边按钮
-     * 
-     * @return
      */
     public ImageView getLeftButton() {
         return mLeftBtn;

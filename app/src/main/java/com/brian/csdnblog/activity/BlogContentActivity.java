@@ -11,6 +11,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.webkit.WebSettings;
@@ -18,6 +20,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 
 import com.brian.common.view.TitleBar;
@@ -25,16 +28,17 @@ import com.brian.csdnblog.Config;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
+import com.brian.csdnblog.manager.BlogManager;
 import com.brian.csdnblog.manager.DataFetcher;
 import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
 import com.brian.csdnblog.manager.DataManager;
-import com.brian.csdnblog.manager.BlogManager;
 import com.brian.csdnblog.manager.ShareManager;
 import com.brian.csdnblog.manager.ThreadManager;
 import com.brian.csdnblog.manager.TypeManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
 import com.brian.csdnblog.model.BlogInfo;
+import com.brian.csdnblog.model.Bloger;
 import com.brian.csdnblog.model.SearchResult;
 import com.brian.csdnblog.parser.BlogHtmlParserFactory;
 import com.brian.csdnblog.parser.IBlogHtmlParser;
@@ -109,6 +113,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         ButterKnife.bind(this);
 
         initUI();// 初始化界面
+        initPopupMenu();
         initListener();
         initAd();
 
@@ -213,6 +218,47 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
 //        webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);//适应屏幕，内容将自动缩放
     }
 
+    PopupMenu popupMenu;
+    private void initPopupMenu() {
+        popupMenu = new PopupMenu(this, mTitleBar.getRightButton());
+        Menu menu = popupMenu.getMenu();
+        // 通过代码添加菜单项
+        menu.add(Menu.NONE, Menu.FIRST, 0, "分享");
+        menu.add(Menu.NONE, Menu.FIRST + 1, 1, "收藏");
+        menu.add(Menu.NONE, Menu.FIRST + 2, 2, "博主列表");
+
+        // 监听事件
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case Menu.FIRST + 0:
+                        onClickShare();
+                        break;
+                    case Menu.FIRST + 1:
+                        boolean hasFavoed = mBtnFavo.isSelected();
+                        BlogManager.getInstance().doFavo(mBlogInfo, !hasFavoed);
+                        mBtnFavo.setSelected(!hasFavoed);
+                        break;
+                    case Menu.FIRST + 2:
+                        if (!TextUtils.isEmpty(mBlogInfo.blogerID)) {
+                            LogUtil.log(mBlogInfo.blogerJson);
+                            Bloger bloger = Bloger.fromJson(mBlogInfo.blogerJson);
+                            if (bloger != null) {
+                                BlogerBlogListActivity.startActivity(BlogContentActivity.this, mBlogInfo.type, bloger);
+                                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_BLOGER_ENTR, "bloglist");
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+    }
+
     private void initListener() {
         mTitleBar.setLeftListener(new OnClickListener() {
             @Override
@@ -224,7 +270,8 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
             
             @Override
             public void onClick(View v) {
-                onClickShare();
+//                onClickShare();
+                popupMenu.show();
             }
         });
         mReLoadImageView.setOnClickListener(new OnClickListener() {
