@@ -230,7 +230,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         menu.add(Menu.NONE, Menu.FIRST + 1, 1, "收藏");
         menu.add(Menu.NONE, Menu.FIRST + 2, 2, "博主列表");
 
-        if (mBlogInfo.blogerID.equalsIgnoreCase(BlogerManager.getsInstance().getCurrBloger().blogerID)) {
+        if (BlogerManager.getsInstance().getCurrBloger().blogerID.equalsIgnoreCase(mBlogInfo.blogerID)) {
             mPopupMenu.getMenu().getItem(2).setVisible(false);
         }
 

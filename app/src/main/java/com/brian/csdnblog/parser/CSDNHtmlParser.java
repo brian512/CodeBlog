@@ -145,21 +145,43 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
         // 获取class="article_item"的所有元素
         Elements blogList = doc.getElementsByClass("article_item");//.get(0).children()
         if (blogList == null || blogList.size() <= 0) {
-            return list;
+            blogList = doc.getElementsByClass("skin_list").get(0).children();
+            if (blogList == null || blogList.size() <= 0) {
+                return list;
+            }
+            for (Element blogItem : blogList) {
+                BlogInfo item = new BlogInfo();
+                item.title = blogItem.getElementsByClass("list_c_t").get(0).text(); // 得到标题
+                item.summary = blogItem.getElementsByClass("list_c_c").get(0).text();
+                item.extraMsg = blogItem.getElementsByClass("list_c_b_l").get(0).text();
+                item.link = blogItem.getElementsByClass("list_c_t").get(0).select("a").attr("href");
+                if (item.link.startsWith("/")) {
+                    item.link = URL_CSDN_BLOG_BASE + item.link;
+                }
+                item.blogId = Md5.getMD5ofStr(item.link);
+                item.type = type;
+                item.dateStamp = String.valueOf(System.currentTimeMillis());
+
+                list.add(item);
+            }
+        } else {
+            for (Element blogItem : blogList) {
+                BlogInfo item = new BlogInfo();
+                item.title = blogItem.getElementsByClass("article_title").get(0).text(); // 得到标题
+                item.summary = blogItem.getElementsByClass("article_description").get(0).text();
+                item.extraMsg = blogItem.getElementsByClass("article_manage").get(0).text();
+                item.link = blogItem.getElementsByClass("article_title").get(0).select("a").attr("href");
+                if (item.link.startsWith("/")) {
+                    item.link = URL_CSDN_BLOG_BASE + item.link;
+                }
+                item.blogId = Md5.getMD5ofStr(item.link);
+                item.type = type;
+                item.dateStamp = String.valueOf(System.currentTimeMillis());
+
+                list.add(item);
+            }
         }
 
-        for (Element blogItem : blogList) {
-            BlogInfo item = new BlogInfo();
-            item.title = blogItem.getElementsByClass("article_title").get(0).text(); // 得到标题
-            item.summary = blogItem.getElementsByClass("article_description").get(0).text();
-            item.extraMsg = blogItem.getElementsByClass("article_manage").get(0).text();
-            item.link = blogItem.getElementsByClass("article_title").get(0).select("a").attr("href");
-            item.blogId = Md5.getMD5ofStr(item.link);
-            item.type = type;
-            item.dateStamp = String.valueOf(System.currentTimeMillis());
-
-            list.add(item);
-        }
         return list;
     }
 
