@@ -22,14 +22,6 @@
             android:layerType="software"
             android:visibility="visible" />
 
-        <ImageView
-            android:id="@+id/btn_favo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|right"
-            android:padding="10dp"
-            android:src="@drawable/ic_favo_selector" />
-
         <ProgressBar
             android:id="@+id/blogContentPro"
             style="@android:style/Holo.Light.ButtonBar"

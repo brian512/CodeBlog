@@ -160,7 +160,7 @@ public class SidePageFragment extends Fragment implements OnClickListener {
 
     @Override
     public void onDestroy() {
-        EventBus.getDefault().register(this);
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 

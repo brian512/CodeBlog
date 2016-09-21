@@ -29,6 +29,7 @@ public class UsageStatsManager {
     public static final String USAGE_BLOGER_ENTR = "bloger_entrance";
 
     public static final String MENU_LIST = "menu_list";
+    public static final String MENU_CONTENT_LIST = "menu_content_list";
     public static final String USAGE_SEARCH = "search";
     public static final String USAGE_FEEDBACK = "feedback";
     public static final String USAGE_SLIDEMENU_SHOW = "show_slidemenu";

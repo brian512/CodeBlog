@@ -29,6 +29,7 @@ import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
 import com.brian.csdnblog.manager.BlogManager;
+import com.brian.csdnblog.manager.BlogerManager;
 import com.brian.csdnblog.manager.DataFetcher;
 import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
@@ -62,14 +63,16 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
 
     @BindView(R.id.title_bar) TitleBar mTitleBar;
     @BindView(R.id.article_content) WebView mWebView;
-    @BindView(R.id.btn_favo) ImageView mBtnFavo;
     @BindView(R.id.blogContentPro) ProgressBar mProgressBar; // 进度条
     @BindView(R.id.reLoadImage) ImageView mReLoadImageView; // 重新加载的图片
     @BindView(R.id.ad_group) FrameLayout mAdLayout; // 广告
+    private PopupMenu mPopupMenu;
 
     private IQhInterstitialAd mAd;
 
     private IBlogHtmlParser mBlogParser = null;
+
+    private boolean mHasFavoed;
     
     /**
      * 存放已打开过的链接
@@ -113,7 +116,6 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         ButterKnife.bind(this);
 
         initUI();// 初始化界面
-        initPopupMenu();
         initListener();
         initAd();
 
@@ -123,6 +125,8 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
             finish();
             return;
         }
+        initPopupMenu();
+
         mTitleBar.setTitle(mBlogInfo.title);
         mCurrentTitle = mBlogInfo.title;
 
@@ -181,7 +185,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     
 
     private void initUI() {
-        mTitleBar.setRightImageResource(R.drawable.ic_share);
+        mTitleBar.setRightImageResource(R.drawable.ic_menu);
         // 点击图片重新加载
         mWebView.setWebViewClient(new MyWebViewClient());
         mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -218,30 +222,40 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
 //        webSettings.setLayoutAlgorithm(LayoutAlgorithm.SINGLE_COLUMN);//适应屏幕，内容将自动缩放
     }
 
-    PopupMenu popupMenu;
     private void initPopupMenu() {
-        popupMenu = new PopupMenu(this, mTitleBar.getRightButton());
-        Menu menu = popupMenu.getMenu();
+        mPopupMenu = new PopupMenu(this, mTitleBar.getRightButton());
         // 通过代码添加菜单项
+        Menu menu = mPopupMenu.getMenu();
         menu.add(Menu.NONE, Menu.FIRST, 0, "分享");
         menu.add(Menu.NONE, Menu.FIRST + 1, 1, "收藏");
         menu.add(Menu.NONE, Menu.FIRST + 2, 2, "博主列表");
 
+        if (mBlogInfo.blogerID.equalsIgnoreCase(BlogerManager.getsInstance().getCurrBloger().blogerID)) {
+            mPopupMenu.getMenu().getItem(2).setVisible(false);
+        }
+
         // 监听事件
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+        mPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case Menu.FIRST + 0:
+                    case Menu.FIRST:
+                        UsageStatsManager.sendUsageData(UsageStatsManager.MENU_CONTENT_LIST, "分享");
                         onClickShare();
                         break;
                     case Menu.FIRST + 1:
-                        boolean hasFavoed = mBtnFavo.isSelected();
-                        BlogManager.getInstance().doFavo(mBlogInfo, !hasFavoed);
-                        mBtnFavo.setSelected(!hasFavoed);
+                        UsageStatsManager.sendUsageData(UsageStatsManager.MENU_CONTENT_LIST, "收藏");
+                        mHasFavoed = !mHasFavoed;
+                        BlogManager.getInstance().doFavo(mBlogInfo, mHasFavoed);
+                        if (mHasFavoed) {
+                            mPopupMenu.getMenu().getItem(1).setTitle("取消收藏");
+                        } else {
+                            mPopupMenu.getMenu().getItem(1).setTitle("收藏");
+                        }
                         break;
                     case Menu.FIRST + 2:
+                        UsageStatsManager.sendUsageData(UsageStatsManager.MENU_CONTENT_LIST, "博主");
                         if (!TextUtils.isEmpty(mBlogInfo.blogerID)) {
                             LogUtil.log(mBlogInfo.blogerJson);
                             Bloger bloger = Bloger.fromJson(mBlogInfo.blogerJson);
@@ -270,8 +284,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
             
             @Override
             public void onClick(View v) {
-//                onClickShare();
-                popupMenu.show();
+                mPopupMenu.show();
             }
         });
         mReLoadImageView.setOnClickListener(new OnClickListener() {
@@ -282,15 +295,6 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
                 toggleAdShow(true);
                 
                 DataFetcher.getInstance().fetchString(mCurrentUrl, BlogContentActivity.this);
-            }
-        });
-        mBtnFavo.setOnClickListener(new OnClickListener() {
-            
-            @Override
-            public void onClick(View v) {
-                boolean hasFavoed = mBtnFavo.isSelected();
-                BlogManager.getInstance().doFavo(mBlogInfo, !hasFavoed);
-                mBtnFavo.setSelected(!hasFavoed);
             }
         });
     }
@@ -400,7 +404,6 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         UsageStatsManager.sendUsageData(UsageStatsManager.EXP_EMPTY_BLOG, TypeManager.getBlogName(mBlogInfo.type));
         
         mWebView.setVisibility(View.INVISIBLE);
-        mBtnFavo.setVisibility(View.INVISIBLE);
         mProgressBar.setVisibility(View.INVISIBLE);
         mReLoadImageView.setVisibility(View.VISIBLE);
     }
@@ -412,11 +415,16 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_UPDATE:
+                    toggleAdShow(false);// 隐藏广告
                     mReLoadImageView.setVisibility(View.GONE);
                     mProgressBar.setVisibility(View.GONE);
-                    
-                    mBtnFavo.setVisibility(View.VISIBLE);
-                    mBtnFavo.setSelected(BlogManager.getInstance().isFavo(mBlogInfo));
+
+                    mHasFavoed = BlogManager.getInstance().isFavo(mBlogInfo);
+                    if (mHasFavoed) {
+                        mPopupMenu.getMenu().getItem(1).setTitle("取消收藏");
+                    } else {
+                        mPopupMenu.getMenu().getItem(1).setTitle("收藏");
+                    }
                     mWebView.setVisibility(View.VISIBLE);
                     String content = (String) msg.obj;
                     mWebView.loadDataWithBaseURL(mBlogParser.getBlogBaseUrl(), content,
@@ -435,7 +443,6 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
 
     @Override
     public void onFetchFinished(final Result<String> response) {
-        toggleAdShow(false);// 隐藏广告
         LogUtil.i("response=" + response.data);
         if (TextUtils.isEmpty(response.data)) {
             showErrorPage();
