@@ -113,13 +113,15 @@ public class BlogListFrag extends Fragment {
                 holder.setText(R.id.description, item.summary);
                 TextView nameView = holder.getView(R.id.msg);
 
-                SpannableStringBuilder builder = new SpannableStringBuilder(item.extraMsg);
                 Bloger bloger = Bloger.fromJson(item.blogerJson);
                 if (bloger != null && !TextUtils.isEmpty(bloger.nickName)) {
+                    SpannableStringBuilder builder = new SpannableStringBuilder(item.extraMsg);
                     int indexStart = item.extraMsg.indexOf(bloger.nickName);
                     builder.setSpan(mColorSpanName, indexStart, indexStart + bloger.nickName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    nameView.setText(builder);
+                } else {
+                    nameView.setText(item.extraMsg);
                 }
-                nameView.setText(builder);
 
                 nameView.setOnClickListener(new OnClickListener() {
                     @Override

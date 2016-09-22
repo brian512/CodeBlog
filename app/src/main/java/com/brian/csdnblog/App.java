@@ -12,6 +12,7 @@ import com.brian.csdnblog.manager.BrianUncaughtExceptionHandler.OnAppCrashListen
 import com.brian.csdnblog.manager.PushManager;
 import com.brian.csdnblog.util.AppInfoUtil;
 import com.brian.csdnblog.util.ConfigHelper;
+import com.facebook.stetho.Stetho;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 
@@ -34,6 +35,8 @@ public class App extends Application {
             if (Config.isDebug) {
 //                RefWatcherHelper.install(this); // 内存泄漏检测
                 catchException(); // 本地记录crash log
+
+                Stetho.initializeWithDefaults(this);
             } else {
                 // 友盟crash统计，目前使用bugly
 //                MobclickAgent.setCatchUncaughtExceptions(true);

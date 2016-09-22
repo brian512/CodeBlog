@@ -3,7 +3,9 @@ package com.brian.csdnblog.manager;
 import android.os.Handler;
 import android.text.TextUtils;
 
+import com.brian.csdnblog.Config;
 import com.brian.csdnblog.util.LogUtil;
+import com.facebook.stetho.okhttp3.StethoInterceptor;
 
 import java.io.IOException;
 
@@ -34,7 +36,13 @@ public class DataFetcher {
     }
 
     private DataFetcher() {
-        mOkHttpClient = new OkHttpClient();
+        if (Config.isDebug) {
+            mOkHttpClient = new OkHttpClient.Builder()
+                    .addNetworkInterceptor(new StethoInterceptor())
+                    .build();
+        } else {
+            mOkHttpClient = new OkHttpClient();
+        }
         mHandler = new Handler();
     }
 

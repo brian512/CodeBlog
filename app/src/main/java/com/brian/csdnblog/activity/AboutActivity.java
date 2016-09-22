@@ -2,6 +2,7 @@
 package com.brian.csdnblog.activity;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.net.Uri;
@@ -84,9 +85,13 @@ public class AboutActivity extends BaseActivity {
         mQQText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url="mqqwpa://im/chat?chat_type=group&uin=194067225";
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_LOOKUP_QQ);
+                try {
+                    String url="mqqwpa://im/chat?chat_type=group&uin=194067225";
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                    UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_LOOKUP_QQ);
+                } catch (ActivityNotFoundException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
