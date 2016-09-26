@@ -14,10 +14,13 @@ import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
+import com.brian.csdnblog.manager.DataManager;
 import com.brian.csdnblog.manager.ShareManager;
 import com.brian.csdnblog.manager.UpdateManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
+import com.brian.csdnblog.util.FileUtil;
 import com.brian.csdnblog.util.MarketUtils;
+import com.brian.csdnblog.util.ToastUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import butterknife.BindView;
@@ -33,6 +36,7 @@ public class SettingActivity extends BaseActivity {
     @BindView(R.id.switch_staybg_text)      TextView mSwitchStayBgText;
     @BindView(R.id.market)                  TextView mMarketText;
     @BindView(R.id.update)                  TextView mCheckUpdateText;
+    @BindView(R.id.cache)                   TextView mClearCacheText;
 
     public static void startActivity(Activity activity) {
         Intent intent = new Intent();
@@ -142,6 +146,15 @@ public class SettingActivity extends BaseActivity {
             public void onClick(View v) {
                 UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_LIST, "update");
                 UpdateManager.getInstance().checkUpdate(Env.getContext());
+            }
+        });
+
+        mClearCacheText.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_LIST, "cache");
+                ToastUtil.showMsgS("清除了缓存：" + FileUtil.fileSizeToString(DataManager.getInstance().getRemovableDataSize()));
+                DataManager.getInstance().clearAllCacheData();
             }
         });
     }

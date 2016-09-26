@@ -36,6 +36,7 @@ import java.util.UUID;
 public class DeviceUtil {
 
     private static String uniqueId;
+
     public static String getUUID() {
         if (!TextUtils.isEmpty(uniqueId)) {
             return uniqueId;
@@ -289,8 +290,6 @@ public class DeviceUtil {
 
     /**
      * 返回内置sd卡路径,带后置分隔符 要获取下载目录, 请使用DownloadConfig.getDownloadPath
-     *
-     * @return
      */
     public static String getSDCardDir() {
         String sdcardPath = Environment.getExternalStorageDirectory().getPath();
@@ -308,8 +307,6 @@ public class DeviceUtil {
 
     /**
      * 返回内置sd卡路径,带后置分隔符 要获取下载目录, 请使用DownloadConfig.getDownloadPath
-     *
-     * @return
      */
     public static String getPrimarySDCard() {
         // return Environment.getExternalStorageDirectory().getPath();
@@ -322,8 +319,6 @@ public class DeviceUtil {
 
     /**
      * 返回外置sd卡路径,带后置分隔符 返回除内置存储器外, 可用空间最大的存储器
-     *
-     * @return
      */
     private static String sSlaveSDCard = null;
 
@@ -338,13 +333,13 @@ public class DeviceUtil {
 
         ArrayList<String> storageArrayList = getMountedDevicesList();
 
-		/*
+        /*
          * ----------------------------------------------------------------------
-		 * ------- 特殊情况： 有些手机加载SD卡比较特殊，在设备列表中找不到该路径，这里山寨一点，加入一些
-		 * 常用的外置SD路径，如果设别列表路径没有，则从里面猜一个
-		 * ------------------------------------------
-		 * -----------------------------------
-		 */
+         * ------- 特殊情况： 有些手机加载SD卡比较特殊，在设备列表中找不到该路径，这里山寨一点，加入一些
+         * 常用的外置SD路径，如果设别列表路径没有，则从里面猜一个
+         * ------------------------------------------
+         * -----------------------------------
+         */
         storageArrayList.add("/mnt/external1");
         //
         // ... 如有需要后续这里可以再加其他路径
@@ -363,7 +358,7 @@ public class DeviceUtil {
             }
 
             // 过来不存在的路径
-            if (FileUtil.isDirExist(storagePath) == false) {
+            if (!FileUtil.isDirExist(storagePath)) {
                 continue;
             }
 
@@ -414,7 +409,7 @@ public class DeviceUtil {
         // final int INDEX_PARTITION = 3;
         final int INDEX_SYSFS_PATH = 4;
 
-        ArrayList<String> volumnPathList = new ArrayList<String>();
+        ArrayList<String> volumnPathList = new ArrayList<>();
         if (VOLD_FSTAB.exists() == false) {
             return volumnPathList;
         }
@@ -433,6 +428,7 @@ public class DeviceUtil {
             reader.close();
             mountCmdLines.trimToSize();
         } catch (IOException e) {
+            LogUtil.printError(e);
         }
 
         for (final String mountCmdLine : mountCmdLines) {
@@ -441,7 +437,7 @@ public class DeviceUtil {
             }
 
             String[] infos = mountCmdLine.split(" ");
-            if (infos == null || infos.length < INDEX_SYSFS_PATH) {
+            if (infos.length < INDEX_SYSFS_PATH) {
                 continue;
             }
 
@@ -453,7 +449,6 @@ public class DeviceUtil {
             if (!new File(path).exists()) {
                 continue;
             }
-
             volumnPathList.add(path);
         }
 
@@ -462,9 +457,6 @@ public class DeviceUtil {
 
     /**
      * 获取指定磁盘的可用空间
-     *
-     * @param storagePath
-     * @return
      */
     public static long getAvailableSizeOf(final String storagePath) {
         StatFs stat = new StatFs(storagePath);
@@ -475,8 +467,6 @@ public class DeviceUtil {
 
     /**
      * 获取扩展SD卡的总大小
-     *
-     * @return
      */
     public static long getTotalExtSdCardMemorySize() {
         String path = getSlaveSDCard();
@@ -490,11 +480,8 @@ public class DeviceUtil {
 
     /**
      * 获取扩展SD卡的空余大小
-     *
-     * @return
      */
     public static long getFreeExtSdCardMemorySize() {
-        // String path = getSlaveSDCard();
         String path = getSDCardDir();
         if (path == null)
             return 0;
@@ -509,8 +496,6 @@ public class DeviceUtil {
 
     /**
      * 获取SD卡的总大小
-     *
-     * @return
      */
     public static long getTotalExternalMemorySize() {
         String path = Environment.getExternalStorageDirectory().getPath();
@@ -522,8 +507,6 @@ public class DeviceUtil {
 
     /**
      * 获取SD卡的剩余大小（包括不可用部分）
-     *
-     * @return
      */
     public static long getAvailableExternalMemorySize() {
         String path = Environment.getExternalStorageDirectory().getPath();
@@ -535,8 +518,6 @@ public class DeviceUtil {
 
     /**
      * 获取SD卡的剩余大小
-     *
-     * @return
      */
     public static long getFreeExternalMemorySize() {
         String path = Environment.getExternalStorageDirectory().getPath();
@@ -573,16 +554,7 @@ public class DeviceUtil {
      */
     @SuppressLint("NewApi")
     static public boolean isExternalStorageEmulated() {
-
-        if (Build.VERSION.SDK_INT >= 11) {
-            boolean b = Environment.isExternalStorageEmulated(); // SDK版本号要高于11才能用
-            return b;
-
-        } else {
-            return false;
-
-        }
-
+        return Build.VERSION.SDK_INT >= 11 && Environment.isExternalStorageEmulated();
     }
 
     /**
@@ -590,32 +562,21 @@ public class DeviceUtil {
      */
     @SuppressLint("NewApi")
     static public boolean isExternalStorageRemovable() {
-
-        if (Build.VERSION.SDK_INT >= 11) {
-            boolean b = Environment.isExternalStorageRemovable(); // SDK版本号要高于11才能用
-            return b;
-
-        } else {
-            return false;
-
-        }
+        return Build.VERSION.SDK_INT >= 11 && Environment.isExternalStorageRemovable(); // SDK版本号要高于11才能用
     }
 
     /**
      * 获取序列号
-     *
-     * @return
      */
     public static String getSerialId(Context context) {
-
         String seria_num = null;
         try {
-
             Class<?> c = Class.forName("android.os.SystemProperties");
             Method m = c.getMethod("get", String.class);
             seria_num = (String) m.invoke(c, "ro.serialno");
 
         } catch (Exception e) {
+            LogUtil.printError(e);
         }
         if (seria_num == null || seria_num.equals("")) {
             TelephonyManager tManager = (TelephonyManager) context
@@ -670,8 +631,6 @@ public class DeviceUtil {
      * 通过读取"/proc/meminfo"系统内存信息文件获取，因为
      * 从API16开始才添加了从ActivityManager读取MemoryInfo.TotalMem 的方法，因此需要从文件读取 MemTotal:
      * 94096 kB MemFree: 1684 kB
-     *
-     * @return
      */
     public static long getTotalMemory() {
         String str1 = "/proc/meminfo";
@@ -714,8 +673,7 @@ public class DeviceUtil {
      * @return 总的内存大小
      */
     public static long getTotalMemorySize() {
-        long totalMemory = getTotalMemory();
-        return totalMemory;
+        return getTotalMemory();
     }
 
     /**
@@ -728,15 +686,12 @@ public class DeviceUtil {
         ActivityManager mActivityManager = (ActivityManager) context
                 .getSystemService(Context.ACTIVITY_SERVICE);
         mActivityManager.getMemoryInfo(memoryInfo);
-        long hasMemory = memoryInfo.availMem;
-        return hasMemory;
+        return memoryInfo.availMem;
     }
 
 
     /**
      * 获得CPU频率
-     *
-     * @return
      */
     public static String getCurCpuFreq() {
         String result = "N/A";
@@ -768,8 +723,6 @@ public class DeviceUtil {
      * 获取CPU最大频率（单位KHZ）
      * "/system/bin/cat" 命令行
      * "/sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq" 存储最大频率的文件的路径
-     *
-     * @return
      */
     public static long getMaxCpuFreq() {
         String result = null;
@@ -798,8 +751,6 @@ public class DeviceUtil {
 
     /**
      * 获取cpu 内核数
-     *
-     * @return
      */
     public static int getCpuNum() {
         int cpuNum = 1;
@@ -827,14 +778,9 @@ public class DeviceUtil {
 
     /**
      * 判断当前设备是否为魅族手机
-     *
-     * @return
      */
     public static boolean isMeizu() {
         Build build = new Build();
-        if (build.BRAND.indexOf("Meizu") != -1) {
-            return true;
-        }
-        return false;
+        return build.BRAND.indexOf("Meizu") != -1;
     }
 }

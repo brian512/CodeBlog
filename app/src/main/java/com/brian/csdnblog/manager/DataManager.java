@@ -17,7 +17,6 @@ public class DataManager {
     public static final String PATH_DIR_CACHE = Env.getContext().getCacheDir().getAbsolutePath();
     public static final String PATH_DIR_DB = PATH_DIR_ROOT + "/databases";
     public static final String PATH_DIR_PREFERENCE = PATH_DIR_ROOT + "/shared_prefs";
-    public static final String PATH_DIR_CACHE_PIC = PATH_DIR_CACHE;
 
     public static final String PATH_DIR_CACHE_BLOG = PATH_DIR_DATA + "/blogs";
 
@@ -68,7 +67,7 @@ public class DataManager {
      */
     public void clearAllCacheData() {
         clearCacheData();
-        FileUtil.deleteDirsAndFiles(PATH_DIR_CACHE_PIC);
+        FileUtil.deleteDirsAndFiles(PATH_DIR_CACHE_BLOG);
     }
     
     /**
@@ -86,5 +85,13 @@ public class DataManager {
     public void clearAllData() {
         clearData();
         FileUtil.deleteDirsAndFiles(PATH_DIR_PREFERENCE);
+    }
+
+    /**
+     * 获取缓存数据大小
+     * @return cache目录 + 博文缓存总和
+     */
+    public long getRemovableDataSize() {
+        return FileUtil.getFolderSize(PATH_DIR_CACHE_BLOG) + FileUtil.getFolderSize(PATH_DIR_CACHE);
     }
 }

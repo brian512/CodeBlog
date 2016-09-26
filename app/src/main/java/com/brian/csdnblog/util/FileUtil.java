@@ -331,16 +331,6 @@ public class FileUtil {
                 lastModified);
     }
 
-    public static String getCacheFileLastModified(Context ctx,
-                                                        String fileName) {
-        final File f = ctx.getFileStreamPath(fileName);
-        if (f != null && f.exists()) {
-            return DateTimeUtil.formatFileModifyDate(f.lastModified());
-        } else {
-            return null;
-        }
-    }
-
     public static void updateFileLastModified(String filePath) {
         File file = new File(filePath);
         file.setLastModified(System.currentTimeMillis());
@@ -349,43 +339,6 @@ public class FileUtil {
     public static long getFileLastModified(String filePath) {
         File file = new File(filePath);
         return file.lastModified();
-    }
-
-    public static boolean writeCache(Context ctx, String fileName,
-                                           String str, String lastModified) {
-        FileOutputStream out = null;
-        try {
-            out = ctx.openFileOutput(fileName, Context.MODE_PRIVATE);
-            out.write(str.getBytes());
-            out.flush();
-
-            if (lastModified != null) {
-                setCacheFileLastModified(ctx, fileName, lastModified);
-            }
-            return true;
-        } catch (Exception e) {
-            LogUtil.w(TAG, "can't write cache file: " + fileName);
-        } finally {
-            closeStream(out);
-        }
-        return false;
-    }
-
-    public static boolean writeCache(Context ctx, String fileName,
-                                           String str, int mode) {
-        FileOutputStream out = null;
-        try {
-            out = ctx.openFileOutput(fileName, mode);
-            out.write(str.getBytes());
-            out.flush();
-
-            return true;
-        } catch (Exception e) {
-            LogUtil.w(TAG, "can't write cache file: " + fileName);
-        } finally {
-            closeStream(out);
-        }
-        return false;
     }
 
     public static void clearCache(File cacheDir, long effiveTime) {
@@ -510,42 +463,35 @@ public class FileUtil {
         return fileSizeToString(blockSize);
     }
 
-    public static void deleteInvalidPluginFile(Context ctxt, String dirName,
-                                               String fileName) {
-        try {
-            if (StringUtil.isEmptyString(fileName)
-                    || StringUtil.isEmptyString(dirName)) {
-                return;
-            }
-            File oldDex = new File(ctxt.getDir(dirName, Context.MODE_PRIVATE),
-                    fileName);
-            File oldOptDex = new File(ctxt.getDir("opt_" + dirName,
-                    Context.MODE_PRIVATE), fileName);
-            if (oldDex.exists()) {
-                LogUtil.i(TAG, "delete invalid file :" + oldDex);
-                oldDex.delete();
-            }
-            if (oldOptDex.exists()) {
-                LogUtil.i(TAG, "delete invalid file :" + oldOptDex);
-                oldOptDex.delete();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static long getFileSize(File file) throws Exception {
+    private static long getFileSize(File file){
         long size = 0;
         if (file.exists()) {
             FileInputStream fis = null;
-            fis = new FileInputStream(file);
-            size = fis.available();
-            fis.close();
+            try {
+                fis = new FileInputStream(file);
+                size = fis.available();
+
+            } catch (IOException e){
+                LogUtil.printError(e);
+            } finally {
+                closeStream(fis);
+            }
         }
         return size;
     }
 
-    private static long getFolderSize(File f) throws Exception {
+    public static long getFolderSize(String folderPath) {
+        if (TextUtils.isEmpty(folderPath)) {
+            return 0;
+        }
+        File file = new File(folderPath);
+        if (!file.exists() || file.isFile()) {
+            return 0;
+        }
+        return getFolderSize(file);
+    }
+
+    public static long getFolderSize(File f) {
         long size = 0;
         File[] flist = f.listFiles();
         if (flist == null || flist.length <= 0) {
@@ -561,7 +507,7 @@ public class FileUtil {
         return size;
     }
 
-    private static String fileSizeToString(long fileSize) {
+    public static String fileSizeToString(long fileSize) {
         DecimalFormat df = new DecimalFormat("#.00");
         String fileSizeString = "";
         String wrongSize = "0B";
@@ -943,30 +889,6 @@ public class FileUtil {
         return (file.exists() && file.isFile());
     }
 
-    public static boolean checkFileValid(String filePath) {
-        if (StringUtil.isBlank(filePath)) {
-            return false;
-        }
-        File file = new File(filePath);
-        return checkFileValid(file);
-    }
-
-    public static boolean checkFileValid(File file) {
-        return file != null && (file.exists() && file.isFile() && file.length() > 0);
-    }
-
-    /**
-     * Indicates if this file represents a directory on the underlying file system.
-     */
-    public static boolean isFolderExist(String directoryPath) {
-        if (StringUtil.isBlank(directoryPath)) {
-            return false;
-        }
-
-        File dire = new File(directoryPath);
-        return (dire.exists() && dire.isDirectory());
-    }
-
     /**
      * delete file or directory
      * <ul>
@@ -1002,18 +924,6 @@ public class FileUtil {
             }
         }
         return file.delete();
-    }
-
-    /**
-     * get file size
-     */
-    public static long getFileSize(String path) {
-        if (StringUtil.isBlank(path)) {
-            return -1;
-        }
-
-        File file = new File(path);
-        return (file.exists() && file.isFile() ? file.length() : -1);
     }
 
     /**
@@ -1057,23 +967,5 @@ public class FileUtil {
 
         File file = new File(path);
         return file.isDirectory();
-    }
-
-
-    public static List<String> getBrianURLs(Context context, String fileName) {
-        List<String> urls = new ArrayList<>();
-        try {
-            // 把数据从文件中读入内存
-            InputStream is = context.getResources().getAssets().open(fileName);
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(is));
-            String url = "";
-            while (!TextUtils.isEmpty(url = reader.readLine())) {
-                urls.add(url);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return urls;
     }
 }
