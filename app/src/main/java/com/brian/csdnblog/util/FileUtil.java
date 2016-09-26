@@ -41,9 +41,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FileUtil {
-    private static final String TAG = "FileUtil";
+    private static String TAG = "FileUtil";
 
-    private static final long MIN_SPACE_LEFT = 20 * 1 << 20;
+    private static long MIN_SPACE_LEFT = 20 * (1 << 20);
 
     public static boolean writeFile(String filePath, InputStream stream) {
         if (!SdCardSize.checkSDCardSizeIsEnough(MIN_SPACE_LEFT)) {
@@ -57,7 +57,7 @@ public class FileUtil {
             checkFilePath(filePath);
             o = new FileOutputStream(filePath);
             byte data[] = new byte[1024];
-            int length = -1;
+            int length;
             while ((length = stream.read(data)) != -1) {
                 o.write(data, 0, length);
             }
@@ -131,6 +131,7 @@ public class FileUtil {
             fileWriter.write(content);
             fileWriter.flush();
             fileWriter.close();
+            updateFileLastModified(filePath);
             return true;
         } catch (IOException e) {
             return false;
@@ -212,7 +213,7 @@ public class FileUtil {
             return;
         }
         File file = new File(folderPath);
-        if (file.exists() && !file.isDirectory() || !file.exists()) {
+        if (!file.exists() || !file.isDirectory()) {
             file.mkdirs();
         }
     }
@@ -270,17 +271,10 @@ public class FileUtil {
     }
 
     public static boolean renameFile(File oldFile, File newFile) {
-        if (!checkFileExists(oldFile)) {
-            return false;
-        }
-        if (oldFile.renameTo(newFile)) {
-            return true;
-        } else {
-            return false;
-        }
+        return checkFileExists(oldFile) && oldFile.renameTo(newFile);
     }
 
-    public static final boolean deleteFile(String filePath) {
+    public static boolean deleteFile(String filePath) {
         if (TextUtils.isEmpty(filePath)) {
             return false;
         }
@@ -288,14 +282,14 @@ public class FileUtil {
         return deleteFile(f);
     }
 
-    public static final boolean deleteFile(File file) {
+    public static boolean deleteFile(File file) {
         if (file == null || !file.exists()) {
             return true;
         }
         return file.delete();
     }
 
-    public static final void closeStream(Closeable io) {
+    public static void closeStream(Closeable io) {
         if (io != null) {
             try {
                 io.close();
@@ -323,24 +317,21 @@ public class FileUtil {
         return true;
     }
 
-    public static final boolean setFileLastModified(File f, String lastModified) {
+    public static boolean setFileLastModified(File f, String lastModified) {
         if (StringUtil.isEmptyString(lastModified)) {
             return false;
         }
         final Date time = DateTimeUtil.parseDate(lastModified);
-        if (f != null && f.exists()) {
-            return f.setLastModified(time.getTime());
-        }
-        return false;
+        return f != null && f.exists() && f.setLastModified(time.getTime());
     }
 
-    public static final boolean setCacheFileLastModified(Context ctx,
+    public static boolean setCacheFileLastModified(Context ctx,
                                                          String fileName, String lastModified) {
         return setFileLastModified(ctx.getFileStreamPath(fileName),
                 lastModified);
     }
 
-    public static final String getCacheFileLastModified(Context ctx,
+    public static String getCacheFileLastModified(Context ctx,
                                                         String fileName) {
         final File f = ctx.getFileStreamPath(fileName);
         if (f != null && f.exists()) {
@@ -350,7 +341,17 @@ public class FileUtil {
         }
     }
 
-    public static final boolean writeCache(Context ctx, String fileName,
+    public static void updateFileLastModified(String filePath) {
+        File file = new File(filePath);
+        file.setLastModified(System.currentTimeMillis());
+    }
+
+    public static long getFileLastModified(String filePath) {
+        File file = new File(filePath);
+        return file.lastModified();
+    }
+
+    public static boolean writeCache(Context ctx, String fileName,
                                            String str, String lastModified) {
         FileOutputStream out = null;
         try {
@@ -370,7 +371,7 @@ public class FileUtil {
         return false;
     }
 
-    public static final boolean writeCache(Context ctx, String fileName,
+    public static boolean writeCache(Context ctx, String fileName,
                                            String str, int mode) {
         FileOutputStream out = null;
         try {
@@ -403,13 +404,13 @@ public class FileUtil {
         }
     }
 
-    public static final void deleteDirsAndFiles(String filepath) {
+    public static void deleteDirsAndFiles(String filepath) {
         if (!StringUtil.isEmptyString(filepath)) {
             deleteDirsAndFiles(new File(filepath));
         }
     }
 
-    public static final void deleteDirsAndFiles(File f) {
+    public static void deleteDirsAndFiles(File f) {
         if (f != null && f.exists() && f.canWrite()) {
             if (f.isFile()) {
                 f.delete();
@@ -427,7 +428,7 @@ public class FileUtil {
         }
     }
 
-    public static final boolean isDirectoryWritable(String directory) {
+    public static boolean isDirectoryWritable(String directory) {
         if (!StringUtil.isEmptyString(directory)) {
             File dir = new File(directory);
             return dir.canWrite();
@@ -635,15 +636,15 @@ public class FileUtil {
         if (TextUtils.isEmpty(filePath) || seprator == null) {
             return null;
         }
-        BufferedReader reader = null;
-        HashMap<String, String> configs = new HashMap<String, String>();
+        BufferedReader reader;
+        HashMap<String, String> configs = new HashMap<>();
         try {
             File file = new File(filePath);
             if (!file.exists() || !file.isFile() || !file.canRead()) {
                 return null;
             }
             reader = new BufferedReader(new FileReader(file));
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null) {
                 if (line.contains(seprator)) {
                     String key = line.substring(0, line.indexOf(seprator));
@@ -664,7 +665,7 @@ public class FileUtil {
             return null;
         }
         StringBuilder content = new StringBuilder("");
-        String temString = "";
+        String temString;
         try {
             File file = new File(path);
             if (!file.exists() || !file.isFile() || !file.canRead()) {
@@ -712,21 +713,20 @@ public class FileUtil {
     /**
      * read file
      *
-     * @param filePath
      * @return if file not exist, return null, else return content of file
      * @throws IOException if an error occurs while operator BufferedReader
      */
     public static StringBuilder readFile(String filePath) {
         File file = new File(filePath);
         StringBuilder fileContent = new StringBuilder("");
-        if (file == null || !file.isFile()) {
+        if (!file.isFile()) {
             return null;
         }
 
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(file));
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null) {
                 if (!fileContent.toString().equals("")) {
                     fileContent.append("\r\n");
@@ -745,21 +745,20 @@ public class FileUtil {
     /**
      * read file to string list, a element of list is a line
      *
-     * @param filePath
      * @return if file not exist, return null, else return content of file
      * @throws IOException if an error occurs while operator BufferedReader
      */
     public static List<String> readFileToList(String filePath) {
         File file = new File(filePath);
-        List<String> fileContent = new ArrayList<String>();
-        if (file == null || !file.isFile()) {
+        List<String> fileContent = new ArrayList<>();
+        if (!file.isFile()) {
             return null;
         }
 
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new FileReader(file));
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null) {
                 fileContent.add(line);
             }
@@ -790,7 +789,6 @@ public class FileUtil {
      *      getFileNameWithoutExtension("/home/admin/a.txt/b.mp3")  =   "b"
      * </pre>
      *
-     * @param filePath
      * @return file name from path, not include suffix
      * @see
      */
@@ -828,7 +826,6 @@ public class FileUtil {
      *      getFileName("/home/admin/a.txt/b.mp3")  =   "b.mp3"
      * </pre>
      *
-     * @param filePath
      * @return file name from path, include suffix
      */
     public static String getFileName(String filePath) {
@@ -859,8 +856,6 @@ public class FileUtil {
      *      getFolderName("/home/admin/a.txt/b.mp3")  =   "/home/admin/a.txt"
      * </pre>
      *
-     * @param filePath
-     * @return
      */
     public static String getFolderName(String filePath) {
 
@@ -890,9 +885,6 @@ public class FileUtil {
      *      getFileExtension("/home/admin/a.txt/b")  =   ""
      *      getFileExtension("/home/admin/a.txt/b.mp3")  =   "mp3"
      * </pre>
-     *
-     * @param filePath
-     * @return
      */
     public static String getFileExtension(String filePath) {
         if (StringUtil.isBlank(filePath)) {
@@ -932,8 +924,6 @@ public class FileUtil {
     }
 
     /**
-     * @param filePath
-     * @return
      * @see {@link #makeDirs(String)}
      */
     public static boolean makeFolders(String filePath) {
@@ -943,8 +933,6 @@ public class FileUtil {
     /**
      * Indicates if this file represents a file on the underlying file system.
      *
-     * @param filePath
-     * @return
      */
     public static boolean isFileExist(String filePath) {
         if (StringUtil.isBlank(filePath)) {
@@ -964,17 +952,11 @@ public class FileUtil {
     }
 
     public static boolean checkFileValid(File file) {
-        if (file == null) {
-            return false;
-        }
-        return (file.exists() && file.isFile() && file.length() > 0);
+        return file != null && (file.exists() && file.isFile() && file.length() > 0);
     }
 
     /**
      * Indicates if this file represents a directory on the underlying file system.
-     *
-     * @param directoryPath
-     * @return
      */
     public static boolean isFolderExist(String directoryPath) {
         if (StringUtil.isBlank(directoryPath)) {
@@ -992,9 +974,6 @@ public class FileUtil {
      * <li>if path not exist, return true</li>
      * <li>if path exist, delete recursion. return true</li>
      * <ul>
-     *
-     * @param path
-     * @return
      */
     public static boolean deleteFileAndDir(String path) {
         if (StringUtil.isBlank(path)) {
@@ -1027,8 +1006,6 @@ public class FileUtil {
 
     /**
      * get file size
-     * @param path
-     * @return
      */
     public static long getFileSize(String path) {
         if (StringUtil.isBlank(path)) {
@@ -1057,10 +1034,6 @@ public class FileUtil {
 
     /**
      * 判断两个路径是否相等 大小写不敏感 : 存储卡的文件系统一般为FAT, 大小写不敏感
-     *
-     * @param pathSrc
-     * @param pathDst
-     * @return
      */
     public static boolean isPathEqual(final String pathSrc, final String pathDst) {
         if (pathSrc == null || pathDst == null) {
@@ -1088,7 +1061,7 @@ public class FileUtil {
 
 
     public static List<String> getBrianURLs(Context context, String fileName) {
-        List<String> urls = new ArrayList<String>();
+        List<String> urls = new ArrayList<>();
         try {
             // 把数据从文件中读入内存
             InputStream is = context.getResources().getAssets().open(fileName);

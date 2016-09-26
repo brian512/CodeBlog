@@ -41,11 +41,15 @@ public class DeviceUtil {
             return uniqueId;
         }
         final TelephonyManager tm = (TelephonyManager) Env.getContext().getSystemService(Context.TELEPHONY_SERVICE);
-        final String tmDevice, tmSerial, androidId;
-        tmDevice = "" + tm.getDeviceId();
+        String deviceId, tmSerial, androidId;
+        try {
+            deviceId = tm.getDeviceId();
+        } catch (Exception e) {
+            deviceId = "";
+        }
         tmSerial = "" + tm.getSimSerialNumber();
         androidId = "" + Settings.Secure.getString(Env.getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) deviceId.hashCode() << 32) | tmSerial.hashCode());
         uniqueId = Md5.getMD5ofStr(deviceUuid.toString());
         LogUtil.d("uuid=" + uniqueId);
         return uniqueId;
@@ -55,9 +59,8 @@ public class DeviceUtil {
      * 获取分辨率，格式：640x480
      */
     public static String getResolution(Context context) {
-        String resolution = context.getResources().getDisplayMetrics().widthPixels
+        return context.getResources().getDisplayMetrics().widthPixels
                 + "x" + context.getResources().getDisplayMetrics().heightPixels;
-        return resolution;
     }
 
     /**
@@ -65,9 +68,7 @@ public class DeviceUtil {
      */
     public static int getScreenDensity(Context context) {
         DisplayMetrics metric = context.getResources().getDisplayMetrics();
-        int densityDpi = metric.densityDpi; // 屏幕密度DPI（120 / 160 / 240）
-
-        return densityDpi;
+        return metric.densityDpi; // 屏幕密度DPI（120 / 160 / 240）
     }
 
     /**
@@ -170,8 +171,7 @@ public class DeviceUtil {
      * 获取手机操作系统
      */
     public static String getSystemId() {
-        String systemId = Build.VERSION.RELEASE;
-        return systemId;
+        return Build.VERSION.RELEASE;
     }
 
 
@@ -179,8 +179,7 @@ public class DeviceUtil {
      * 获取手机SDK版本号
      */
     public static int getSdkVersion() {
-        int sdkVersion = Build.VERSION.SDK_INT;
-        return sdkVersion;
+        return Build.VERSION.SDK_INT;
     }
 
     /**
@@ -197,7 +196,7 @@ public class DeviceUtil {
         sCPU = "";
 
         String str1 = "/proc/cpuinfo";
-        String str2 = "";
+        String str2;
         String[] cpuInfo = {"", ""}; // 1-cpu型号 //2-cpu频率
         String[] arrayOfString;
         try {
@@ -214,7 +213,7 @@ public class DeviceUtil {
             localBufferedReader.close();
             sCPU = cpuInfo[0];
         } catch (IOException e) {
-
+            LogUtil.printError(e);
         }
         return sCPU;
     }
@@ -236,7 +235,7 @@ public class DeviceUtil {
         try {
             process = Runtime.getRuntime().exec("cat /proc/version");
         } catch (IOException e) {
-
+            LogUtil.printError(e);
         }
 
         // get the output line
@@ -253,10 +252,10 @@ public class DeviceUtil {
                 // result += " ";
             }
         } catch (IOException e) {
-
+            LogUtil.printError(e);
         }
 
-        if (result != "") {
+        if (!TextUtils.isEmpty(result)) {
             String Keyword = "version ";
             int index = result.indexOf(Keyword);
             line = result.substring(index + Keyword.length());

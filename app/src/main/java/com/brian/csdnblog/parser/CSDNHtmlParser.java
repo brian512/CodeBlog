@@ -338,13 +338,10 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
      * 若该链接是博文链接，则返回链接地址，若不是则返回空
      */
     public String getBlogContentUrl(String... urls) {
-        String blogUrl = "";
-        String url = urls[0];
-        if (url.contains("/article/details")) {// 链接为CSDN博客内容
-            if (url.startsWith("/")) {
-                blogUrl = URL_CSDN_BLOG_BASE + url;
-            } else {
-                blogUrl = url;
+        String blogUrl = urls[0];
+        if (blogUrl.contains("/article/details")) {// 链接为CSDN博客内容
+            if (blogUrl.startsWith("/")) {
+                blogUrl = URL_CSDN_BLOG_BASE + blogUrl;
             }
         }
         return blogUrl;

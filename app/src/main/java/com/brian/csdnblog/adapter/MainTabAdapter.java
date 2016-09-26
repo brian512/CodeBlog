@@ -3,6 +3,7 @@ package com.brian.csdnblog.adapter;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.ViewGroup;
 
 import com.brian.csdnblog.activity.BlogListFrag;
 import com.brian.csdnblog.manager.TypeManager;
@@ -74,4 +75,9 @@ public class MainTabAdapter extends FragmentPagerAdapter {
         return mTabTitles.length;
     }
 
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        // 避免视图被销毁
+//        super.destroyItem(container, position, object);
+    }
 }

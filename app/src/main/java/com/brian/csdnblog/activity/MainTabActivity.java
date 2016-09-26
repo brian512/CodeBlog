@@ -78,7 +78,7 @@ public class MainTabActivity extends SlidingFragmentActivity {
     private void initUI() {
         mTabAdapter = new MainTabAdapter(getSupportFragmentManager());
         // 视图切换器
-        mViewpager.setOffscreenPageLimit(4);// 预先加载页面的数量
+        mViewpager.setOffscreenPageLimit(1);// 预先加载页面的数量
         mViewpager.setAdapter(mTabAdapter);
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);//设置滑动模式
         mTabLayout.setupWithViewPager(mViewpager);

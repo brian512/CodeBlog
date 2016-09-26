@@ -120,6 +120,12 @@ public class LogUtil {
         return "Invalid Json, Please Check: " + jsonStr;
     }
 
+    public static void printError(Throwable throwable) {
+        if (mIsDebugMode) {
+            throwable.printStackTrace();
+        }
+    }
+
     private static String buildMessageSafe(String msg) {
         try {
             return LOGV ? buildMessage(msg) : msg;

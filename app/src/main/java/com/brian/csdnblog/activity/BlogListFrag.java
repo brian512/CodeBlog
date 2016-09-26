@@ -114,7 +114,7 @@ public class BlogListFrag extends Fragment {
                 TextView nameView = holder.getView(R.id.msg);
 
                 Bloger bloger = Bloger.fromJson(item.blogerJson);
-                if (bloger != null && !TextUtils.isEmpty(bloger.nickName)) {
+                if (bloger != null && !TextUtils.isEmpty(bloger.nickName) && !TextUtils.isEmpty(item.extraMsg)) {
                     SpannableStringBuilder builder = new SpannableStringBuilder(item.extraMsg);
                     int indexStart = item.extraMsg.indexOf(bloger.nickName);
                     builder.setSpan(mColorSpanName, indexStart, indexStart + bloger.nickName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -451,9 +451,14 @@ public class BlogListFrag extends Fragment {
     }
 
     private void startRefresh() {
-        if (mRefreshable) {
+        if (mRefreshable && checkUpdateTime()) {
             mRefreshLayout.setRefreshing(true);
             loadData(true);
         }
+    }
+
+    private boolean checkUpdateTime() {
+        long lastUpdateTime = FileUtil.getFileLastModified(Env.getContext().getFilesDir() + "/cache_" + mType);
+        return System.currentTimeMillis() - lastUpdateTime > 3000_000;
     }
 }
