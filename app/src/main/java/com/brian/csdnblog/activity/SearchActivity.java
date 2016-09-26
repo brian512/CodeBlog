@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,9 +31,12 @@ import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
 import com.brian.csdnblog.manager.ThreadManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
+import com.brian.csdnblog.model.Bloger;
 import com.brian.csdnblog.model.SearchResult;
 import com.brian.csdnblog.parser.CSDNHtmlParser;
 import com.brian.csdnblog.util.CommonAdapter;
+import com.brian.csdnblog.util.LogUtil;
+import com.brian.csdnblog.util.ResourceUtil;
 import com.brian.csdnblog.util.ToastUtil;
 import com.brian.csdnblog.util.UIUtil;
 import com.brian.csdnblog.util.WeakRefHandler;
@@ -82,12 +88,37 @@ public class SearchActivity extends BaseActivity {
         mTitleBar.setRightImageVisible(View.INVISIBLE);
 
         mAdapter = new CommonAdapter<SearchResult>(Env.getContext(), null, R.layout.item_list_search) {
-
+            private ForegroundColorSpan mColorSpanName = new ForegroundColorSpan(ResourceUtil.getColor(R.color.light_blue));
             @Override
             public void convert(ViewHolder holder, final SearchResult item) {
                 holder.setText(R.id.title, item.title);
                 holder.setText(R.id.authorTime, item.authorTime);
                 holder.setText(R.id.searchDetail, item.searchDetail);
+
+                TextView nameView = holder.getView(R.id.authorTime);
+                Bloger bloger = Bloger.fromJson(item.blogerJson);
+                if (bloger != null && !TextUtils.isEmpty(bloger.nickName) && !TextUtils.isEmpty(item.authorTime)) {
+                    SpannableStringBuilder builder = new SpannableStringBuilder(item.authorTime);
+                    int indexStart = item.authorTime.indexOf(bloger.nickName);
+                    builder.setSpan(mColorSpanName, indexStart, indexStart + bloger.nickName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    nameView.setText(builder);
+                } else {
+                    nameView.setText(item.authorTime);
+                }
+
+                nameView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!TextUtils.isEmpty(item.blogerID)) {
+                            LogUtil.log(item.blogerJson);
+                            Bloger bloger = Bloger.fromJson(item.blogerJson);
+                            if (bloger != null) {
+                                BlogerBlogListActivity.startActivity(SearchActivity.this, item.type, bloger);
+                                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_BLOGER_ENTR, "bloglist");
+                            }
+                        }
+                    }
+                });
 
                 holder.setOnClickListener(new OnClickListener() {
                     @Override

@@ -8,6 +8,8 @@ public class SearchResult implements Serializable {
     public String authorTime = "";
     public String searchDetail = "";
     public String link = "";
+    public String blogerJson = "";
+    public String blogerID = "";
     public int type;
 
     @Override

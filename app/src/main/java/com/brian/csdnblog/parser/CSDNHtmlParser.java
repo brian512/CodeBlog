@@ -294,6 +294,21 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
             } else {
                 temp.link = link.select("a").attr("href");
             }
+
+            String homePageUrl = element.getElementsByClass("author-time").get(0).select("a").attr("href");
+            if (!TextUtils.isEmpty(homePageUrl)) {
+                Bloger bloger = new Bloger();
+                bloger.blogerType = TYPE;
+                bloger.nickName = element.getElementsByClass("author-time").get(0).select("a").text();
+//                bloger.headUrl = element.getElementsByClass("head").get(0).select("img").attr("src");
+                bloger.homePageUrl = homePageUrl.replace("my.csdn.net", "blog.csdn.net");
+                bloger.blogerID = Bloger.getBlogerId(bloger.homePageUrl);
+
+//                BlogerTable.getInstance().insert(bloger);//保存用户信息
+                temp.blogerJson = bloger.toJson();
+                temp.blogerID = bloger.blogerID;
+            }
+
             resultList.add(temp);
         }
         return resultList;
