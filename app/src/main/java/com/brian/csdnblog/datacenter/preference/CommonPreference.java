@@ -12,6 +12,9 @@ public class CommonPreference extends BasePreference {
     private static final String KEY_ARTICLE_TYPE = "pre_key_article_type";
     private static final String KEY_VERSION_CODE = "pre_key_version_code";
 
+    private static final String KEY_BLOG_COUNT = "pre_key_blog_count";
+    private static final String KEY_BLOG_TIME = "pre_key_blog_time";
+
     private static final String KEY_BLOGER_JSON = "pre_key_curr_bloger_json";
 
     private static CommonPreference sInstance;
@@ -70,6 +73,22 @@ public class CommonPreference extends BasePreference {
 
     public void setCurrBlogerJson(String blogerJson) {
         putString(KEY_BLOGER_JSON, blogerJson);
+    }
+
+    public int getBlogReadCount() {
+        return getInt(KEY_BLOG_COUNT, 0);
+    }
+
+    public void addBlogReadCount() {
+        putInt(KEY_BLOG_COUNT, getBlogReadCount() + 1);
+    }
+
+    public int getBlogReadTime() {
+        return getInt(KEY_BLOG_TIME, 0);
+    }
+
+    public void addBlogReadTime(long deltaTime) {
+        putInt(KEY_BLOG_TIME, getBlogReadTime() + (int)deltaTime);
     }
 
     private String getDefaultBloger() {

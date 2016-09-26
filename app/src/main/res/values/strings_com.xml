@@ -1,0 +1,54 @@
+<resources>
+
+    <string name="program_error">program error :</string>
+    <string name="memory_low">memory low</string>
+    <string name="loading">"loading..."</string>
+    <string name="null_str"></string>
+
+    <!-- 时间格式 -->
+    <string name="time_current">刚刚</string>
+    <string name="time_before_days">%d天前</string>
+    <string name="time_before_hours">%d小时前</string>
+    <string name="time_before_minute">%d分钟前</string>
+    <string name="time_before_second">%d秒前</string>
+    <string name="time_yesterday">昨天%s</string>
+
+    <!-- 公共的字符串 -->
+    <string name="logout">Log Out</string>
+    <string name="reset">Reset</string>
+    <string name="exit">Exit</string>
+    <string name="account_sign_in">Sign In</string>
+    <string name="account_sign_up">Sign Up</string>
+    <string name="password">passwords</string>
+
+    <string name="cancel">Cancel</string>
+    <string name="setting">Setting</string>
+    <string name="ok">OK</string>
+    <string name="back">Back</string>
+    <string name="delete">Delete</string>
+    <string name="next_step">Next</string>
+    <string name="send">Send</string>
+
+    <string name="save">Save</string>
+    <string name="close">Close</string>
+    <string name="share">Share</string>
+    <string name="finish">Done</string>
+    <string name="clear">Clear</string>
+
+    <string name="copy">Copy</string>
+
+    <string name="tips">Tips</string>
+    <string name="refresh">Refresh</string>
+
+    <string name="more">More</string>
+
+    <string-array name="time_week_array">
+        <item>Sun</item>
+        <item>Mon</item>
+        <item>Tue</item>
+        <item>Wen</item>
+        <item>Thu</item>
+        <item>Fri</item>
+        <item>Sat</item>
+    </string-array>
+</resources>

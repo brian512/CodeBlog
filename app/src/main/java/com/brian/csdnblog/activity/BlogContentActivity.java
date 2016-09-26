@@ -27,6 +27,7 @@ import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
+import com.brian.csdnblog.datacenter.preference.CommonPreference;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
 import com.brian.csdnblog.manager.BlogManager;
 import com.brian.csdnblog.manager.BlogerManager;
@@ -73,6 +74,8 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     private IBlogHtmlParser mBlogParser = null;
 
     private boolean mHasFavoed;
+
+    private long mStartTime;
     
     /**
      * 存放已打开过的链接
@@ -114,6 +117,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_webview);
         ButterKnife.bind(this);
+        mStartTime = System.currentTimeMillis();
 
         initUI();// 初始化界面
         initListener();
@@ -390,6 +394,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
 
     @Override
     protected void onDestroy() {
+        CommonPreference.getInstance().addBlogReadTime(System.currentTimeMillis() - mStartTime);
         super.onDestroy();
         Qhad.activityDestroy(this);
 
@@ -464,6 +469,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
                         BlogManager.getInstance().saveBlog(mBlogInfo);
                     }
 
+                    CommonPreference.getInstance().addBlogReadCount();// 阅读数+1
                     mBlogStack.push(contentHtml);
 
                     Message msg = mHandler.obtainMessage(MSG_UPDATE);

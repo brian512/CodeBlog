@@ -21,6 +21,8 @@ import com.brian.csdnblog.manager.ShareManager;
 import com.brian.csdnblog.manager.UpdateManager;
 import com.brian.csdnblog.manager.UsageStatsManager;
 import com.brian.csdnblog.util.LogUtil;
+import com.brian.csdnblog.util.TimeUtil;
+import com.brian.csdnblog.util.ToastUtil;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnCloseListener;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenListener;
@@ -32,6 +34,8 @@ import com.umeng.onlineconfig.OnlineConfigLog;
 import com.umeng.onlineconfig.UmengOnlineConfigureListener;
 
 import org.json.JSONObject;
+
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -226,6 +230,9 @@ public class MainTabActivity extends SlidingFragmentActivity {
 
     @Override
     protected void onDestroy() {
+        int count = CommonPreference.getInstance().getBlogReadCount();
+        String time = TimeUtil.convCountTime(CommonPreference.getInstance().getBlogReadTime());
+        ToastUtil.showMsgS(String.format(Locale.CHINA, "共浏览 %d篇博文，累计学习 %s", count, time));
         super.onDestroy();
         OnlineConfigAgent.getInstance().removeOnlineConfigListener();
     }

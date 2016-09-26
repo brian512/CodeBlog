@@ -2,11 +2,11 @@
 <resources>
 
     <string name="app_name">编程博客</string>
-    
+
     <string name="app_description">编程博客（CodeBlog）是为了方便在手机端阅读编程技术博文。应用展示了CSDN博客,InfoQ,开源中国和ITEye上的技术博文，并提供了技术类型的选择，如移动开发、数据库、云计算等，让你随时随地都可以轻松阅读技术大牛的文章。目前功能有：\n1. 博客查看、收藏与分享；\n2. 博客内代码高亮显示；\n3. 集成多个技术平台上的主流技术类型；\n4. 广告可设置不显示；</string>
-    
+
     <string name="user_name">年少的风</string>
-    
+
     <string name="str_null"></string>
     <string name="check_update">检查更新</string>
     <string name="news">新  闻</string>
@@ -16,19 +16,15 @@
     <string name="search">搜索</string>
     <string name="settings">设  置</string>
     <string name="chat">聊  天</string>
-    <string name="back">返回</string>
-	<string name="null_str"></string>
-    <string name="hint_userid">CSDN ID</string>
-    
+
     <string name="tip_no_network">无网络可用，请确认网络连接！</string>
     <string name="tip_nomore_data">无更多加载内容</string>
-    
-     
-     
+
+
     <string name="str_profile">个人资料</string>
-    
+
     <string name="brian_blog"><a href="http://blog.csdn.net/brian512">http://blog.csdn.net/brian512 </a></string>
-    
+
     <string name="madeby">Made by: brian512</string>
-    
+
 </resources>

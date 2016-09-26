@@ -73,6 +73,10 @@ public class ResourceUtil {
         }
     }
 
+    public static String getString(int resid, Object... formatArgs){
+        return Env.getContext().getString(resid, formatArgs);
+    }
+
     public static String getString(Context context, int resId) {
         if (context == null) {
             return "";
