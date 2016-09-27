@@ -96,7 +96,6 @@ android {
     dexOptions {
         javaMaxHeapSize "2g"
         preDexLibraries = false
-        incremental true
     }
 
     aaptOptions {
