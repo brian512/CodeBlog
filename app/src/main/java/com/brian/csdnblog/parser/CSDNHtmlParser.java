@@ -109,6 +109,9 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
             String nickName = blogItem.getElementsByClass("nickname").get(0).text();
             item.extraMsg = nickName + "  " + blogItem.getElementsByClass("blog_list_b_r").get(0).select("label").text();
             item.link = blogItem.select("h3").select("a").attr("href");
+            if (item.link.startsWith("/")) {
+                item.link = getBlogBaseUrl() + item.link;
+            }
             item.blogId = Md5.getMD5ofStr(item.link);
             item.type = type;
             item.dateStamp = String.valueOf(System.currentTimeMillis());

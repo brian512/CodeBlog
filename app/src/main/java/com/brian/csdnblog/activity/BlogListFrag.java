@@ -451,7 +451,7 @@ public class BlogListFrag extends Fragment {
     }
 
     private void startRefresh() {
-        if (mRefreshable && checkUpdateTime()) {
+        if (mRefreshable && (checkUpdateTime()||Config.isDebug)) {
             mRefreshLayout.setRefreshing(true);
             loadData(true);
         }

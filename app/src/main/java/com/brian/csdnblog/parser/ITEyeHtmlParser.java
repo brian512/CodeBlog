@@ -12,8 +12,10 @@ import android.text.TextUtils;
 
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.manager.Constants;
+import com.brian.csdnblog.manager.TypeManager;
 import com.brian.csdnblog.model.BlogInfo;
 import com.brian.csdnblog.datacenter.preference.CommonPreference;
+import com.brian.csdnblog.model.Bloger;
 import com.brian.csdnblog.util.JsoupUtil;
 import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.Md5;
@@ -62,12 +64,53 @@ public class ITEyeHtmlParser implements IBlogHtmlParser {
     @Override
     public List<BlogInfo> getBlogList(int type, String strHtml) {
         try {
-            return doGetBlogList(type, strHtml);
+            if (TypeManager.getCateType(type) == TypeManager.TYPE_CAT_BLOGER) {
+                return doGetBlogerItemList(type, strHtml);
+            } else {
+                return doGetBlogList(type, strHtml);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.printError(e);
             MobclickAgent.reportError(Env.getContext(), e);
             return null;
         }
+    }
+
+
+    private List<BlogInfo> doGetBlogerItemList(int type, String str) {
+        List<BlogInfo> list = new ArrayList<>();
+        if (TextUtils.isEmpty(str)) {
+            return list;
+        }
+//        LogUtil.d("str=" + str);
+        // 获取文档对象
+        Document doc = Jsoup.parse(str);
+        // 获取class="article_item"的所有元素
+        Elements blogList = doc.getElementsByClass("blog_main");
+        if (blogList == null) {
+            return list;
+        }
+
+        for (Element blogItem : blogList) {
+            BlogInfo item = new BlogInfo();
+            item.title = blogItem.select("h3").select("a").text(); // 得到标题
+            item.link = blogItem.select("h3").select("a").attr("href");
+            if (item.link.startsWith("/")) {
+                item.link = getBlogBaseUrl() + item.link;
+            }
+            item.summary = blogItem.getElementsByClass("blog_content").first().text();
+            item.blogId = Md5.getMD5ofStr(item.link);
+
+            Element msgElement = blogItem.getElementsByClass("blog_bottom").get(0);
+            msgElement.getElementsByClass("comment").remove();
+            msgElement.getElementsByClass("view").remove();
+            msgElement.getElementsByClass("digged").remove();
+            item.extraMsg = msgElement.text();
+            item.type = type;
+
+            list.add(item);
+        }
+        return list;
     }
     
     private List<BlogInfo> doGetBlogList(int type, String str) {
@@ -89,6 +132,9 @@ public class ITEyeHtmlParser implements IBlogHtmlParser {
             BlogInfo item = new BlogInfo();
             item.title = blogItem.select("h3").select("a").text(); // 得到标题
             item.link = blogItem.select("h3").select("a").attr("href");
+            if (item.link.startsWith("/")) {
+                item.link = getBlogBaseUrl() + item.link;
+            }
             item.summary = blogItem.getElementsByIndexEquals(1).text();
             item.blogId = Md5.getMD5ofStr(item.link);
 
@@ -98,6 +144,20 @@ public class ITEyeHtmlParser implements IBlogHtmlParser {
             msgElement.getElementsByClass("digged").remove();
             item.extraMsg = msgElement.text();
             item.type = type;
+
+            String homePageUrl = blogItem.getElementsByClass("blog_info").get(0).select("a").attr("href");
+            if (!TextUtils.isEmpty(homePageUrl)) {
+                Bloger bloger = new Bloger();
+                bloger.blogerType = type;
+                bloger.nickName = blogItem.getElementsByClass("blog_info").get(0).select("a").text();
+                bloger.headUrl = blogItem.getElementsByClass("logo").get(0).select("img").attr("src");
+                bloger.homePageUrl = homePageUrl;
+                bloger.blogerID = Bloger.getBlogerId(bloger.homePageUrl);
+
+//                BlogerTable.getInstance().insert(bloger);//保存用户信息
+                item.blogerJson = bloger.toJson();
+                item.blogerID = bloger.blogerID;
+            }
 
             list.add(item);
         }
