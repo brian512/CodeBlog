@@ -4,7 +4,9 @@ import android.text.TextUtils;
 
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.datacenter.preference.CommonPreference;
+import com.brian.csdnblog.manager.TypeManager;
 import com.brian.csdnblog.model.BlogInfo;
+import com.brian.csdnblog.model.Bloger;
 import com.brian.csdnblog.util.JsoupUtil;
 import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.Md5;
@@ -59,7 +61,11 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
     @Override
     public List<BlogInfo> getBlogList(int type, String strHtml) {
         try {
-            return doGetBlogList(type, strHtml);
+            if (TypeManager.getCateType(type) == TypeManager.TYPE_CAT_BLOGER) {
+                return doGetBlogerItemList(type, strHtml);
+            } else {
+                return doGetBlogList(type, strHtml);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
@@ -67,6 +73,36 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
         }
     }
     
+    private List<BlogInfo> doGetBlogerItemList(int type, String str) {
+        List<BlogInfo> list = new ArrayList<>();
+        if (TextUtils.isEmpty(str)) {
+            return list;
+        }
+//        LogUtil.d("str=" + str);
+        // 获取文档对象
+        Document doc = Jsoup.parse(str);
+        // 获取class="article_item"的所有元素
+        Element blogs = doc.getElementById("list");
+        if (blogs == null) {
+            return list;
+        }
+        Elements blogList = blogs.getElementsByClass("list-item");
+
+        for (Element blogItem : blogList) {
+            BlogInfo item = new BlogInfo();
+            item.title = blogItem.getElementsByClass("title").get(0).select("a").text(); // 得到标题
+            item.link = blogItem.getElementsByClass("title").get(0).select("a").attr("href");
+            item.summary = "";
+            item.extraMsg = blogItem.getElementsByClass("time").get(0).text();
+            item.blogId = Md5.getMD5ofStr(item.link);
+
+            item.type = type;
+
+            list.add(item);
+        }
+        return list;
+    }
+
     private List<BlogInfo> doGetBlogList(int type, String str) {
         List<BlogInfo> list = new ArrayList<>();
         if (TextUtils.isEmpty(str)) {
@@ -92,6 +128,20 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
 
             item.type = type;
 
+            String homePageUrl = blogItem.select("a").get(0).attr("href");
+            if (!TextUtils.isEmpty(homePageUrl)) {
+                Bloger bloger = new Bloger();
+                bloger.blogerType = type;
+                bloger.nickName = blogItem.select("a").get(0).select("img").attr("title");
+                bloger.headUrl = blogItem.select("a").get(0).select("img").attr("src");
+                bloger.homePageUrl = homePageUrl;
+                bloger.blogerID = Bloger.getBlogerId(bloger.homePageUrl);
+
+//                BlogerTable.getInstance().insert(bloger);//保存用户信息
+                item.blogerJson = bloger.toJson();
+                item.blogerID = bloger.blogerID;
+            }
+
             list.add(item);
         }
         return list;
@@ -101,6 +151,7 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
         try {
             return doGetBlogContent(contentSrc);
         } catch (Exception e) {
+            LogUtil.printError(e);
             MobclickAgent.reportError(Env.getContext(), e);
             return "";
         }

@@ -3,6 +3,7 @@ package com.brian.csdnblog.manager;
 import com.brian.csdnblog.datacenter.preference.CommonPreference;
 import com.brian.csdnblog.model.Bloger;
 import com.brian.csdnblog.model.event.CurrBlogerEvent;
+import com.brian.csdnblog.util.LogUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -42,6 +43,8 @@ public class BlogerManager {
             CurrBlogerEvent event = new CurrBlogerEvent();
             event.bloger = mCurrBloger;
             EventBus.getDefault().post(event);
+
+            LogUtil.log("mCurrBloger=" + mCurrBloger.toJson());
         }
     }
 }

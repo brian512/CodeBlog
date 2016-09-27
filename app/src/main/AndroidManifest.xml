@@ -37,9 +37,6 @@
 
         <meta-data android:name="DEBUG_ENABLE" android:value="${DEBUG_ENABLE}" />
 
-        <!--腾讯X5内核-->
-        <meta-data android:name="QBSDKAppKey" android:value="OExstf3r76Yf79YF/kJrUb+Q"/>
-
         <activity
             android:name="com.brian.csdnblog.activity.SplashActivity"
             android:screenOrientation="portrait">

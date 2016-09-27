@@ -48,8 +48,17 @@ public class DeviceUtil {
         } catch (Exception e) {
             deviceId = "";
         }
-        tmSerial = "" + tm.getSimSerialNumber();
-        androidId = "" + Settings.Secure.getString(Env.getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        try {
+            tmSerial = "" + tm.getSimSerialNumber();
+        } catch (Exception e) {
+            tmSerial = "";
+        }
+        try {
+            androidId = "" + Settings.Secure.getString(Env.getContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        } catch (Exception e) {
+            androidId = "";
+        }
+
         UUID deviceUuid = new UUID(androidId.hashCode(), ((long) deviceId.hashCode() << 32) | tmSerial.hashCode());
         uniqueId = Md5.getMD5ofStr(deviceUuid.toString());
         LogUtil.d("uuid=" + uniqueId);

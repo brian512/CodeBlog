@@ -11,6 +11,7 @@ import org.jsoup.select.Elements;
 import android.text.TextUtils;
 
 import com.brian.csdnblog.Env;
+import com.brian.csdnblog.manager.BlogerManager;
 import com.brian.csdnblog.manager.Constants;
 import com.brian.csdnblog.manager.TypeManager;
 import com.brian.csdnblog.model.BlogInfo;
@@ -20,6 +21,8 @@ import com.brian.csdnblog.util.JsoupUtil;
 import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.Md5;
 import com.umeng.analytics.MobclickAgent;
+
+import static com.brian.csdnblog.manager.BlogerManager.getsInstance;
 
 /**
  * 博客园网页解析类
@@ -90,13 +93,18 @@ public class ITEyeHtmlParser implements IBlogHtmlParser {
         if (blogList == null) {
             return list;
         }
+        Bloger bloger = BlogerManager.getsInstance().getCurrBloger();
+        String host = getBlogBaseUrl();
+        if (!TextUtils.isEmpty(bloger.homePageUrl)) {
+            host = bloger.homePageUrl.substring(0, bloger.homePageUrl.indexOf(".com")+4);
+        }
 
         for (Element blogItem : blogList) {
             BlogInfo item = new BlogInfo();
             item.title = blogItem.select("h3").select("a").text(); // 得到标题
             item.link = blogItem.select("h3").select("a").attr("href");
             if (item.link.startsWith("/")) {
-                item.link = getBlogBaseUrl() + item.link;
+                item.link = host + item.link;
             }
             item.summary = blogItem.getElementsByClass("blog_content").first().text();
             item.blogId = Md5.getMD5ofStr(item.link);
