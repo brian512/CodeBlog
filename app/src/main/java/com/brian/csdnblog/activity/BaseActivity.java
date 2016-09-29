@@ -31,6 +31,7 @@ public class BaseActivity extends SwipeBackActivity {
         super.onCreate(savedInstanceState);
 
         sTopActivity = this;
+        RefWatcherHelper.watch(this);
     }
     
     @Override

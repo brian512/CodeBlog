@@ -134,6 +134,7 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.tencent.bugly:crashreport:latest.release'
@@ -142,8 +143,8 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
 
-    compile 'com.jakewharton:butterknife:8.3.0'
-    apt 'com.jakewharton:butterknife-compiler:8.3.0'
+    compile 'com.jakewharton:butterknife:8.4.0'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
 
     compile 'com.facebook.stetho:stetho:1.4.1'
     compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'

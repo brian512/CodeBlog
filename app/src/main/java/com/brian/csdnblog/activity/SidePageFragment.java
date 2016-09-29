@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.brian.common.view.CircleImageView;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
+import com.brian.csdnblog.RefWatcherHelper;
 import com.brian.csdnblog.manager.BlogerManager;
 import com.brian.csdnblog.manager.Constants;
 import com.brian.csdnblog.manager.TypeManager;
@@ -47,6 +49,12 @@ public class SidePageFragment extends Fragment implements OnClickListener {
     @BindView(R.id.settings)            View mSettingsLy;
     @BindView(R.id.chat)                View viewChat;
     @BindView(R.id.tv_select_type)      TextView mSelectTypeView;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        RefWatcherHelper.watch(this);
+    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

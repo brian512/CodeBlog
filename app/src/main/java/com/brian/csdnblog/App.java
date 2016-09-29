@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.os.StrictMode;
 
 import com.brian.csdnblog.activity.MainTabActivity;
-import com.brian.csdnblog.manager.BrianUncaughtExceptionHandler;
-import com.brian.csdnblog.manager.BrianUncaughtExceptionHandler.OnAppCrashListener;
+import com.brian.csdnblog.manager.CrashHandler;
+import com.brian.csdnblog.manager.CrashHandler.OnAppCrashListener;
 import com.brian.csdnblog.manager.PushManager;
 import com.brian.csdnblog.util.AppInfoUtil;
 import com.brian.csdnblog.util.ConfigHelper;
@@ -21,28 +21,38 @@ public class App extends Application {
     public static final String PROCESS_NAME_MAIN = "com.brian.csdnblog";
 
     @Override
+    protected void attachBaseContext(Context base) {
+        // app start here
+        Env.setAppStartTime();
+        super.attachBaseContext(base);
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         Env.setContext(this);
-        ConfigHelper.init(this);
+        handleCrash();
 
-        // init bugly
-        CrashReport.initCrashReport(getApplicationContext(), "900033443", false);
-        
-        if (PROCESS_NAME_MAIN.equals(AppInfoUtil.getProcessName(getApplicationContext()))) {
-            MobclickAgent.setCatchUncaughtExceptions(false);
-            // 捕捉异常
-            if (Config.isDebug) {
-//                RefWatcherHelper.install(this); // 内存泄漏检测
-                catchException(); // 本地记录crash log
-
-                Stetho.initializeWithDefaults(this);
-            } else {
-                // 友盟crash统计，目前使用bugly
-//                MobclickAgent.setCatchUncaughtExceptions(true);
-            }
+        if (PROCESS_NAME_MAIN.equals(AppInfoUtil.getProcessName(this))) {
+            ConfigHelper.init(this);
             PushManager.getInstance().initPushMsg(this);
             setStrictModeEnable(Config.isDebug);
+
+            if (Config.isDebug) {
+                Stetho.initializeWithDefaults(this); // chrome调试
+                RefWatcherHelper.install(this); // 内存泄漏检测
+            }
+        }
+    }
+
+    private void handleCrash() {
+        // init bugly
+        CrashReport.initCrashReport(getApplicationContext(), "900033443", false);
+
+        // 友盟crash统计，目前使用bugly
+        MobclickAgent.setCatchUncaughtExceptions(false);
+        if (Config.isDebug) {
+            catchException(); // 本地记录crash log
         }
     }
 
@@ -52,21 +62,14 @@ public class App extends Application {
         intent.setClassName(getPackageName(), MainTabActivity.class.getName());// 设置程序入口
 
         // 程序崩溃时触发线程
-        BrianUncaughtExceptionHandler uncaughtExceptionHandler = new BrianUncaughtExceptionHandler();
-        uncaughtExceptionHandler.setOnCrashListener(new OnAppCrashListener() {
+        CrashHandler crashHandler = new CrashHandler();
+        crashHandler.setOnCrashListener(new OnAppCrashListener() {
             @Override
             public void onAppCrash() {
                 // TODO
             }
         });
-        Thread.setDefaultUncaughtExceptionHandler(uncaughtExceptionHandler);
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        // app start here
-        Env.setAppStartTime();
-        super.attachBaseContext(base);
+        Thread.setDefaultUncaughtExceptionHandler(crashHandler);
     }
 
     private void setStrictModeEnable(boolean enable) {
@@ -87,8 +90,11 @@ public class App extends Application {
                 .build());
     }
 
-    public void exit() {
-        MobclickAgent.onKillProcess(getApplicationContext());
+    /**
+     * 退出应用
+     */
+    public static void exit() {
+        MobclickAgent.onKillProcess(Env.getContext());
         System.exit(0);
         android.os.Process.killProcess(android.os.Process.myPid());
     }

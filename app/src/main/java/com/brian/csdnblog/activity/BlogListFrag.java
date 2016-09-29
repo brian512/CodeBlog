@@ -4,6 +4,7 @@ package com.brian.csdnblog.activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -23,6 +24,7 @@ import com.brian.common.view.RefreshLayout;
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
+import com.brian.csdnblog.RefWatcherHelper;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
 import com.brian.csdnblog.manager.BlogManager;
 import com.brian.csdnblog.manager.DataFetcher;
@@ -84,7 +86,13 @@ public class BlogListFrag extends Fragment {
     private boolean hasInitedData = false;
     
     private IBlogHtmlParser mBlogParser;
-    
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        RefWatcherHelper.watch(this);
+    }
+
     /**
      * 设置博客类型
      */

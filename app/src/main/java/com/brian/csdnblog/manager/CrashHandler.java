@@ -18,9 +18,9 @@ import com.brian.csdnblog.Env;
 import com.brian.csdnblog.util.LogUtil;
 import com.umeng.analytics.MobclickAgent;
 
-public class BrianUncaughtExceptionHandler implements UncaughtExceptionHandler {
+public class CrashHandler implements UncaughtExceptionHandler {
     
-    private static final String TAG = BrianUncaughtExceptionHandler.class.getSimpleName();
+    private static final String TAG = CrashHandler.class.getSimpleName();
     
     
     private OnAppCrashListener mCrashListener = null;

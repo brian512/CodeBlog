@@ -58,10 +58,12 @@ public class DeviceUtil {
         } catch (Exception e) {
             androidId = "";
         }
-
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) deviceId.hashCode() << 32) | tmSerial.hashCode());
-        uniqueId = Md5.getMD5ofStr(deviceUuid.toString());
-        LogUtil.d("uuid=" + uniqueId);
+        try {
+            UUID deviceUuid = new UUID(androidId.hashCode(), ((long) deviceId.hashCode() << 32) | tmSerial.hashCode());
+            uniqueId = Md5.getMD5ofStr(deviceUuid.toString());
+            LogUtil.d("uuid=" + uniqueId);
+        } catch (Exception e) {
+        }
         return uniqueId;
     }
 

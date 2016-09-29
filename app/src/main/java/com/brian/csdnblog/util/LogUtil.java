@@ -1,5 +1,6 @@
 package com.brian.csdnblog.util;
 
+import android.os.Environment;
 import android.util.Log;
 
 import com.brian.csdnblog.Config;
@@ -23,10 +24,10 @@ public class LogUtil {
 
     private static final int JSON_INDENT = 2;
 
-    private static boolean LOGV = true;
-    private static boolean LOGF = true;
-    private static boolean LOGD = true;
-    private static boolean LOGI = true;
+    private static boolean LOGV = mIsDebugMode;
+    private static boolean LOGF = mIsDebugMode;
+    private static boolean LOGD = mIsDebugMode;
+    private static boolean LOGI = mIsDebugMode;
     private static boolean LOGW = true;
     private static boolean LOGE = true;
 
@@ -54,8 +55,7 @@ public class LogUtil {
      */
     public static void f(String tag, String mess) {
         if (LOGF) {
-            Log.v(tag, "write log to file /sdcard/GameCenter.log");
-            writeFile("/sdcard/CSDN.log", tag, mess);
+            writeFile(Environment.getExternalStorageDirectory().getPath() + System.currentTimeMillis() + ".log", tag, mess);
         }
     }
 
@@ -98,7 +98,7 @@ public class LogUtil {
         }
     }
 
-    public static void json(String tag, String json) {
+    public static void json(String json) {
         if (!mIsDebugMode) return;
         d(getTag(), getPrettyJson(json));
     }
@@ -128,8 +128,9 @@ public class LogUtil {
 
     private static String buildMessageSafe(String msg) {
         try {
-            return LOGV ? buildMessage(msg) : msg;
+            return buildMessage(msg);
         } catch (Exception e) {
+            printError(e);
         }
         return msg;
     }
@@ -168,8 +169,7 @@ public class LogUtil {
             DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd__HH.mm.ss", Locale.CHINA);
             String time = formatter.format(new Date());
             fileWriter = new FileWriter(filePath, true);
-            fileWriter.write(String.format("\n<<<<<<<<<<<<<< %s <<<<<<<<<<<\n",
-                    time));
+            fileWriter.write(String.format("\n<<<<<<<<<<<<<< %s <<<<<<<<<<<\n", time));
             fileWriter.write(tag + "\n");
             fileWriter.write(content + "\n");
             fileWriter.write(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n");
@@ -183,6 +183,7 @@ public class LogUtil {
                 try {
                     fileWriter.close();
                 } catch (IOException e) {
+                    printError(e);
                 }
             }
         }
