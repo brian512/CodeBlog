@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ import com.brian.csdnblog.datacenter.preference.CommonPreference;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
 import com.brian.csdnblog.manager.BlogManager;
 import com.brian.csdnblog.manager.BlogerManager;
+import com.brian.csdnblog.manager.Constants;
 import com.brian.csdnblog.manager.DataFetcher;
 import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
@@ -51,6 +53,8 @@ import com.brian.csdnblog.util.ToastUtil;
 import com.brian.csdnblog.util.WeakRefHandler;
 import com.qhad.ads.sdk.adcore.Qhad;
 import com.qhad.ads.sdk.interfaces.IQhInterstitialAd;
+import com.qq.e.ads.interstitial.AbstractInterstitialADListener;
+import com.qq.e.ads.interstitial.InterstitialAD;
 import com.tencent.connect.share.QQShare;
 
 import java.util.Stack;
@@ -174,15 +178,44 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         }
         toggleAdShow(true);
     }
+
+    private InterstitialAD iad;
+    private InterstitialAD getIAD() {
+        if (iad == null) {
+            iad = new InterstitialAD(this, Constants.APPID, Constants.InterteristalPosID);
+        }
+        return iad;
+    }
+    private void showAsPopup() {
+        getIAD().setADListener(new AbstractInterstitialADListener() {
+
+            @Override
+            public void onNoAD(int arg0) {
+                Log.i("AD_DEMO", "LoadInterstitialAd Fail:" + arg0);
+            }
+
+            @Override
+            public void onADReceive() {
+                iad.showAsPopupWindow();
+            }
+        });
+        iad.loadAD();
+    }
+
+    private void closeAsPopup() {
+        iad.closePopupWindow();
+    }
     
     private void toggleAdShow(boolean isShow) {
         if (mAd != null && SettingPreference.getInstance().getAdsEnable()) {
             if (isShow) {
                 mAdLayout.setVisibility(View.VISIBLE);
-                mAd.showAds(this);
+//                mAd.showAds(this);
+                showAsPopup();
             } else {
                 mAdLayout.setVisibility(View.GONE);
-                mAd.closeAds();
+//                mAd.closeAds();
+                closeAsPopup();
             }
         }
     }

@@ -6,7 +6,11 @@ package com.brian.csdnblog.manager;
  * 常量类
  */
 public class Constants {
-    public static final String DEFAULT_BLOG_USER_ID = "brian512";
+
+    public static final String APPID = "1101152570";
+    public static final String BannerPosID = "9079537218417626401";
+    public static final String InterteristalPosID = "8575134060152130849";
+    public static final String SplashPosID = "8863364436303842593";
 
     public static final String URL_CSDN_LOGO = "http://a.hiphotos.baidu.com/image/pic/item/f636afc379310a556b16f08cb04543a982261093.jpg";
 

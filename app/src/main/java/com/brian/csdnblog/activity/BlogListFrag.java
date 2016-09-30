@@ -27,6 +27,7 @@ import com.brian.csdnblog.R;
 import com.brian.csdnblog.RefWatcherHelper;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
 import com.brian.csdnblog.manager.BlogManager;
+import com.brian.csdnblog.manager.Constants;
 import com.brian.csdnblog.manager.DataFetcher;
 import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
@@ -45,7 +46,9 @@ import com.brian.csdnblog.util.ResourceUtil;
 import com.brian.csdnblog.util.WeakRefHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.qhad.ads.sdk.adcore.Qhad;
+import com.qq.e.ads.banner.ADSize;
+import com.qq.e.ads.banner.AbstractBannerADListener;
+import com.qq.e.ads.banner.BannerView;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -180,11 +183,28 @@ public class BlogListFrag extends Fragment {
 
         if (SettingPreference.getInstance().getAdsEnable()) {
             FrameLayout adLy  = (FrameLayout) inflater.inflate(R.layout.layout_ad, null);
-            String adSpaceid = Config.getAdBannerKey();
-            if (!TextUtils.isEmpty(adSpaceid)) {
-                Qhad.showBanner(adLy, BaseActivity.getTopActivity(), adSpaceid, false);
-            }
+//            String adSpaceid = Config.getAdBannerKey();
+//            if (!TextUtils.isEmpty(adSpaceid)) {
+//                Qhad.showBanner(adLy, BaseActivity.getTopActivity(), adSpaceid, false);
+//            }
+
+            BannerView banner = new BannerView(BaseActivity.getTopActivity(), ADSize.BANNER, Constants.APPID, Constants.BannerPosID);
+
+            banner.setRefresh(30);
+            banner.setADListener(new AbstractBannerADListener() {
+                @Override
+                public void onNoAD(int errorCode) {
+                    LogUtil.e("errorCode=" + errorCode);
+                }
+                @Override
+                public void onADReceiv() {
+                    LogUtil.e("onADReceiv=");
+                }
+            });
+            /* 发起广告请求，收到广告数据后会展示数据   */
+            adLy.addView(banner);
             mBlogListView.addHeaderView(adLy);
+            banner.loadAD();
         }
         mFooterLayout = inflater.inflate(R.layout.loading_footer, null);
         mFooterLayout.setVisibility(View.GONE);

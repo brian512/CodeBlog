@@ -27,6 +27,9 @@
     <permission android:name="com.brian.csdnblog.permission.MIPUSH_RECEIVE" android:protectionLevel="signature" />
     <uses-permission android:name="com.brian.csdnblog.permission.MIPUSH_RECEIVE" />
 
+    <!--腾讯广告-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_UPDATES"/>
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -182,7 +185,7 @@
                 </activity> -->
 
 
-        <!-- 360广告 -->
+        <!-- 360广告
         <service
             android:name="com.qhad.ads.sdk.service.QhAdService"
             android:enabled="true"
@@ -191,6 +194,17 @@
         <activity
             android:name="com.qhad.ads.sdk.adcore.QhAdActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
+ -->
+
+
+        <!--腾讯广告-->
+        <service
+            android:name="com.qq.e.comm.DownloadService"
+            android:exported="false" />
+        <activity
+            android:name="com.qq.e.ads.ADActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
+
 
         <meta-data
             android:name="UMENG_APPKEY"
