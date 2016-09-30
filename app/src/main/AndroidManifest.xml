@@ -42,6 +42,7 @@
 
         <activity
             android:name="com.brian.csdnblog.activity.SplashActivity"
+            android:theme="@style/AppBaseTheme"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,6 +53,7 @@
         <!-- 主界面标签切换界面 -->
         <activity
             android:name="com.brian.csdnblog.activity.MainTabActivity"
+            android:theme="@style/AppBaseTheme"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <!-- 博客详细内容界面 -->

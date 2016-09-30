@@ -101,11 +101,14 @@ public class BlogListFrag extends Fragment {
      */
     public void setType(int type) {
         mType = type;
+
         mBlogParser = BlogHtmlParserFactory.getBlogParser(mType);
-        initData();
-        if (mRefreshLayout != null) {
-            startRefresh();
-        }
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                initData();
+            }
+        }, 200);
     }
 
     @Override
@@ -194,11 +197,11 @@ public class BlogListFrag extends Fragment {
             banner.setADListener(new AbstractBannerADListener() {
                 @Override
                 public void onNoAD(int errorCode) {
-                    LogUtil.e("errorCode=" + errorCode);
+                    LogUtil.d("TX_AD errorCode=" + errorCode);
                 }
                 @Override
                 public void onADReceiv() {
-                    LogUtil.e("onADReceiv=");
+                    LogUtil.d("TX_AD");
                 }
             });
             /* 发起广告请求，收到广告数据后会展示数据   */

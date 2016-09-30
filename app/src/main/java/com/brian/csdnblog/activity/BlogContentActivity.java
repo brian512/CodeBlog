@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -188,14 +187,13 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     }
     private void showAsPopup() {
         getIAD().setADListener(new AbstractInterstitialADListener() {
-
             @Override
-            public void onNoAD(int arg0) {
-                Log.i("AD_DEMO", "LoadInterstitialAd Fail:" + arg0);
+            public void onNoAD(int errorCode) {
+                LogUtil.d("TX_AD LoadInterstitialAd Fail:" + errorCode);
             }
-
             @Override
             public void onADReceive() {
+                LogUtil.d("TX_AD");
                 iad.showAsPopupWindow();
             }
         });

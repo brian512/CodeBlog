@@ -60,23 +60,30 @@ public class MainTabActivity extends SlidingFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setSwipeBackEnable(false);
+        setSwipeBackEnable(false); // 不可滑动返回，否则容易异常退出
         setContentView(R.layout.activity_main_tab);
         ButterKnife.bind(this);
-
-        // 初始化更新模块
-        UpdateManager.getInstance().initUpdate();
 
         MobclickAgent.enableEncrypt(true);
 
         initUI();
         initListener();
-        recoveryUI();
+        recoveryUI(); // 恢复上次浏览视图：主要是tab位置
+    }
 
-        // 初始化侧滑栏
-        initSlidingMenu(savedInstanceState);
+    @Override
+    public void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
 
-        initOnlineParams();
+        // 延迟初始化非必要组件
+        getWindow().getDecorView().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // 初始化更新模块
+                UpdateManager.getInstance().initUpdate();
+                initOnlineParams();
+            }
+        }, 3000);
     }
 
     private void initUI() {
@@ -86,6 +93,9 @@ public class MainTabActivity extends SlidingFragmentActivity {
         mViewpager.setAdapter(mTabAdapter);
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);//设置滑动模式
         mTabLayout.setupWithViewPager(mViewpager);
+
+        // 初始化侧滑栏
+        initSlidingMenu();
     }
 
     private void recoveryUI() {
@@ -100,11 +110,10 @@ public class MainTabActivity extends SlidingFragmentActivity {
         UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_MAIN_TAB, mTabAdapter.getPageTitle(initPosition));
     }
 
-    private void initSlidingMenu(Bundle savedInstanceState) {
+    private void initSlidingMenu() {
         // 设置左侧滑动菜单
         setBehindContentView(R.layout.menu_frame_left);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.menu_frame, new SidePageFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.menu_frame, new SidePageFragment()).commit();
 
         // 实例化滑动菜单对象
         SlidingMenu sm = getSlidingMenu();

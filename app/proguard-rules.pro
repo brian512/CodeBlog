@@ -148,3 +148,16 @@
 
 #小米推送
 -keep class com.brian.csdnblog.receiver.MiPushMessageReceiver {*;}
+
+# 腾讯相关
+-keep public class com.tencent.** {*;}
+
+-keep class com.qq.e.** {
+   public protected *;
+}
+-keep class android.support.v4.app.NotificationCompat**{
+   public *;
+}
+
+# 解决第三方包，爆出的warning
+-keepattributes EnclosingMethod
