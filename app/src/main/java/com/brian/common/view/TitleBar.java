@@ -5,15 +5,14 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.brian.csdnblog.activity.BaseActivity;
-import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
-import com.brian.csdnblog.util.DeviceUtil;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * 首页的标题栏
@@ -23,9 +22,9 @@ public class TitleBar extends LinearLayout {
     /**
      * UI元素
      */
-    private ImageView mLeftBtn;
-    private ImageView mRightBtn;
-    private TextView mTitleText;
+    @BindView(R.id.left_text) ImageView mLeftBtn;
+    @BindView(R.id.right_text) ImageView mRightBtn;
+    @BindView(R.id.title_text) TextView mTitleText;
 
     public TitleBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -41,23 +40,8 @@ public class TitleBar extends LinearLayout {
     }
 
     private void initUI(Context ctx) {
-        LayoutInflater.from(ctx).inflate(R.layout.layout_common_title_bar, this);
-
-        mLeftBtn = (ImageView) findViewById(R.id.left_text);
-        mRightBtn = (ImageView) findViewById(R.id.right_text);
-        mTitleText = (TextView) findViewById(R.id.title_text);
-        setStatusBarVisible(BaseActivity.getTopActivity().isStatusBarTranslate());
-    }
-
-    private void setStatusBarVisible(boolean visible) {
-        View statusBar = findViewById(R.id.status_bar);
-        ViewGroup.LayoutParams params = statusBar.getLayoutParams();
-        if (visible) {
-            params.height = DeviceUtil.getStatusHeightNew(Env.getContext());
-        } else {
-            params.height = 0;
-        }
-        statusBar.setLayoutParams(params);
+        View rootLy = LayoutInflater.from(ctx).inflate(R.layout.layout_common_title_bar, this);
+        ButterKnife.bind(rootLy);
     }
 
     /**

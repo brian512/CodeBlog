@@ -4,13 +4,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.Env;
@@ -30,51 +28,50 @@ import net.youmi.android.normal.spot.SpotListener;
 import net.youmi.android.normal.spot.SpotManager;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class SplashActivity extends BaseActivity {
     private static final String TAG = SplashActivity.class.getSimpleName();
 
-    @BindView(R.id.splash_container) RelativeLayout mADContainer;
+    @BindView(R.id.splash_container) FrameLayout mADContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setIsFullScreen(true);
+        setFullScreenEnable(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        ButterKnife.bind(this);
+        AdManager.getInstance(this).init(Constants.APPID, Constants.APPSECTET, true, true);
 
         // 打开调试模式
         MobclickAgent.setDebugMode(Config.isDebug);
-        initAD();
-    }
 
-    @Override
-    public void onPostCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
-        super.onPostCreate(savedInstanceState, persistentState);
+        getUIHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isFirstLaunch()) {
+                    LogUtil.log("isFirstLaunch");
+                    createShortCut();// 创建桌面快捷方式
 
-        if (isFirstLaunch()) {
-            LogUtil.log("isFirstLaunch");
-            createShortCut();// 创建桌面快捷方式
+                    DataManager.getInstance().onVersionCodeUpgrade();
 
-            DataManager.getInstance().onVersionCodeUpgrade();
+                    updateVersionCode();// 更新版本号
+                }
 
-            updateVersionCode();// 更新版本号
-        }
-
-        // 请求权限
-        boolean permission = PermissionUtil.checkInitPermission(BaseActivity.getTopActivity());
-//        if (permission) {
-//            jumpMainActivityDeLay(2000);
-//        }
+                // 请求权限
+                if (PermissionUtil.checkInitPermission(BaseActivity.getTopActivity())) {
+                    initAD();
+                }
+                jumpMainActivityDeLay(2000);
+            }
+        }, 0);
     }
 
     private void initAD() {
-        AdManager.getInstance(this).init(Constants.APPID, Constants.APPSECTET, true, true);
         SplashViewSettings splashViewSettings = new SplashViewSettings();
         splashViewSettings.setTargetClass(MainTabActivity.class);
         // 使用默认布局参数
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        splashViewSettings.setSplashViewContainerAndLayoutParams(mADContainer, params);
-//        splashViewSettings.setSplashViewContainer(mADContainer);
+        splashViewSettings.setSplashViewContainer(mADContainer);
         SpotManager.getInstance(this).showSplash(this, splashViewSettings, new SpotListener() {
                     @Override
                     public void onShowSuccess() {
@@ -86,7 +83,7 @@ public class SplashActivity extends BaseActivity {
 
                     @Override
                     public void onShowFailed(int errorCode) {
-                        jumpMainActivityDeLay(1000);
+                        jumpMainActivityDeLay(500);
                         LogUtil.e("YoumiSdk onShowFailed" + errorCode);
                         switch (errorCode) {
                             case ErrorCode.NON_NETWORK:
@@ -119,16 +116,11 @@ public class SplashActivity extends BaseActivity {
                 });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        jumpMainActivityDeLay(3000);
-    }
-
     private Runnable mJumpTask = new Runnable() {
         @Override
         public void run() {
-            startActivity(new Intent(SplashActivity.this, MainTabActivity.class));
+            Intent intent = new Intent(SplashActivity.this, MainTabActivity.class);
+            startActivity(intent);
             finish();
         }
     };
@@ -191,7 +183,7 @@ public class SplashActivity extends BaseActivity {
             case PermissionUtil.PERMISSION_REQUEST_CODE_INIT:
                 // 如果读取手机状态和写SDCARD被授权
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    jumpMainActivityDeLay(0);
+                    initAD();
                 }else {
                     PermissionUtil.showPermissionDetail(this, "读写权限不可少", true);
                 }

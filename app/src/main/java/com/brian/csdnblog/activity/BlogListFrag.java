@@ -1,6 +1,7 @@
 
 package com.brian.csdnblog.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -181,10 +182,8 @@ public class BlogListFrag extends Fragment {
                 R.color.red,
                 R.color.yellow);
 
-        if (SettingPreference.getInstance().getAdsEnable()) {
+        if (SettingPreference.getInstance().getAdsEnable() && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             final LinearLayout adLy = new LinearLayout(getContext());
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//            adLy.setLayoutParams(params);
             View bannerView = BannerManager.getInstance(getContext()).getBannerView(new BannerViewListener() {
                 @Override
                 public void onRequestSuccess() {
