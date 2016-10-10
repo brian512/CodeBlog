@@ -54,6 +54,16 @@ public class DataFetcher {
      */
     public void fetchString(final String url, final String charset, final OnFetchDataListener<Result<String>> listener) {
         LogUtil.w(TAG, "url=" + url);
+        if (TextUtils.isEmpty(url) || !url.startsWith("http")) {
+            final Result<String> result = new Result<>(url, "");
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    listener.onFetchFinished(result);
+                }
+            });
+            return;
+        }
         Request.Builder builder = new Request.Builder().url(url).get();
         Request okRequest = builder.build();
         Call call = mOkHttpClient.newCall(okRequest);

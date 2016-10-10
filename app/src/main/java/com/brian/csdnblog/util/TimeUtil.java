@@ -426,15 +426,15 @@ public class TimeUtil {
         int minute, second, hour;
 
         if (timeSec < 60) {
-            return String.format(Locale.CHINA, "%02d秒", timeSec);
+            return String.format(Locale.CHINA, "%d秒", timeSec);
         } else if (timeSec < 3600) {
             minute = timeSec / 60;
             second = timeSec % 60;
-            return String.format(Locale.CHINA, "%02d分%02d秒", minute, second);
+            return String.format(Locale.CHINA, "%d分%d秒钟", minute, second);
         } else {
-            minute = timeSec / 60;
-            hour = minute / 60;
-            return String.format(Locale.CHINA, "%02小时%02d分", hour, minute);
+            hour = timeSec / 3600;
+            minute = (timeSec-3600*hour) / 60;
+            return String.format(Locale.CHINA, "%d小时%d分钟", hour, minute);
         }
     }
 }

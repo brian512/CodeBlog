@@ -189,7 +189,6 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
         detail.getElementsByClass("related-info").remove();
         detail.getElementsByClass("inline_reply_editor").remove();
         detail.getElementsByClass("SpaceList").remove();
-        detail.getElementById("comment-list").remove();
 
         // 处理代码块-markdown
         Elements elements = detail.select("pre");

@@ -242,7 +242,7 @@ public class MainTabActivity extends SlidingFragmentActivity {
     protected void onDestroy() {
         int count = CommonPreference.getInstance().getBlogReadCount();
         String time = TimeUtil.convCountTime(CommonPreference.getInstance().getBlogReadTime());
-        ToastUtil.showMsgS(String.format(Locale.CHINA, "共浏览 %d篇博文，累计学习 %s", count, time));
+        ToastUtil.showMsgS(String.format(Locale.CHINA, "累计学习 %d篇博文，时长 %s", count, time));
         super.onDestroy();
         OnlineConfigAgent.getInstance().removeOnlineConfigListener();
         SpotManager.getInstance(this).onDestroy();
