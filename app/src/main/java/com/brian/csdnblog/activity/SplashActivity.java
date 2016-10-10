@@ -1,7 +1,6 @@
 package com.brian.csdnblog.activity;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -27,10 +26,13 @@ import net.youmi.android.normal.spot.SplashViewSettings;
 import net.youmi.android.normal.spot.SpotListener;
 import net.youmi.android.normal.spot.SpotManager;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
     private static final String TAG = SplashActivity.class.getSimpleName();
 
     @BindView(R.id.splash_container) FrameLayout mADContainer;
@@ -50,7 +52,6 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void run() {
                 if (isFirstLaunch()) {
-                    LogUtil.log("isFirstLaunch");
                     createShortCut();// 创建桌面快捷方式
 
                     DataManager.getInstance().onVersionCodeUpgrade();
@@ -61,8 +62,8 @@ public class SplashActivity extends BaseActivity {
                 // 请求权限
                 if (PermissionUtil.checkInitPermission(BaseActivity.getTopActivity())) {
                     initAD();
+                    jumpMainActivityDeLay(1500); // 防止卡在广告页
                 }
-                jumpMainActivityDeLay(2000);
             }
         }, 0);
     }
@@ -75,7 +76,7 @@ public class SplashActivity extends BaseActivity {
         SpotManager.getInstance(this).showSplash(this, splashViewSettings, new SpotListener() {
                     @Override
                     public void onShowSuccess() {
-                        BaseActivity.getUIHandler().removeCallbacks(mJumpTask);
+//                        BaseActivity.getUIHandler().removeCallbacks(mJumpTask);
                         LogUtil.d(TAG, "YoumiSdk 开屏展示成功");
                         mADContainer.setVisibility(View.VISIBLE);
                         mADContainer.startAnimation(AnimationUtils.loadAnimation(Env.getContext(), R.anim.anim_splash_enter));
@@ -164,6 +165,7 @@ public class SplashActivity extends BaseActivity {
             isFirstLaunch = false;
         }
 
+        LogUtil.log("isFirstLaunch:" + isFirstLaunch);
         return isFirstLaunch;
     }
 
@@ -179,18 +181,25 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case PermissionUtil.PERMISSION_REQUEST_CODE_INIT:
-                // 如果读取手机状态和写SDCARD被授权
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    initAD();
-                }else {
-                    PermissionUtil.showPermissionDetail(this, "读写权限不可少", true);
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                break;
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+        // 请求权限
+        if (PermissionUtil.checkInitPermission(BaseActivity.getTopActivity())) {
+            initAD();
+            jumpMainActivityDeLay(1500); // 防止卡在广告页
+        }
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        if (requestCode == PermissionUtil.PERMISSION_REQUEST_CODE_INIT) {
+            PermissionUtil.checkInitPermission(BaseActivity.getTopActivity());
         }
     }
 
@@ -202,5 +211,4 @@ public class SplashActivity extends BaseActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
-
 }

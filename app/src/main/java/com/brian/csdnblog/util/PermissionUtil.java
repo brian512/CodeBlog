@@ -13,6 +13,8 @@ import android.support.v4.content.ContextCompat;
 import com.brian.common.view.JDDialog;
 import com.brian.csdnblog.Env;
 
+import pub.devrel.easypermissions.EasyPermissions;
+
 /**
  * 封装6.0 需要动态请求的权限
  * Created by lipeilong on 2016/7/26.
@@ -174,16 +176,15 @@ public class PermissionUtil {
             return true;
         }
 
-        boolean readPhoneStatePermission = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
-        boolean writePermission = (ContextCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+        String[] perms = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         // 手机状态和写SDCARD的权限是必须的
-        if (!readPhoneStatePermission || !writePermission) {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE_INIT);
+        if (EasyPermissions.hasPermissions(activity, perms)) {
+            return true;
+        } else {
+            EasyPermissions.requestPermissions(activity, "需要存储数据到设备！", PERMISSION_REQUEST_CODE_INIT, perms);
             return false;
         }
-
-        return true;
     }
 
     public static void showPermissionDetail(Activity activity, int tipResID, boolean isToFinishActivityOnCancel) {

@@ -36,7 +36,7 @@ public class SettingPreference extends BasePreference {
     }
 
     public boolean getRunInBackEnable() {
-        return getBoolean(KEY_RUN_IN_BACK, true);
+        return getBoolean(KEY_RUN_IN_BACK, false);
     }
 
     public boolean getLoadImgOnlyInWifiEnable() {
