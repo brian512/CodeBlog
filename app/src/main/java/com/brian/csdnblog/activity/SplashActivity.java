@@ -3,14 +3,17 @@ package com.brian.csdnblog.activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.view.KeyEvent;
-import android.widget.FrameLayout;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.widget.RelativeLayout;
 
 import com.brian.csdnblog.Config;
+import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.datacenter.preference.CommonPreference;
 import com.brian.csdnblog.manager.Constants;
@@ -18,19 +21,20 @@ import com.brian.csdnblog.manager.DataManager;
 import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.PermissionUtil;
 import com.brian.csdnblog.util.UIUtil;
-import com.qhad.ads.sdk.adcore.Qhad;
-import com.qq.e.ads.splash.SplashAD;
-import com.qq.e.ads.splash.SplashADListener;
 import com.umeng.analytics.MobclickAgent;
+
+import net.youmi.android.AdManager;
+import net.youmi.android.normal.common.ErrorCode;
+import net.youmi.android.normal.spot.SplashViewSettings;
+import net.youmi.android.normal.spot.SpotListener;
+import net.youmi.android.normal.spot.SpotManager;
 
 import butterknife.BindView;
 
 public class SplashActivity extends BaseActivity {
     private static final String TAG = SplashActivity.class.getSimpleName();
 
-    @BindView(R.id.ad_group) FrameLayout mADContainer;
-
-    private boolean mCanJump = false;
+    @BindView(R.id.splash_container) RelativeLayout mADContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,7 @@ public class SplashActivity extends BaseActivity {
         super.onPostCreate(savedInstanceState, persistentState);
 
         if (isFirstLaunch()) {
+            LogUtil.log("isFirstLaunch");
             createShortCut();// 创建桌面快捷方式
 
             DataManager.getInstance().onVersionCodeUpgrade();
@@ -57,63 +62,79 @@ public class SplashActivity extends BaseActivity {
 
         // 请求权限
         boolean permission = PermissionUtil.checkInitPermission(BaseActivity.getTopActivity());
-        if (permission) {
-            jumpMainActivityDeLay(2000);
-        }
+//        if (permission) {
+//            jumpMainActivityDeLay(2000);
+//        }
     }
 
     private void initAD() {
-        Qhad.setLogSwitch(this, false);
-        SplashAD splashAD = new SplashAD(this, mADContainer, Constants.APPID, Constants.SplashPosID, new SplashADListener() {
-            @Override
-            public void onADDismissed() {
-                LogUtil.d("TX_AD");
-                jumpMainActivityDeLay(0); // 广告隐藏后立即跳转
-            }
-            @Override
-            public void onNoAD(int errorCode) {
-                LogUtil.d("TX_AD errorCode=" + errorCode);
-                jumpMainActivityDeLay(2000); // 没有广告就延迟跳转
-            }
-            @Override
-            public void onADPresent() {
-                LogUtil.d("TX_AD");
-            }
-            @Override
-            public void onADClicked() {
-                LogUtil.d("TX_AD");
-            }
-        });
-    }
+        AdManager.getInstance(this).init(Constants.APPID, Constants.APPSECTET, true, true);
+        SplashViewSettings splashViewSettings = new SplashViewSettings();
+        splashViewSettings.setTargetClass(MainTabActivity.class);
+        // 使用默认布局参数
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        splashViewSettings.setSplashViewContainerAndLayoutParams(mADContainer, params);
+//        splashViewSettings.setSplashViewContainer(mADContainer);
+        SpotManager.getInstance(this).showSplash(this, splashViewSettings, new SpotListener() {
+                    @Override
+                    public void onShowSuccess() {
+                        BaseActivity.getUIHandler().removeCallbacks(mJumpTask);
+                        LogUtil.d(TAG, "YoumiSdk 开屏展示成功");
+                        mADContainer.setVisibility(View.VISIBLE);
+                        mADContainer.startAnimation(AnimationUtils.loadAnimation(Env.getContext(), R.anim.anim_splash_enter));
+                    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mCanJump = false;
+                    @Override
+                    public void onShowFailed(int errorCode) {
+                        jumpMainActivityDeLay(1000);
+                        LogUtil.e("YoumiSdk onShowFailed" + errorCode);
+                        switch (errorCode) {
+                            case ErrorCode.NON_NETWORK:
+                                LogUtil.e(TAG, "YoumiSdk无网络");
+                                break;
+                            case ErrorCode.NON_AD:
+                                LogUtil.e(TAG, "YoumiSdk无广告");
+                                break;
+                            case ErrorCode.RESOURCE_NOT_READY:
+                                LogUtil.e(TAG, "YoumiSdk资源还没准备好");
+                                break;
+                            case ErrorCode.SHOW_INTERVAL_LIMITED:
+                                LogUtil.e(TAG, "YoumiSdk展示间隔限制");
+                                break;
+                            case ErrorCode.WIDGET_NOT_IN_VISIBILITY_STATE:
+                                LogUtil.e(TAG, "YoumiSdk控件处在不可见状态");
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onSpotClosed() {
+                        LogUtil.d("YoumiSdk onSpotClosed");
+                    }
+
+                    @Override
+                    public void onSpotClicked(boolean isWebPage) {
+                        LogUtil.d("YoumiSdk onSpotClicked" + isWebPage);
+                    }
+                });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mCanJump) {
-            jumpMainActivityDeLay(1000);
-        }
-        mCanJump = true;
+        jumpMainActivityDeLay(3000);
     }
 
-    private void jumpMainActivityDeLay(int delay) {
-        if (!mCanJump) {
-            mCanJump = true;
-            return;
+    private Runnable mJumpTask = new Runnable() {
+        @Override
+        public void run() {
+            startActivity(new Intent(SplashActivity.this, MainTabActivity.class));
+            finish();
         }
+    };
+    private void jumpMainActivityDeLay(int delay) {
         // 延迟进入
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                startActivity(new Intent(SplashActivity.this, MainTabActivity.class));
-                finish();
-            }
-        }, delay);
+        BaseActivity.getUIHandler().postDelayed(mJumpTask, delay);
     }
 
     /**

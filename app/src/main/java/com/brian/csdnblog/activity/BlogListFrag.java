@@ -16,7 +16,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,10 +24,8 @@ import com.brian.common.view.RefreshLayout;
 import com.brian.csdnblog.Config;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
-import com.brian.csdnblog.RefWatcherHelper;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
 import com.brian.csdnblog.manager.BlogManager;
-import com.brian.csdnblog.manager.Constants;
 import com.brian.csdnblog.manager.DataFetcher;
 import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
@@ -46,10 +44,10 @@ import com.brian.csdnblog.util.ResourceUtil;
 import com.brian.csdnblog.util.WeakRefHandler;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.qq.e.ads.banner.ADSize;
-import com.qq.e.ads.banner.AbstractBannerADListener;
-import com.qq.e.ads.banner.BannerView;
 import com.umeng.analytics.MobclickAgent;
+
+import net.youmi.android.normal.banner.BannerManager;
+import net.youmi.android.normal.banner.BannerViewListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -93,7 +91,6 @@ public class BlogListFrag extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RefWatcherHelper.watch(this);
     }
 
     /**
@@ -185,29 +182,29 @@ public class BlogListFrag extends Fragment {
                 R.color.yellow);
 
         if (SettingPreference.getInstance().getAdsEnable()) {
-            FrameLayout adLy  = (FrameLayout) inflater.inflate(R.layout.layout_ad, null);
-//            String adSpaceid = Config.getAdBannerKey();
-//            if (!TextUtils.isEmpty(adSpaceid)) {
-//                Qhad.showBanner(adLy, BaseActivity.getTopActivity(), adSpaceid, false);
-//            }
-
-            BannerView banner = new BannerView(BaseActivity.getTopActivity(), ADSize.BANNER, Constants.APPID, Constants.BannerPosID);
-
-            banner.setRefresh(30);
-            banner.setADListener(new AbstractBannerADListener() {
+            final LinearLayout adLy = new LinearLayout(getContext());
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//            adLy.setLayoutParams(params);
+            View bannerView = BannerManager.getInstance(getContext()).getBannerView(new BannerViewListener() {
                 @Override
-                public void onNoAD(int errorCode) {
-                    LogUtil.d("TX_AD errorCode=" + errorCode);
+                public void onRequestSuccess() {
+                    LogUtil.i(TAG, "YoumiSdk 请求广告条成功");
                 }
+
                 @Override
-                public void onADReceiv() {
-                    LogUtil.d("TX_AD");
+                public void onSwitchBanner() {
+                    LogUtil.i(TAG, "YoumiSdk 广告条切换");
+                }
+
+                @Override
+                public void onRequestFailed() {
+                    mBlogListView.removeHeaderView(adLy);
+                    LogUtil.e(TAG, "YoumiSdk 请求广告条失败");
                 }
             });
-            /* 发起广告请求，收到广告数据后会展示数据   */
-            adLy.addView(banner);
+            adLy.removeAllViews();
+            adLy.addView(bannerView);
             mBlogListView.addHeaderView(adLy);
-            banner.loadAD();
         }
         mFooterLayout = inflater.inflate(R.layout.loading_footer, null);
         mFooterLayout.setVisibility(View.GONE);

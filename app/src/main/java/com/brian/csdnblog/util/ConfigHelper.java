@@ -17,7 +17,7 @@ public class ConfigHelper {
         try {
             ApplicationInfo info = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             // 调试 (PS:默认为false)
-            Config.isDebug = info.metaData.getBoolean("DEBUG_ENABLE");
+//            Config.isDebug = info.metaData.getBoolean("DEBUG_ENABLE");
             Log.w("ConfigHelper", "Config.isDebug=" + Config.isDebug);
 
             AppInfoUtil.sChannelName = info.metaData.getString("UMENG_CHANNEL");

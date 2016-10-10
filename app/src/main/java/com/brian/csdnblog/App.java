@@ -12,7 +12,6 @@ import com.brian.csdnblog.manager.CrashHandler.OnAppCrashListener;
 import com.brian.csdnblog.manager.PushManager;
 import com.brian.csdnblog.util.AppInfoUtil;
 import com.brian.csdnblog.util.ConfigHelper;
-import com.facebook.stetho.Stetho;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 
@@ -37,11 +36,6 @@ public class App extends Application {
             ConfigHelper.init(this);
             PushManager.getInstance().initPushMsg(this);
             setStrictModeEnable(Config.isDebug);
-
-            if (Config.isDebug) {
-                Stetho.initializeWithDefaults(this); // chrome调试
-                RefWatcherHelper.install(this); // 内存泄漏检测
-            }
         }
     }
 

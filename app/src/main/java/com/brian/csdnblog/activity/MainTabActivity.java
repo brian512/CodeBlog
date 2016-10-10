@@ -33,6 +33,8 @@ import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.umeng.onlineconfig.OnlineConfigLog;
 import com.umeng.onlineconfig.UmengOnlineConfigureListener;
 
+import net.youmi.android.normal.spot.SpotManager;
+
 import org.json.JSONObject;
 
 import java.util.Locale;
@@ -244,6 +246,7 @@ public class MainTabActivity extends SlidingFragmentActivity {
         ToastUtil.showMsgS(String.format(Locale.CHINA, "共浏览 %d篇博文，累计学习 %s", count, time));
         super.onDestroy();
         OnlineConfigAgent.getInstance().removeOnlineConfigListener();
+        SpotManager.getInstance(this).onDestroy();
     }
 
     // 当启动模式为singletask，重新被启动时调用

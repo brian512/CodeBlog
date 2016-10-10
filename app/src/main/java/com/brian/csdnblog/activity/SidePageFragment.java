@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.brian.common.view.CircleImageView;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
-import com.brian.csdnblog.RefWatcherHelper;
 import com.brian.csdnblog.manager.BlogerManager;
 import com.brian.csdnblog.manager.Constants;
 import com.brian.csdnblog.manager.TypeManager;
@@ -53,7 +52,6 @@ public class SidePageFragment extends Fragment implements OnClickListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        RefWatcherHelper.watch(this);
     }
 
     @Override

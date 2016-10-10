@@ -27,9 +27,6 @@
     <permission android:name="com.brian.csdnblog.permission.MIPUSH_RECEIVE" android:protectionLevel="signature" />
     <uses-permission android:name="com.brian.csdnblog.permission.MIPUSH_RECEIVE" />
 
-    <!--腾讯广告-->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_UPDATES"/>
-
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -163,50 +160,23 @@
             </intent-filter>
         </receiver>
 
-        <!-- leakcanary -->
-        <!--         <service
-                    android:name="com.squareup.leakcanary.internal.HeapAnalyzerService"
-                    android:enabled="false"
-                    android:process=":leakcanary" />
-                <service
-                    android:name="com.squareup.leakcanary.DisplayLeakService"
-                    android:enabled="false" />
-
-                <activity
-                    android:name="com.squareup.leakcanary.internal.DisplayLeakActivity"
-                    android:enabled="false"
-                    android:icon="@drawable/__leak_canary_icon"
-                    android:label="@string/__leak_canary_display_activity_label"
-                    android:taskAffinity="com.squareup.leakcanary"
-                    android:theme="@style/__LeakCanary.Base" >
-                    <intent-filter>
-                        <action android:name="android.intent.action.MAIN" />
-
-                        <category android:name="android.intent.category.LAUNCHER" />
-                    </intent-filter>
-                </activity> -->
-
-
-        <!-- 360广告
-        <service
-            android:name="com.qhad.ads.sdk.service.QhAdService"
-            android:enabled="true"
-            android:exported="false" />
-
+        <!--有米广告-->
         <activity
-            android:name="com.qhad.ads.sdk.adcore.QhAdActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
- -->
-
-
-        <!--腾讯广告-->
+            android:name="net.youmi.android.AdBrowser"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
         <service
-            android:name="com.qq.e.comm.DownloadService"
-            android:exported="false" />
-        <activity
-            android:name="com.qq.e.ads.ADActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize" />
-
+            android:name="net.youmi.android.AdService"
+            android:exported="false" >
+        </service>
+        <receiver
+            android:name="net.youmi.android.AdReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
 
         <meta-data
             android:name="UMENG_APPKEY"

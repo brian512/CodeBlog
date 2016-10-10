@@ -10,11 +10,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -22,6 +24,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.Config;
@@ -31,7 +34,6 @@ import com.brian.csdnblog.datacenter.preference.CommonPreference;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
 import com.brian.csdnblog.manager.BlogManager;
 import com.brian.csdnblog.manager.BlogerManager;
-import com.brian.csdnblog.manager.Constants;
 import com.brian.csdnblog.manager.DataFetcher;
 import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
 import com.brian.csdnblog.manager.DataFetcher.Result;
@@ -50,11 +52,11 @@ import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.NetStatusUtil;
 import com.brian.csdnblog.util.ToastUtil;
 import com.brian.csdnblog.util.WeakRefHandler;
-import com.qhad.ads.sdk.adcore.Qhad;
-import com.qhad.ads.sdk.interfaces.IQhInterstitialAd;
-import com.qq.e.ads.interstitial.AbstractInterstitialADListener;
-import com.qq.e.ads.interstitial.InterstitialAD;
 import com.tencent.connect.share.QQShare;
+
+import net.youmi.android.normal.common.ErrorCode;
+import net.youmi.android.normal.spot.SpotListener;
+import net.youmi.android.normal.spot.SpotManager;
 
 import java.util.Stack;
 
@@ -70,9 +72,8 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     @BindView(R.id.blogContentPro) ProgressBar mProgressBar; // 进度条
     @BindView(R.id.reLoadImage) ImageView mReLoadImageView; // 重新加载的图片
     @BindView(R.id.ad_group) FrameLayout mAdLayout; // 广告
+    private View mAdView;
     private PopupMenu mPopupMenu;
-
-    private IQhInterstitialAd mAd;
 
     private IBlogHtmlParser mBlogParser = null;
 
@@ -170,51 +171,64 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     }
 
     private void initAd() {
-        mAdLayout = (FrameLayout) findViewById(R.id.ad_group);
-        String adSpaceid = Config.getAdSplashKey();
-        if (!TextUtils.isEmpty(adSpaceid)) {
-            mAd = Qhad.showInterstitial(this, adSpaceid, false);
-        }
+        SpotManager.getInstance(Env.getContext()).setImageType(SpotManager.IMAGE_TYPE_VERTICAL);
+        // 获取原生插屏控件
+        mAdView = SpotManager.getInstance(Env.getContext()).getNativeSpot(Env.getContext(), new SpotListener() {
+
+                    @Override
+                    public void onShowSuccess() {
+                        Log.d(TAG, "插屏展示成功");
+                    }
+
+                    @Override
+                    public void onShowFailed(int errorCode) {
+                        Log.d(TAG, "插屏展示失败" + errorCode);
+                        switch (errorCode) {
+                            case ErrorCode.NON_NETWORK:
+                                LogUtil.e("YoumiSdk网络异常");
+                                break;
+                            case ErrorCode.NON_AD:
+                                LogUtil.e("YoumiSdk暂无广告");
+                                break;
+                            case ErrorCode.RESOURCE_NOT_READY:
+                                LogUtil.e(TAG, "YoumiSdk资源还没准备好");
+                                break;
+                            case ErrorCode.SHOW_INTERVAL_LIMITED:
+                                LogUtil.e(TAG, "YoumiSdk展示间隔限制");
+                                break;
+                            case ErrorCode.WIDGET_NOT_IN_VISIBILITY_STATE:
+                                LogUtil.e(TAG, "YoumiSdk控件处在不可见状态");
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onSpotClosed() {
+                        LogUtil.d(TAG, "YoumiSdk插屏被关闭");
+                    }
+
+                    @Override
+                    public void onSpotClicked(boolean isWebPage) {
+                        LogUtil.d(TAG, "YoumiSdk插屏被点击");
+                    }
+                });
         toggleAdShow(true);
     }
 
-    private InterstitialAD iad;
-    private InterstitialAD getIAD() {
-        if (iad == null) {
-            iad = new InterstitialAD(this, Constants.APPID, Constants.InterteristalPosID);
-        }
-        return iad;
-    }
-    private void showAsPopup() {
-        getIAD().setADListener(new AbstractInterstitialADListener() {
-            @Override
-            public void onNoAD(int errorCode) {
-                LogUtil.d("TX_AD LoadInterstitialAd Fail:" + errorCode);
-            }
-            @Override
-            public void onADReceive() {
-                LogUtil.d("TX_AD");
-                iad.showAsPopupWindow();
-            }
-        });
-        iad.loadAD();
-    }
-
-    private void closeAsPopup() {
-        iad.closePopupWindow();
-    }
-    
     private void toggleAdShow(boolean isShow) {
-        if (mAd != null && SettingPreference.getInstance().getAdsEnable()) {
-            if (isShow) {
+        if (isShow && SettingPreference.getInstance().getAdsEnable()) {
+            RelativeLayout.LayoutParams layoutParams =
+                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+            mAdLayout.removeAllViews();
+            // 添加原生插屏控件到容器中
+            mAdLayout.addView(mAdView, layoutParams);
+            if (mAdLayout.getVisibility() != View.VISIBLE) {
                 mAdLayout.setVisibility(View.VISIBLE);
-//                mAd.showAds(this);
-                showAsPopup();
-            } else {
-                mAdLayout.setVisibility(View.GONE);
-//                mAd.closeAds();
-                closeAsPopup();
             }
+        } else {
+            mAdLayout.setVisibility(View.GONE);
         }
     }
     
@@ -337,6 +351,12 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // 如果有需要，可以点击后退关闭插播广告。
+            if (mAdLayout != null && mAdLayout.getVisibility() == View.VISIBLE) {
+                mAdLayout.setVisibility(View.GONE);
+                return true;
+            }
+
             if (mReLoadImageView.getVisibility() == View.VISIBLE) {
                 mReLoadImageView.setVisibility(View.GONE);
                 mWebView.setVisibility(View.VISIBLE);
@@ -424,10 +444,23 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        // 插播广告
+        SpotManager.getInstance(this).onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 插播广告
+        SpotManager.getInstance(this).onStop();
+    }
+
+    @Override
     protected void onDestroy() {
         CommonPreference.getInstance().addBlogReadTime(System.currentTimeMillis() - mStartTime);
         super.onDestroy();
-        Qhad.activityDestroy(this);
 
         mWebView.stopLoading();
         mWebView.onPause();

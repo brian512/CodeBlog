@@ -3,6 +3,7 @@ package com.brian.csdnblog.activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PersistableBundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -10,7 +11,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.brian.csdnblog.R;
-import com.brian.csdnblog.RefWatcherHelper;
 import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.ResourceUtil;
 import com.umeng.analytics.MobclickAgent;
@@ -31,7 +31,6 @@ public class BaseActivity extends SwipeBackActivity {
         super.onCreate(savedInstanceState);
 
         sTopActivity = this;
-        RefWatcherHelper.watch(this);
     }
     
     @Override
@@ -101,7 +100,6 @@ public class BaseActivity extends SwipeBackActivity {
     protected void onDestroy() {
         LogUtil.log("onDestroy：" + getClass().getSimpleName());
         super.onDestroy();
-        RefWatcherHelper.watch(this);
     }
 
     /**
@@ -160,5 +158,13 @@ public class BaseActivity extends SwipeBackActivity {
                 isStatusBarTranslate = true;
             }
         }
+    }
+
+    public static Handler getUIHandler() {
+        Handler handler = getTopActivity().getWindow().getDecorView().getHandler();
+        if (handler == null) {
+            handler = new Handler();
+        }
+        return handler;
     }
 }

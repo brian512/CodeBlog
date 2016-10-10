@@ -28,10 +28,9 @@
         android:textSize="16sp"
         android:textColor="#88ffffff"/>
 
-    <FrameLayout
+    <RelativeLayout
         android:id="@+id/splash_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"/>
+        android:layout_height="match_parent"/>
 
 </FrameLayout>
