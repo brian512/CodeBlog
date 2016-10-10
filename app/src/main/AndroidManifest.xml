@@ -35,8 +35,6 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
-        <meta-data android:name="DEBUG_ENABLE" android:value="${DEBUG_ENABLE}" />
-
         <activity
             android:name="com.brian.csdnblog.activity.SplashActivity"
             android:theme="@style/AppBaseTheme"

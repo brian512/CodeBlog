@@ -5,6 +5,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.util.Log;
 
+import com.brian.csdnblog.BuildConfig;
 import com.brian.csdnblog.Config;
 
 /**
@@ -17,7 +18,7 @@ public class ConfigHelper {
         try {
             ApplicationInfo info = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             // 调试 (PS:默认为false)
-//            Config.isDebug = info.metaData.getBoolean("DEBUG_ENABLE");
+            Config.isDebug = BuildConfig.LOG_DEBUG;
             Log.w("ConfigHelper", "Config.isDebug=" + Config.isDebug);
 
             AppInfoUtil.sChannelName = info.metaData.getString("UMENG_CHANNEL");

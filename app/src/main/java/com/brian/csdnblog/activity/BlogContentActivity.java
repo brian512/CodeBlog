@@ -138,16 +138,21 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         mTitleBar.setTitle(mBlogInfo.title);
         mCurrentTitle = mBlogInfo.title;
 
-        // 开始请求数据
-        if (TypeManager.getWebType(mBlogInfo.type) == TypeManager.TYPE_WEB_JCC) {
-            BlogManager.getInstance().fetchBlogContent(mCurrentUrl, "GB2312", this);
-        } else {
-            BlogManager.getInstance().fetchBlogContent(mCurrentUrl, this);
-        }
-
         mProgressBar.setVisibility(View.VISIBLE);
-        
-        BlogManager.getInstance().saveBlog(mBlogInfo);
+
+        getUIHandler().post(new Runnable() {
+            @Override
+            public void run() {
+                // 开始请求数据
+                if (TypeManager.getWebType(mBlogInfo.type) == TypeManager.TYPE_WEB_JCC) {
+                    BlogManager.getInstance().fetchBlogContent(mCurrentUrl, "GB2312", BlogContentActivity.this);
+                } else {
+                    BlogManager.getInstance().fetchBlogContent(mCurrentUrl, BlogContentActivity.this);
+                }
+
+                BlogManager.getInstance().saveBlog(mBlogInfo);
+            }
+        });
     }
 
     private void initBlogInfo() {
@@ -216,7 +221,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     }
 
     private void toggleAdShow(boolean isShow) {
-        if (isShow && SettingPreference.getInstance().getAdsEnable()) {
+        if (mAdView != null && isShow && SettingPreference.getInstance().getAdsEnable()) {
             RelativeLayout.LayoutParams layoutParams =
                     new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT);

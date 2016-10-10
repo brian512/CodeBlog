@@ -110,23 +110,23 @@ android {
     // 配置渠道包
     productFlavors {
         WANDOUJIA {
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "WANDOUJIA", DEBUG_ENABLE: false]
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "WANDOUJIA"]
         }
 
         BAIDU {
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "BAIDU", DEBUG_ENABLE: false]
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "BAIDU"]
         }
 
         QIHU360 {
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "QIHU360", DEBUG_ENABLE: false]
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "QIHU360"]
         }
 
         XIAOMI {
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "XIAOMI", DEBUG_ENABLE: false]
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "XIAOMI"]
         }
 
         YINGYONGBAO {
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "YINGYONGBAO", DEBUG_ENABLE: false]
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "YINGYONGBAO"]
         }
     }
 }

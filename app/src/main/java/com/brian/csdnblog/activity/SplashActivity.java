@@ -41,7 +41,7 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
-        AdManager.getInstance(this).init(Constants.APPID, Constants.APPSECTET, true, true);
+        AdManager.getInstance(this).init(Constants.APPID, Constants.APPSECTET, Config.isDebug, Config.isDebug);
 
         // 打开调试模式
         MobclickAgent.setDebugMode(Config.isDebug);
