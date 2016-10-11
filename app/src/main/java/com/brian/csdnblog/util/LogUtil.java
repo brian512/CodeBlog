@@ -3,8 +3,6 @@ package com.brian.csdnblog.util;
 import android.os.Environment;
 import android.util.Log;
 
-import com.brian.csdnblog.Config;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,25 +18,21 @@ import java.util.Locale;
  * @author brian @date 2015年7月24日
  */
 public class LogUtil {
-    private static boolean mIsDebugMode = Config.isDebug;// 获取堆栈信息会影响性能，发布应用时记得关闭DebugMode
+    public static boolean mIsDebugMode = true;// 获取堆栈信息会影响性能，发布应用时记得关闭DebugMode
 
     private static final int JSON_INDENT = 2;
 
-    private static boolean LOGV = mIsDebugMode;
-    private static boolean LOGF = mIsDebugMode;
-    private static boolean LOGD = mIsDebugMode;
-    private static boolean LOGI = mIsDebugMode;
     private static boolean LOGW = true;
     private static boolean LOGE = true;
 
     public static void v(String tag, String mess) {
-        if (LOGV) { Log.v(tag, buildMessageSafe(mess)); }
+        if (mIsDebugMode) { Log.v(tag, buildMessageSafe(mess)); }
     }
     public static void d(String tag, String mess) {
-        if (LOGD) { Log.d(tag, buildMessageSafe(mess)); }
+        if (mIsDebugMode) { Log.d(tag, buildMessageSafe(mess)); }
     }
     public static void i(String tag, String mess) {
-        if (LOGI) { Log.i(tag, buildMessageSafe(mess)); }
+        if (mIsDebugMode) { Log.i(tag, buildMessageSafe(mess)); }
     }
     public static void w(String tag, String mess) {
         if (LOGW) { Log.w(tag, buildMessageSafe(mess)); }
@@ -47,14 +41,14 @@ public class LogUtil {
         if (LOGE) { Log.e(tag, buildMessageSafe(mess)); }
     }
     public static void log(String mess) {
-        if (LOGD) { Log.i(getTag(), buildMessageSafe(mess)); }
+        if (mIsDebugMode) { Log.i(getTag(), buildMessageSafe(mess)); }
     }
 
     /**
      * write log to file /sdcard/GameCenter.log
      */
     public static void f(String tag, String mess) {
-        if (LOGF) {
+        if (mIsDebugMode) {
             writeFile(Environment.getExternalStorageDirectory().getPath() + System.currentTimeMillis() + ".log", tag, mess);
         }
     }
@@ -70,13 +64,13 @@ public class LogUtil {
      * use the classname as tag
      */
     public static void v(String mess) {
-        if (LOGV) { Log.v(getTag(), buildMessageSafe(mess)); }
+        if (mIsDebugMode) { Log.v(getTag(), buildMessageSafe(mess)); }
     }
     public static void d(String mess) {
-        if (LOGD) { Log.d(getTag(), buildMessageSafe(mess)); }
+        if (mIsDebugMode) { Log.d(getTag(), buildMessageSafe(mess)); }
     }
     public static void i(String mess) {
-        if (LOGI) { Log.i(getTag(), buildMessageSafe(mess)); }
+        if (mIsDebugMode) { Log.i(getTag(), buildMessageSafe(mess)); }
     }
     public static void w(String mess) {
         if (LOGW) { Log.w(getTag(), buildMessageSafe(mess)); }

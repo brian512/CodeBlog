@@ -10,14 +10,14 @@ def releaseTime() {
 // 打debug包命令 gradlew assembleDebug
 android {
     compileSdkVersion 24
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "24.0.3"
 
     defaultConfig {
         applicationId "com.brian.csdnblog"
         minSdkVersion 15
         targetSdkVersion 24
-        versionCode 79
-        versionName "1.3.79"
+        versionCode 80
+        versionName "1.3.80"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
 

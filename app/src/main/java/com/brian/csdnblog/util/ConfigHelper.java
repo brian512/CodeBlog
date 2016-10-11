@@ -18,6 +18,7 @@ public class ConfigHelper {
             ApplicationInfo info = context.getPackageManager().getApplicationInfo(context.getPackageName(), PackageManager.GET_META_DATA);
             // 打包时动态更改LOG_DEBUG
             Config.isDebug = BuildConfig.LOG_DEBUG;
+            LogUtil.mIsDebugMode = Config.isDebug;
 
             AppInfoUtil.sChannelName = info.metaData.getString("UMENG_CHANNEL");
         } catch (Exception e) {
