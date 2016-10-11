@@ -106,34 +106,44 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
     private List<BlogInfo> doGetBlogList(int type, String str) {
         List<BlogInfo> list = new ArrayList<>();
         if (TextUtils.isEmpty(str)) {
+            LogUtil.e("str is empty");
             return list;
         }
 //        LogUtil.d("str=" + str);
         // 获取文档对象
         Document doc = Jsoup.parse(str);
         // 获取class="article_item"的所有元素
-        Element blogs = doc.getElementById("RecentBlogs");
+        Element blogs = doc.getElementById("topsOfToday");
         if (blogs == null) {
+            LogUtil.e("RecentBlogs=null");
             return list;
         }
-        Elements blogList = blogs.getElementsByClass("BlogList").get(0).getElementsByTag("li");
+        Elements blogList = blogs.getElementsByClass("item");
 
         for (Element blogItem : blogList) {
             BlogInfo item = new BlogInfo();
-            item.title = blogItem.select("h3").select("a").text(); // 得到标题
-            item.summary = blogItem.getElementsByTag("p").text();
-            item.extraMsg = blogItem.getElementsByClass("date").text();
-            item.link = blogItem.select("h3").select("a").attr("href");
+            item.title = blogItem.select("header").get(0).select("a").text(); // 得到标题
+            item.summary = blogItem.select("section").get(0).text();
+            item.extraMsg = blogItem.select("footer").get(0).text();
+            item.link = blogItem.select("header").get(0).select("a").attr("href");
             item.blogId = Md5.getMD5ofStr(item.link);
 
             item.type = type;
 
-            String homePageUrl = blogItem.select("a").get(0).attr("href");
+            String homePageUrl = "";
+            try {
+                homePageUrl = blogItem.getElementsByClass("box-fl").get(0).select("a").attr("href");
+            } catch (Exception e) {
+                LogUtil.printError(e);
+            }
             if (!TextUtils.isEmpty(homePageUrl)) {
                 Bloger bloger = new Bloger();
                 bloger.blogerType = type;
-                bloger.nickName = blogItem.select("a").get(0).select("img").attr("title");
-                bloger.headUrl = blogItem.select("a").get(0).select("img").attr("src");
+                bloger.nickName = blogItem.select("footer").get(0).getElementsByIndexEquals(0).text();
+                bloger.headUrl = blogItem.getElementsByClass("box-fl").get(0).select("img").attr("src");
+                if (TextUtils.isEmpty(bloger.headUrl)) {
+                    bloger.headUrl = blogItem.getElementsByClass("box-fl").get(0).select("img").attr("data-delay");
+                }
                 bloger.homePageUrl = homePageUrl;
                 bloger.blogerID = Bloger.getBlogerId(bloger.homePageUrl);
 

@@ -253,7 +253,7 @@ public class MainTabActivity extends SlidingFragmentActivity {
         super.onNewIntent(intent);
 
         // 若参数中无
-        int initPosition = CommonPreference.getInstance().getIndicatorPosition(0);
+        int initPosition = CommonPreference.getInstance().getIndicatorPosition(mTabAdapter.getCount()/2);
         mViewpager.setCurrentItem(initPosition, false);
 
         getIntent().putExtras(intent);// 共享数据

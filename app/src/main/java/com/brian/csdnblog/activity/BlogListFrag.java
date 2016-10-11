@@ -129,8 +129,12 @@ public class BlogListFrag extends Fragment {
                 if (bloger != null && !TextUtils.isEmpty(bloger.nickName) && !TextUtils.isEmpty(item.extraMsg)) {
                     SpannableStringBuilder builder = new SpannableStringBuilder(item.extraMsg);
                     int indexStart = item.extraMsg.indexOf(bloger.nickName);
-                    builder.setSpan(mColorSpanName, indexStart, indexStart + bloger.nickName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    nameView.setText(builder);
+                    if (indexStart < 0) {
+                        nameView.setText(item.extraMsg);
+                    } else {
+                        builder.setSpan(mColorSpanName, indexStart, indexStart + bloger.nickName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        nameView.setText(builder);
+                    }
                 } else {
                     nameView.setText(item.extraMsg);
                 }
@@ -326,6 +330,7 @@ public class BlogListFrag extends Fragment {
                 }
                 
                 if (TextUtils.isEmpty(response.data)) {
+                    LogUtil.e("empty response");
                     if (mAdapter.isEmpty()) {
                         showNoBlog();
                     }

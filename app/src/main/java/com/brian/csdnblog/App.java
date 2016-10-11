@@ -31,6 +31,7 @@ public class App extends Application {
 
         if (PROCESS_NAME_MAIN.equals(AppInfoUtil.getProcessName(this))) {
             ConfigHelper.init(this);
+            LogUtil.w("Config.isDebug=" + Config.isDebug);
             setStrictModeEnable(Config.isDebug);
         }
     }

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,6 +32,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.brian.csdnblog.R.id.bloger;
 
 /**
  * 侧边栏
@@ -88,7 +91,11 @@ public class SidePageFragment extends Fragment implements OnClickListener {
         Bloger bloger = BlogerManager.getsInstance().getCurrBloger();
         mBlogerNameView.setText(bloger.nickName + "的博客");
         LogUtil.log("headUrl=" + bloger.headUrl);
-        Picasso.with(Env.getContext()).load(bloger.headUrl).into(mBlogerHeadView);
+        if (TextUtils.isEmpty(bloger.headUrl)) {
+            mBlogerHeadView.setImageResource(R.drawable.icon_default_user);
+        } else {
+            Picasso.with(Env.getContext()).load(bloger.headUrl).into(mBlogerHeadView);
+        }
     }
 
     @Override
@@ -177,7 +184,11 @@ public class SidePageFragment extends Fragment implements OnClickListener {
     public void onEventMainThread(CurrBlogerEvent event) {
         mBlogerNameView.setText(event.bloger.nickName + "的博客");
         LogUtil.log("headUrl=" + event.bloger.headUrl);
-        Picasso.with(Env.getContext()).load(event.bloger.headUrl).into(mBlogerHeadView);
+        if (TextUtils.isEmpty(event.bloger.headUrl)) {
+            mBlogerHeadView.setImageResource(R.drawable.icon_default_user);
+        } else {
+            Picasso.with(Env.getContext()).load(event.bloger.headUrl).into(mBlogerHeadView);
+        }
     }
 
 }
