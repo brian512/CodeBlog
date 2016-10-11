@@ -160,16 +160,16 @@
 
         <!--有米广告-->
         <activity
-            android:name="net.youmi.android.AdBrowser"
+            android:name="tj.zl.op.EA"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
         <service
-            android:name="net.youmi.android.AdService"
+            android:name="tj.zl.op.EB"
             android:exported="false" >
         </service>
         <receiver
-            android:name="net.youmi.android.AdReceiver" >
+            android:name="tj.zl.op.EC" >
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <data android:scheme="package" />

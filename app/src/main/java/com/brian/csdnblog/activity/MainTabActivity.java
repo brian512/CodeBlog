@@ -33,14 +33,13 @@ import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.umeng.onlineconfig.OnlineConfigLog;
 import com.umeng.onlineconfig.UmengOnlineConfigureListener;
 
-import net.youmi.android.normal.spot.SpotManager;
-
 import org.json.JSONObject;
 
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import tj.zl.op.normal.spot.SpotManager;
 
 /**
  * 主界面

@@ -3,15 +3,11 @@ package com.brian.csdnblog;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.os.StrictMode;
 
-import com.brian.csdnblog.activity.MainTabActivity;
-import com.brian.csdnblog.manager.CrashHandler;
-import com.brian.csdnblog.manager.CrashHandler.OnAppCrashListener;
-import com.brian.csdnblog.manager.PushManager;
 import com.brian.csdnblog.util.AppInfoUtil;
 import com.brian.csdnblog.util.ConfigHelper;
+import com.brian.csdnblog.util.LogUtil;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 
@@ -21,6 +17,8 @@ public class App extends Application {
 
     @Override
     protected void attachBaseContext(Context base) {
+        Env.setContext(this);
+        LogUtil.log("AppStart");
         // app start here
         Env.setAppStartTime();
         super.attachBaseContext(base);
@@ -29,12 +27,10 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Env.setContext(this);
         handleCrash();
 
         if (PROCESS_NAME_MAIN.equals(AppInfoUtil.getProcessName(this))) {
             ConfigHelper.init(this);
-            PushManager.getInstance().initPushMsg(this);
             setStrictModeEnable(Config.isDebug);
         }
     }
@@ -45,25 +41,7 @@ public class App extends Application {
 
         // 友盟crash统计，目前使用bugly
         MobclickAgent.setCatchUncaughtExceptions(false);
-        if (Config.isDebug) {
-            catchException(); // 本地记录crash log
-        }
-    }
-
-    // -------------------异常捕获-----捕获异常后重启应用-----------------//
-    private void catchException() {
-        Intent intent = new Intent();
-        intent.setClassName(getPackageName(), MainTabActivity.class.getName());// 设置程序入口
-
-        // 程序崩溃时触发线程
-        CrashHandler crashHandler = new CrashHandler();
-        crashHandler.setOnCrashListener(new OnAppCrashListener() {
-            @Override
-            public void onAppCrash() {
-                // TODO
-            }
-        });
-        Thread.setDefaultUncaughtExceptionHandler(crashHandler);
+//        CrashHandler.getInstance().initCrashHandler(getApplicationContext());
     }
 
     private void setStrictModeEnable(boolean enable) {

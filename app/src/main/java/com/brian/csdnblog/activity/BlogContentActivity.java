@@ -32,6 +32,7 @@ import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.datacenter.preference.CommonPreference;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
+import com.brian.csdnblog.manager.AdHelper;
 import com.brian.csdnblog.manager.BlogManager;
 import com.brian.csdnblog.manager.BlogerManager;
 import com.brian.csdnblog.manager.DataFetcher;
@@ -54,14 +55,13 @@ import com.brian.csdnblog.util.ToastUtil;
 import com.brian.csdnblog.util.WeakRefHandler;
 import com.tencent.connect.share.QQShare;
 
-import net.youmi.android.normal.common.ErrorCode;
-import net.youmi.android.normal.spot.SpotListener;
-import net.youmi.android.normal.spot.SpotManager;
-
 import java.util.Stack;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import tj.zl.op.normal.common.ErrorCode;
+import tj.zl.op.normal.spot.SpotListener;
+import tj.zl.op.normal.spot.SpotManager;
 
 public class BlogContentActivity extends BaseActivity implements OnFetchDataListener<Result<String>> {
 
@@ -221,7 +221,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     }
 
     private void toggleAdShow(boolean isShow) {
-        if (mAdView != null && isShow && SettingPreference.getInstance().getAdsEnable()) {
+        if (mAdView != null && isShow && SettingPreference.getInstance().getAdsEnable() && AdHelper.isAdCanShow) {
             RelativeLayout.LayoutParams layoutParams =
                     new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT);

@@ -144,7 +144,7 @@ public class BaseActivity extends SwipeBackActivity {
     }
 
     public static Handler getUIHandler() {
-        Handler handler = getTopActivity().getWindow().getDecorView().getHandler();
+        Handler handler = sTopActivity.getWindow().getDecorView().getHandler();
         if (handler == null) {
             handler = new Handler();
         }

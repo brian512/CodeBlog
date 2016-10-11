@@ -1,6 +1,15 @@
 
 package com.brian.csdnblog.manager;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Environment;
+
+import com.brian.csdnblog.Env;
+import com.brian.csdnblog.activity.MainTabActivity;
+import com.brian.csdnblog.util.LogUtil;
+import com.umeng.analytics.MobclickAgent;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
@@ -12,19 +21,42 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import android.os.Environment;
-
-import com.brian.csdnblog.Env;
-import com.brian.csdnblog.util.LogUtil;
-import com.umeng.analytics.MobclickAgent;
-
 public class CrashHandler implements UncaughtExceptionHandler {
     
     private static final String TAG = CrashHandler.class.getSimpleName();
     
-    
     private OnAppCrashListener mCrashListener = null;
-    
+
+    private static CrashHandler sInstance;
+
+    private CrashHandler(){}
+
+    public static CrashHandler getInstance() {
+        if (sInstance == null) {
+            synchronized (CrashHandler.class) {
+                if (sInstance == null) {
+                    sInstance = new CrashHandler();
+                }
+            }
+        }
+        return sInstance;
+    }
+
+
+    public void initCrashHandler(Context context) {
+        Intent intent = new Intent();
+        intent.setClassName(context.getPackageName(), MainTabActivity.class.getName());// 设置程序入口
+
+        // 程序崩溃时触发线程
+        CrashHandler crashHandler = new CrashHandler();
+        crashHandler.setOnCrashListener(new OnAppCrashListener() {
+            @Override
+            public void onAppCrash() {
+                // TODO
+            }
+        });
+        Thread.setDefaultUncaughtExceptionHandler(crashHandler);
+    }
     
     
     @Override
@@ -93,6 +125,6 @@ public class CrashHandler implements UncaughtExceptionHandler {
     }
     
     public interface OnAppCrashListener {
-        public void onAppCrash();
+        void onAppCrash();
     }
 }

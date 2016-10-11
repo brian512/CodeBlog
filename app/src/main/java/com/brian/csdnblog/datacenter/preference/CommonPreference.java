@@ -17,6 +17,8 @@ public class CommonPreference extends BasePreference {
 
     private static final String KEY_BLOGER_JSON = "pre_key_curr_bloger_json";
 
+    private static final String KEY_AD_SWITCHER = "pre_key_ad_switcher";
+
     private static CommonPreference sInstance;
     private CommonPreference(){}
 
@@ -89,6 +91,14 @@ public class CommonPreference extends BasePreference {
 
     public void addBlogReadTime(long deltaTime) {
         putInt(KEY_BLOG_TIME, getBlogReadTime() + (int)deltaTime);
+    }
+
+    public boolean getAdIsOpened() {
+        return getBoolean(KEY_AD_SWITCHER, false);
+    }
+
+    public void setAdIsOpened(boolean isOpened) {
+        putBoolean(KEY_AD_SWITCHER, isOpened);
     }
 
     private String getDefaultBloger() {

@@ -154,8 +154,5 @@
 
 -keep class android.support.**{*;}
 
-#有米广告
--keep class net.youmi.android.**{*;}
-
 # 解决第三方包，爆出的warning
 -keepattributes EnclosingMethod

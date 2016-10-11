@@ -26,6 +26,7 @@ import com.brian.csdnblog.Config;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.datacenter.preference.SettingPreference;
+import com.brian.csdnblog.manager.AdHelper;
 import com.brian.csdnblog.manager.BlogManager;
 import com.brian.csdnblog.manager.DataFetcher;
 import com.brian.csdnblog.manager.DataFetcher.OnFetchDataListener;
@@ -47,9 +48,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.umeng.analytics.MobclickAgent;
 
-import net.youmi.android.normal.banner.BannerManager;
-import net.youmi.android.normal.banner.BannerViewListener;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
@@ -57,6 +55,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import tj.zl.op.normal.banner.BannerManager;
+import tj.zl.op.normal.banner.BannerViewListener;
 
 /**
  * Fragment页面
@@ -182,7 +182,7 @@ public class BlogListFrag extends Fragment {
                 R.color.red,
                 R.color.yellow);
 
-        if (SettingPreference.getInstance().getAdsEnable() && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (AdHelper.isAdCanShow && SettingPreference.getInstance().getAdsEnable() && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             final LinearLayout adLy = new LinearLayout(getContext());
             View bannerView = BannerManager.getInstance(getContext()).getBannerView(new BannerViewListener() {
                 @Override

@@ -13,70 +13,85 @@ import com.brian.csdnblog.Config;
 import com.brian.csdnblog.Env;
 import com.brian.csdnblog.R;
 import com.brian.csdnblog.datacenter.preference.CommonPreference;
-import com.brian.csdnblog.manager.Constants;
+import com.brian.csdnblog.manager.AdHelper;
 import com.brian.csdnblog.manager.DataManager;
+import com.brian.csdnblog.manager.PushManager;
 import com.brian.csdnblog.util.LogUtil;
 import com.brian.csdnblog.util.PermissionUtil;
 import com.brian.csdnblog.util.UIUtil;
 import com.umeng.analytics.MobclickAgent;
 
-import net.youmi.android.AdManager;
-import net.youmi.android.normal.common.ErrorCode;
-import net.youmi.android.normal.spot.SplashViewSettings;
-import net.youmi.android.normal.spot.SpotListener;
-import net.youmi.android.normal.spot.SpotManager;
-
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
 import pub.devrel.easypermissions.EasyPermissions;
+import tj.zl.op.normal.common.ErrorCode;
+import tj.zl.op.normal.spot.SplashViewSettings;
+import tj.zl.op.normal.spot.SpotListener;
+import tj.zl.op.normal.spot.SpotManager;
 
 public class SplashActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
     private static final String TAG = SplashActivity.class.getSimpleName();
 
-    @BindView(R.id.splash_container) FrameLayout mADContainer;
+    private FrameLayout mADContainer;
+
+    private boolean mHasInited = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setFullScreenEnable(true);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        ButterKnife.bind(this);
-        AdManager.getInstance(this).init(Constants.APPID, Constants.APPSECTET, Config.isDebug, Config.isDebug);
 
         // 打开调试模式
         MobclickAgent.setDebugMode(Config.isDebug);
+    }
 
-        getUIHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (isFirstLaunch()) {
-                    createShortCut();// 创建桌面快捷方式
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-                    DataManager.getInstance().onVersionCodeUpgrade();
+        if (!mHasInited) {
+            mHasInited = true;
+            getUIHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    delayInitTask();
 
-                    updateVersionCode();// 更新版本号
+                    // 请求权限
+                    if (PermissionUtil.checkInitPermission(BaseActivity.getTopActivity())) {
+                        initAD();
+                        jumpMainActivityDeLay(2000); // 防止卡在广告页
+                    }
                 }
+            }, 50);
+        }
+    }
 
-                // 请求权限
-                if (PermissionUtil.checkInitPermission(BaseActivity.getTopActivity())) {
-                    initAD();
-                    jumpMainActivityDeLay(1500); // 防止卡在广告页
-                }
-            }
-        }, 0);
+    private void delayInitTask() {
+        PushManager.getInstance().initPushMsg(Env.getContext());
+        if (isFirstLaunch()) {
+            createShortCut();// 创建桌面快捷方式
+
+            DataManager.getInstance().onVersionCodeUpgrade();
+
+            updateVersionCode();// 更新版本号
+        }
     }
 
     private void initAD() {
+        AdHelper.initAd(this.getApplicationContext());
+        if (!AdHelper.isAdCanShow) {
+            jumpMainActivityDeLay(1000);
+            return;
+        }
         SplashViewSettings splashViewSettings = new SplashViewSettings();
         splashViewSettings.setTargetClass(MainTabActivity.class);
+        mADContainer = (FrameLayout) findViewById(R.id.splash_container);
         // 使用默认布局参数
         splashViewSettings.setSplashViewContainer(mADContainer);
         SpotManager.getInstance(this).showSplash(this, splashViewSettings, new SpotListener() {
                     @Override
                     public void onShowSuccess() {
-//                        BaseActivity.getUIHandler().removeCallbacks(mJumpTask);
                         LogUtil.d(TAG, "YoumiSdk 开屏展示成功");
                         mADContainer.setVisibility(View.VISIBLE);
                         mADContainer.startAnimation(AnimationUtils.loadAnimation(Env.getContext(), R.anim.anim_splash_enter));
@@ -84,7 +99,7 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
 
                     @Override
                     public void onShowFailed(int errorCode) {
-                        jumpMainActivityDeLay(500);
+                        jumpMainActivityDeLay(1000);
                         LogUtil.e("YoumiSdk onShowFailed" + errorCode);
                         switch (errorCode) {
                             case ErrorCode.NON_NETWORK:
@@ -192,7 +207,7 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
         // 请求权限
         if (PermissionUtil.checkInitPermission(BaseActivity.getTopActivity())) {
             initAD();
-            jumpMainActivityDeLay(1500); // 防止卡在广告页
+            jumpMainActivityDeLay(2000); // 防止卡在广告页
         }
     }
 
