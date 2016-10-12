@@ -28,7 +28,7 @@
     <uses-permission android:name="com.brian.csdnblog.permission.MIPUSH_RECEIVE" />
 
     <application
-        android:name=".App"
+        android:name="com.brian.codeblog.App"
         android:allowBackup="true"
         android:fullBackupContent="true"
         android:icon="@drawable/ic_launcher"
@@ -36,7 +36,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="com.brian.csdnblog.activity.SplashActivity"
+            android:name="com.brian.codeblog.activity.SplashActivity"
             android:theme="@style/AppBaseTheme"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -47,39 +47,39 @@
         </activity>
         <!-- 主界面标签切换界面 -->
         <activity
-            android:name="com.brian.csdnblog.activity.MainTabActivity"
+            android:name="com.brian.codeblog.activity.MainTabActivity"
             android:theme="@style/AppBaseTheme"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <!-- 博客详细内容界面 -->
         <activity
-            android:name="com.brian.csdnblog.activity.BlogContentActivity"
+            android:name="com.brian.codeblog.activity.BlogContentActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <!-- 博客列表界面 -->
         <activity
-            android:name="com.brian.csdnblog.activity.BlogListActivity"
+            android:name="com.brian.codeblog.activity.BlogListActivity"
             android:screenOrientation="portrait"/>
         <!-- 博主文章界面 -->
         <activity
-            android:name="com.brian.csdnblog.activity.BlogerBlogListActivity"
+            android:name="com.brian.codeblog.activity.BlogerBlogListActivity"
             android:screenOrientation="portrait"/>
         <!-- 关于界面 -->
         <activity
-            android:name="com.brian.csdnblog.activity.AboutActivity"
+            android:name="com.brian.codeblog.activity.AboutActivity"
             android:screenOrientation="portrait"/>
         <!-- 设置界面 -->
         <activity
-            android:name="com.brian.csdnblog.activity.SettingActivity"
+            android:name="com.brian.codeblog.activity.SettingActivity"
             android:screenOrientation="portrait"/>
         <!-- 搜索界面 -->
         <activity
-            android:name="com.brian.csdnblog.activity.SearchActivity"
+            android:name="com.brian.codeblog.activity.SearchActivity"
             android:screenOrientation="portrait"/>
         <!-- 聊天界面 -->
         <activity
-            android:name="com.brian.csdnblog.activity.ChatActivity"
+            android:name="com.brian.codeblog.activity.ChatActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize|stateAlwaysHidden"/>
 
@@ -146,7 +146,7 @@
         </receiver>
         <receiver
             android:exported="true"
-            android:name="com.brian.csdnblog.receiver.MiPushMessageReceiver">
+            android:name="com.brian.codeblog.receiver.MiPushMessageReceiver">
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
             </intent-filter>

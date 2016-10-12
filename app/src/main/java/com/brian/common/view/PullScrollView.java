@@ -1,8 +1,6 @@
 
 package com.brian.common.view;
 
-import com.brian.csdnblog.R;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
@@ -11,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 import android.widget.ScrollView;
+
+import com.brian.csdnblog.R;
 
 /**
  * 自定义ScrollView

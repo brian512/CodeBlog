@@ -9,8 +9,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.brian.codeblog.util.ResourceUtil;
 import com.brian.csdnblog.R;
-import com.brian.csdnblog.util.ResourceUtil;
 
 /**
  * 通用的对话框，默认显示两个按钮，如果只设置一个按钮的文本，则只会显示一个按钮
