@@ -27,18 +27,18 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        handleCrash();
-
         if (PROCESS_NAME_MAIN.equals(AppInfoUtil.getProcessName(this))) {
             ConfigHelper.init(this);
             LogUtil.w("Config.isDebug=" + Config.isDebug);
             setStrictModeEnable(Config.isDebug);
         }
+        handleCrash();
     }
 
     private void handleCrash() {
         // init bugly
         CrashReport.initCrashReport(getApplicationContext(), "900033443", false);
+        CrashReport.setAppChannel(this, AppInfoUtil.sChannelName);
 
         // 友盟crash统计，目前使用bugly
         MobclickAgent.setCatchUncaughtExceptions(false);

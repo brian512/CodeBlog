@@ -83,7 +83,9 @@ public class PushManager {
         }
 
         PushInfo pushInfo = convert2LocalPush(message);
-        mWaitingTask.add(pushInfo);
+        if(pushInfo != null) {
+            mWaitingTask.add(pushInfo);
+        }
     }
 
     private PushInfo convert2LocalPush(MiPushMessage message) {

@@ -21,7 +21,7 @@ public class AdHelper {
     public static boolean isAdCanShow = CommonPreference.getInstance().getAdIsOpened();
 
     public static void initAd(Context context) {
-        AdManager.getInstance(context).init(Constants.APPID, Constants.APPSECTET, Config.isDebug, Config.isDebug);
+        AdManager.getInstance(context).init(Constants.APPID, Constants.APPSECTET, false, Config.isDebug);
         AdManager.getInstance(context).asyncGetOnlineConfig("is_ad_open", new OnlineConfigCallBack() {
             @Override
             public void onGetOnlineConfigSuccessful(String key, String value) {

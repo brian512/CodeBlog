@@ -12,6 +12,7 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -188,7 +189,7 @@ public class BlogListFrag extends Fragment {
 
         if (AdHelper.isAdCanShow && SettingPreference.getInstance().getAdsEnable() && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             final LinearLayout adLy = new LinearLayout(getContext());
-            View bannerView = BannerManager.getInstance(getContext()).getBannerView(new BannerViewListener() {
+            final View bannerView = BannerManager.getInstance(getContext()).getBannerView(new BannerViewListener() {
                 @Override
                 public void onRequestSuccess() {
                     LogUtil.i(TAG, "YoumiSdk 请求广告条成功");
@@ -207,6 +208,16 @@ public class BlogListFrag extends Fragment {
             });
             adLy.removeAllViews();
             adLy.addView(bannerView);
+            adLy.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        bannerView.dispatchTouchEvent(event);
+                        bannerView.performClick();
+                    }
+                    return true;
+                }
+            });
             mBlogListView.addHeaderView(adLy);
         }
         mFooterLayout = inflater.inflate(R.layout.loading_footer, null);

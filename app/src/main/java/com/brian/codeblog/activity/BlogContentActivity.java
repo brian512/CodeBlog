@@ -226,7 +226,14 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
                     new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT);
             layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-            mAdLayout.removeAllViews();
+            try {
+                mAdLayout.removeAllViews();
+            } catch (Exception e) {
+                LogUtil.printError(e);
+            }
+            if (mAdView.getParent() != null) {
+                ((ViewGroup)mAdView.getParent()).removeView(mAdView);
+            }
             // 添加原生插屏控件到容器中
             mAdLayout.addView(mAdView, layoutParams);
             if (mAdLayout.getVisibility() != View.VISIBLE) {

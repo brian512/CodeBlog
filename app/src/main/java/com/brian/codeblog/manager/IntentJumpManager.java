@@ -11,6 +11,7 @@ import com.brian.codeblog.model.PushInfo;
 import com.brian.codeblog.util.LogUtil;
 
 /**
+ * 消息跳转
  * Created by Brian on 2016/7/10 0010.
  */
 public class IntentJumpManager {
