@@ -100,22 +100,4 @@ public class BlogManager {
     public List<BlogInfo> getFavoBlogList(int page) {
         return BlogInfoTable.getInstance().getFavoList(PAGE_COUNT*page, PAGE_COUNT);
     }
-
-    public void fetchBlogContent(String url, DataFetcher.OnFetchDataListener<DataFetcher.Result<String>> listener) {
-        fetchBlogContent(url, null, listener);
-    }
-
-    public void fetchBlogContent(String url, String charset, DataFetcher.OnFetchDataListener<DataFetcher.Result<String>> listener) {
-        String cachePath = DataManager.getBlogCachePath(Md5.getMD5ofStr(url));
-        if (FileUtil.checkFileExists(cachePath)) {
-            DataFetcher.Result<String> result = new DataFetcher.Result<>();
-            result.url = url;
-            result.data = FileUtil.getFileContent(cachePath);
-            if (!TextUtils.isEmpty(result.data)) {
-                listener.onFetchFinished(result);
-                return;
-            }
-        }
-        DataFetcher.getInstance().fetchString(url, charset, listener);
-    }
 }

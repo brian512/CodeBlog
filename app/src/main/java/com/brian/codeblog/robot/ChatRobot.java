@@ -4,10 +4,9 @@ import android.text.TextUtils;
 
 import com.brian.codeblog.Config;
 import com.brian.codeblog.Env;
-import com.brian.codeblog.manager.DataFetcher;
-import com.brian.codeblog.manager.DataFetcher.OnFetchDataListener;
-import com.brian.codeblog.manager.DataFetcher.Result;
 import com.brian.codeblog.manager.UsageStatsManager;
+import com.brian.codeblog.proctocol.HttpGetChatRequest;
+import com.brian.codeblog.proctocol.base.IResponseCallback;
 import com.brian.codeblog.util.LogUtil;
 import com.brian.codeblog.util.NetStatusUtil;
 import com.brian.codeblog.util.RandomUtil;
@@ -47,6 +46,8 @@ public class ChatRobot {
     private ArrayList<String> mWelcomeReply = null;
     
     private ArrayList<String> mUnknowReply = null;
+
+    private HttpGetChatRequest mHttpRequestClient;
     
     
     private final String[] REPLY_WELCOMES = new String[] {
@@ -72,7 +73,9 @@ public class ChatRobot {
     
     private static ChatRobot sInstance = null;
     
-    private ChatRobot() {}
+    private ChatRobot() {
+        mHttpRequestClient = new HttpGetChatRequest();
+    }
     
     public static ChatRobot getInstance() {
         if (sInstance == null) {
@@ -90,9 +93,9 @@ public class ChatRobot {
      * [{ "key":["",""], "answer":["",""] }]
      */
     public void initMap() {
-        mChatMap = new HashMap<ArrayList<String>, ArrayList<String>>();
-        mUnknowReply = new ArrayList<String>();
-        mWelcomeReply = new ArrayList<String>();
+        mChatMap = new HashMap<>();
+        mUnknowReply = new ArrayList<>();
+        mWelcomeReply = new ArrayList<>();
         
         try {
             Gson gson = new Gson();
@@ -217,19 +220,32 @@ public class ChatRobot {
         
         String url = getXiaoDouBiUrl(info);
         LogUtil.d("url=" + url);
-        
-        DataFetcher.getInstance().fetchString(url, new OnFetchDataListener<Result<String>>() {
+
+        HttpGetChatRequest.RequestParam param = new HttpGetChatRequest.RequestParam();
+        param.url = url;
+        mHttpRequestClient.request(param, new IResponseCallback<HttpGetChatRequest.ResultData>() {
+
             @Override
-            public void onFetchFinished(Result<String> result) {
-                String data = result.data;
+            public void onSuccess(HttpGetChatRequest.ResultData resultData) {
+                String data = resultData.responseMsg;
                 LogUtil.v("data=" + data);
-                
+
                 if (TextUtils.isEmpty(data) || data.contains("抱歉")) {
                     getMessage(ROBOT_TYPE_TULING, info, listener);
                     return;
                 } else {
                     listener.onReply(data);
                 }
+            }
+
+            @Override
+            public void onError(int rtn, String msg) {
+
+            }
+
+            @Override
+            public void onFailure(int errorCode, String msg) {
+
             }
         });
     }
@@ -245,14 +261,16 @@ public class ChatRobot {
             listener.onReply(noNetAns);
             return;
         }
-        
-        DataFetcher.getInstance().fetchString(url, new OnFetchDataListener<Result<String>>() {
+
+        HttpGetChatRequest.RequestParam param = new HttpGetChatRequest.RequestParam();
+        param.url = url;
+        mHttpRequestClient.request(param, new IResponseCallback<HttpGetChatRequest.ResultData>() {
             @Override
-            public void onFetchFinished(Result<String> result) {
-                String data = result.data;
+            public void onSuccess(HttpGetChatRequest.ResultData resultData) {
+                String data = resultData.responseMsg;
                 LogUtil.v("data=" + data);
-                if (TextUtils.isEmpty(data.trim()) 
-                        || data.contains("我不会说英语") 
+                if (TextUtils.isEmpty(data.trim())
+                        || data.contains("我不会说英语")
                         || data.contains("你说的话有错哦")) {
                     listener.onReply(getRandomDefault());
                     return;
@@ -269,39 +287,49 @@ public class ChatRobot {
 //                                listener.onReply(json.optString("text"));
                                 break;
                             case CODE_TYPE_LINK:
-                                
+
                                 break;
                             case CODE_TYPE_NEWS:
-                                
+
                                 break;
                             case CODE_TYPE_MENU:
-                                
+
                                 break;
                         }
-                        
+
                         String text = json.optString("text");
                         text = text.replace("<br>", "\n");
                         listener.onReply(text);
                     }
-                    
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            
+
+            @Override
+            public void onError(int rtn, String msg) {
+
+            }
+
+            @Override
+            public void onFailure(int errorCode, String msg) {
+
+            }
+
             private void handleError(int code, String errorText) {
                 switch (code) {
                     case CODE_ERROR_KEY:
-                        
+
                         break;
                     case CODE_ERROR_EMPTY:
-                        
+
                         break;
                     case CODE_ERROR_OUTINDEX:
-                        
+
                         break;
                     case CODE_ERROR_FORMAT:
-                        
+
                         break;
                 }
             }
@@ -327,10 +355,8 @@ public class ChatRobot {
         }
         return url + "chat=" + info + "&time=" + System.currentTimeMillis();
     }
-    
-    
+
     public static interface OnReplyListener {
-        public void onReply(String reply);
+        void onReply(String reply);
     }
-    
 }

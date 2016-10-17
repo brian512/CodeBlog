@@ -4,8 +4,6 @@ package com.brian.codeblog.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -23,25 +21,20 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.brian.codeblog.Env;
-import com.brian.codeblog.manager.DataFetcher;
-import com.brian.codeblog.manager.DataFetcher.OnFetchDataListener;
-import com.brian.codeblog.manager.DataFetcher.Result;
-import com.brian.codeblog.manager.ThreadManager;
 import com.brian.codeblog.manager.UsageStatsManager;
 import com.brian.codeblog.model.Bloger;
 import com.brian.codeblog.model.SearchResult;
 import com.brian.codeblog.parser.CSDNHtmlParser;
+import com.brian.codeblog.proctocol.HttpGetSearchBlogRequest;
+import com.brian.codeblog.proctocol.base.IResponseCallback;
 import com.brian.codeblog.util.CommonAdapter;
 import com.brian.codeblog.util.LogUtil;
 import com.brian.codeblog.util.ResourceUtil;
 import com.brian.codeblog.util.ToastUtil;
 import com.brian.codeblog.util.UIUtil;
-import com.brian.codeblog.util.WeakRefHandler;
 import com.brian.common.view.RefreshLayout;
 import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -210,56 +203,38 @@ public class SearchActivity extends BaseActivity {
             mFooterLayout.setVisibility(View.VISIBLE);
         }
 
-        DataFetcher.getInstance().fetchString(loadUrl, new OnFetchDataListener<Result<String>>() {
-
+        HttpGetSearchBlogRequest.RequestParam param = new HttpGetSearchBlogRequest.RequestParam();
+        param.url = loadUrl;
+        new HttpGetSearchBlogRequest().request(param, new IResponseCallback<HttpGetSearchBlogRequest.ResultData>() {
             @Override
-            public void onFetchFinished(final Result<String> response) {
+            public void onSuccess(HttpGetSearchBlogRequest.ResultData resultData) {
                 mRefreshLayout.setLoading(false);
 
-                if (TextUtils.isEmpty(response.data)) {
+                if (resultData.blogInfoList == null || resultData.blogInfoList.isEmpty()) {
                     if (mAdapter.isEmpty()) {
                         // 没有搜索到结果的提示
                         UsageStatsManager.sendUsageData(UsageStatsManager.EXP_EMPTY_SEARCH, mInputText);
                     }
                 } else {
-                    ThreadManager.getPoolProxy().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            List<SearchResult> list = CSDNHtmlParser.getInstance().getSearchResultList(response.data);
-                            Message msg = mHandler.obtainMessage(MSG_LIST_ADD);
-                            msg.obj = list;
-                            mHandler.sendMessage(msg);
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    private static final int MSG_LIST_ADD = 2;
-    private Handler.Callback mCallback = new Handler.Callback() {
-        
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_LIST_ADD:
                     if (mCurrentPage <= 1) {
                         mAdapter.removeAllDatas();
                     }
                     mResultListView.setVisibility(View.VISIBLE);
                     mProgressBar.setVisibility(View.INVISIBLE);
-                    List<SearchResult> deltaBlogInfos = (List<SearchResult>) msg.obj;
-                    if (deltaBlogInfos != null && !deltaBlogInfos.isEmpty()) {
-                        mCurrentPage++;
-                        mAdapter.addDatas(deltaBlogInfos);
-                    }
-                    break;
-                    
-                default:
-                    break;
+                    mCurrentPage++;
+                    mAdapter.addDatas(resultData.blogInfoList);
+                }
             }
-            return true;
-        }
-    };
-    private Handler mHandler = new WeakRefHandler(mCallback);
+
+            @Override
+            public void onError(int rtn, String msg) {
+                LogUtil.e("msg=" + msg);
+            }
+
+            @Override
+            public void onFailure(int errorCode, String msg) {
+                LogUtil.e("errorCode=" + errorCode);
+            }
+        });
+    }
 }

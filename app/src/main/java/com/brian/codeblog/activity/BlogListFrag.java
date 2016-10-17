@@ -3,8 +3,6 @@ package com.brian.codeblog.activity;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Spannable;
@@ -27,9 +25,6 @@ import com.brian.codeblog.Env;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.manager.AdHelper;
 import com.brian.codeblog.manager.BlogManager;
-import com.brian.codeblog.manager.DataFetcher;
-import com.brian.codeblog.manager.DataFetcher.OnFetchDataListener;
-import com.brian.codeblog.manager.DataFetcher.Result;
 import com.brian.codeblog.manager.ThreadManager;
 import com.brian.codeblog.manager.TypeManager;
 import com.brian.codeblog.manager.UsageStatsManager;
@@ -38,11 +33,12 @@ import com.brian.codeblog.model.Bloger;
 import com.brian.codeblog.model.event.TypeChangeEvent;
 import com.brian.codeblog.parser.BlogHtmlParserFactory;
 import com.brian.codeblog.parser.IBlogHtmlParser;
+import com.brian.codeblog.proctocol.HttpGetBlogListRequest;
+import com.brian.codeblog.proctocol.base.IResponseCallback;
 import com.brian.codeblog.util.CommonAdapter;
 import com.brian.codeblog.util.FileUtil;
 import com.brian.codeblog.util.LogUtil;
 import com.brian.codeblog.util.ResourceUtil;
-import com.brian.codeblog.util.WeakRefHandler;
 import com.brian.common.view.RefreshLayout;
 import com.brian.csdnblog.R;
 import com.google.gson.Gson;
@@ -58,6 +54,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import tj.zl.op.normal.banner.BannerManager;
 import tj.zl.op.normal.banner.BannerViewListener;
+
+import static com.brian.csdnblog.R.id.msg;
 
 /**
  * Fragment页面
@@ -102,7 +100,7 @@ public class BlogListFrag extends Fragment {
         mType = type;
 
         mBlogParser = BlogHtmlParserFactory.getBlogParser(mType);
-        mHandler.postDelayed(new Runnable() {
+        BaseActivity.getUIHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 initData();
@@ -291,28 +289,98 @@ public class BlogListFrag extends Fragment {
         ThreadManager.getPoolProxy().execute(new Runnable() {
             @Override
             public void run() {
-                List<BlogInfo> list = null;
                 LogUtil.log("mType=" + mType);
                 try {
                     String cachedStr = FileUtil.getFileContent(Env.getContext().getFilesDir() + "/cache_" + mType);
-                    list = new Gson().fromJson(cachedStr, new TypeToken<List<BlogInfo>>() {} .getType());
+                    final List<BlogInfo> list = new Gson().fromJson(cachedStr, new TypeToken<List<BlogInfo>>() {} .getType());
+                    if (list != null && !list.isEmpty()) {
+                        BaseActivity.getUIHandler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mAdapter.initListWithDatas(list);
+                                mCurrentPage = 1;
+                                hasInitedData = true;
+                            }
+                        });
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Message msg = mHandler.obtainMessage(MSG_LIST_UPDATE);
-                msg.obj = list;
-                mHandler.sendMessage(msg);
             }
         });
-
     }
 
     private void loadData(final boolean isRefresh) {
         if (mBlogParser == null) {
             return; // 设置type后，还会调用一次
         }
-        LogUtil.i(TAG, "onRefresh");
         mNoBlogView.setVisibility(View.GONE);
+        String url = getUrl(isRefresh);
+        LogUtil.i(TAG, "refreshUrl=" + url);
+
+        HttpGetBlogListRequest.RequestParam param = new HttpGetBlogListRequest.RequestParam();
+        param.url = url;
+        param.type = mType;
+        new HttpGetBlogListRequest().request(param, new IResponseCallback<HttpGetBlogListRequest.ResultData>() {
+            @Override
+            public void onSuccess(final HttpGetBlogListRequest.ResultData resultData) {
+                LogUtil.d("resultData=" + resultData.blogInfoList);
+                if (isRefresh) {
+                    mRefreshLayout.setRefreshing(false);
+                } else {
+                    mRefreshLayout.setLoading(false);
+                }
+
+                if (resultData.blogInfoList == null || resultData.blogInfoList.isEmpty()) {
+                    LogUtil.e("empty response");
+                    if (mAdapter.isEmpty()) {
+                        showNoBlog();
+                    }
+                } else {
+                    if (isRefresh) {
+                        mAdapter.initListWithDatas(resultData.blogInfoList);
+                        mBlogListView.setVisibility(View.VISIBLE);
+                        mBlogListView.smoothScrollToPosition(0);
+                        mNoBlogView.setVisibility(View.GONE);
+                        mCurrentPage = 1;
+                        hasInitedData = true;
+
+                        if (isRefresh) {
+                            ThreadManager.getPoolProxy().execute(new Runnable() {
+                                @Override
+                                public void run() {
+                                    FileUtil.writeFile(Env.getContext().getFilesDir() + "/cache_" + mType, new Gson().toJson(resultData.blogInfoList));
+                                }
+                            });
+                        }
+                    } else {
+                        mFooterLayout.setVisibility(View.GONE);
+                        mCurrentPage++;
+                        mAdapter.addDatas(resultData.blogInfoList);
+                    }
+                }
+            }
+
+            @Override
+            public void onError(int rtn, String msg) {
+                LogUtil.d("resultData=" + msg);
+                if (mAdapter.isEmpty()) {
+                    showNoBlog();
+                }
+            }
+
+            @Override
+            public void onFailure(int errorCode, String msg) {
+                LogUtil.d("errorCode=" + errorCode);
+                if (mAdapter.isEmpty()) {
+                    showNoBlog();
+                }
+            }
+        });
+
+    }
+
+    private String getUrl(boolean isRefresh) {
         String url;
         if (isRefresh) {
             if (mBloger != null) {
@@ -328,51 +396,7 @@ public class BlogListFrag extends Fragment {
             }
             mFooterLayout.setVisibility(View.VISIBLE);
         }
-        LogUtil.i(TAG, "refreshUrl=" + url);
-        
-        DataFetcher.getInstance().fetchString(url, new OnFetchDataListener<Result<String>>() {
-            
-            @Override
-            public void onFetchFinished(final Result<String> response) {
-                if (isRefresh) {
-                    mRefreshLayout.setRefreshing(false);
-                } else {
-                    mRefreshLayout.setLoading(false);
-                }
-                
-                if (TextUtils.isEmpty(response.data)) {
-                    LogUtil.e("empty response");
-                    if (mAdapter.isEmpty()) {
-                        showNoBlog();
-                    }
-                } else {
-                    ThreadManager.getPoolProxy().execute(new Runnable() {
-                        @Override
-                        public void run() {
-                            List<BlogInfo> list = getBlogList(response.data, isRefresh);
-                            if (isRefresh) {
-                                Message msg = mHandler.obtainMessage(MSG_LIST_UPDATE);
-                                msg.obj = list;
-                                mHandler.sendMessage(msg);
-                            } else {
-                                Message msg = mHandler.obtainMessage(MSG_LIST_ADD);
-                                msg.obj = list;
-                                mHandler.sendMessage(msg);
-                            }
-                        }
-                    });
-                }
-            }
-        });
-    }
-    
-    private List<BlogInfo> getBlogList(String response, boolean isRefresh) {
-        List<BlogInfo> list = mBlogParser.getBlogList(mType, response);
-        if (isRefresh) {
-            FileUtil.writeFile(Env.getContext().getFilesDir() + "/cache_" + mType, new Gson().toJson(list));
-        }
-        
-        return list;
+        return url;
     }
 
     private void showNoBlog() {
@@ -382,47 +406,7 @@ public class BlogListFrag extends Fragment {
         mNoBlogView.setVisibility(View.VISIBLE);
     }
     
-    
-    private static final int MSG_LIST_UPDATE = 1;
-    private static final int MSG_LIST_ADD = 2;
-    
-    private Handler.Callback mCallback = new Handler.Callback() {
-        
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_LIST_UPDATE:
-                    List<BlogInfo> blogInfos = (List<BlogInfo>) msg.obj;
-                    if (blogInfos != null && !blogInfos.isEmpty()) {
-                        mBlogListView.setVisibility(View.VISIBLE);
-                        mBlogListView.smoothScrollToPosition(0);
-                        mNoBlogView.setVisibility(View.GONE);
-                        mAdapter.initListWithDatas(blogInfos);
-                        mCurrentPage = 1;
-                    } else if (mAdapter.isEmpty() && hasInitedData) {
-                        showNoBlog();
-                    }
-                    hasInitedData = true;
-                    
-                    break;
-                    
-                case MSG_LIST_ADD:
-                    mFooterLayout.setVisibility(View.GONE);
-                    List<BlogInfo> deltaBlogInfos = (List<BlogInfo>) msg.obj;
-                    if (deltaBlogInfos != null && !deltaBlogInfos.isEmpty()) {
-                        mCurrentPage++;
-                        mAdapter.addDatas(deltaBlogInfos);
-                    }
-                    break;
-                    
-                default:
-                    break;
-            }
-            return true;
-        }
-    };
-    private Handler mHandler = new WeakRefHandler(mCallback);
-    
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         LogUtil.log("" + isVisibleToUser);

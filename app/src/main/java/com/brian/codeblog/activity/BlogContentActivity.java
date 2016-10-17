@@ -7,8 +7,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -26,16 +24,12 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.brian.codeblog.Config;
 import com.brian.codeblog.Env;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.manager.AdHelper;
 import com.brian.codeblog.manager.BlogManager;
 import com.brian.codeblog.manager.BlogerManager;
-import com.brian.codeblog.manager.DataFetcher;
-import com.brian.codeblog.manager.DataFetcher.OnFetchDataListener;
-import com.brian.codeblog.manager.DataFetcher.Result;
 import com.brian.codeblog.manager.DataManager;
 import com.brian.codeblog.manager.ShareManager;
 import com.brian.codeblog.manager.ThreadManager;
@@ -46,11 +40,12 @@ import com.brian.codeblog.model.Bloger;
 import com.brian.codeblog.model.SearchResult;
 import com.brian.codeblog.parser.BlogHtmlParserFactory;
 import com.brian.codeblog.parser.IBlogHtmlParser;
+import com.brian.codeblog.proctocol.HttpGetBlogContentRequest;
+import com.brian.codeblog.proctocol.base.IResponseCallback;
 import com.brian.codeblog.util.FileUtil;
 import com.brian.codeblog.util.LogUtil;
 import com.brian.codeblog.util.NetStatusUtil;
 import com.brian.codeblog.util.ToastUtil;
-import com.brian.codeblog.util.WeakRefHandler;
 import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;
 import com.tencent.connect.share.QQShare;
@@ -63,7 +58,7 @@ import tj.zl.op.normal.common.ErrorCode;
 import tj.zl.op.normal.spot.SpotListener;
 import tj.zl.op.normal.spot.SpotManager;
 
-public class BlogContentActivity extends BaseActivity implements OnFetchDataListener<Result<String>> {
+public class BlogContentActivity extends BaseActivity {
 
     private static final String TAG = BlogContentActivity.class.getSimpleName();
 
@@ -76,6 +71,8 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
     private PopupMenu mPopupMenu;
 
     private IBlogHtmlParser mBlogParser = null;
+
+    private HttpGetBlogContentRequest mHttpClient;
 
     private boolean mHasFavoed;
 
@@ -140,17 +137,69 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
 
         mProgressBar.setVisibility(View.VISIBLE);
 
+        mHttpClient = new HttpGetBlogContentRequest();
         getUIHandler().post(new Runnable() {
             @Override
             public void run() {
-                // 开始请求数据
-                if (TypeManager.getWebType(mBlogInfo.type) == TypeManager.TYPE_WEB_JCC) {
-                    BlogManager.getInstance().fetchBlogContent(mCurrentUrl, "GB2312", BlogContentActivity.this);
-                } else {
-                    BlogManager.getInstance().fetchBlogContent(mCurrentUrl, BlogContentActivity.this);
+                loadData();
+                BlogManager.getInstance().saveBlog(mBlogInfo);
+            }
+        });
+    }
+
+    private void loadData() {
+        HttpGetBlogContentRequest.RequestParam param = new HttpGetBlogContentRequest.RequestParam();
+        param.url = mCurrentUrl;
+        param.type = mBlogInfo.type;
+        if (TypeManager.getWebType(mBlogInfo.type) == TypeManager.TYPE_WEB_JCC) {
+            param.charset = "GB2312";
+        }
+        mHttpClient.request(param, new IResponseCallback<HttpGetBlogContentRequest.ResultData>() {
+            @Override
+            public void onSuccess(final HttpGetBlogContentRequest.ResultData resultData) {
+                LogUtil.d("resultData=" + resultData.blogContent);
+                if (TextUtils.isEmpty(resultData.blogContent)) {
+                    showErrorPage();
+                    return;
+                }
+                if (mCurrentUrl.equalsIgnoreCase(mBlogInfo.link)) {
+                    saveBlog(resultData.blogContent);
                 }
 
-                BlogManager.getInstance().saveBlog(mBlogInfo);
+                toggleAdShow(false);// 隐藏广告
+                mReLoadImageView.setVisibility(View.GONE);
+                mProgressBar.setVisibility(View.GONE);
+
+                CommonPreference.getInstance().addBlogReadCount();// 阅读数+1
+                mBlogStack.push(resultData.blogContent);
+
+                mHasFavoed = BlogManager.getInstance().isFavo(mBlogInfo);
+                if (mHasFavoed) {
+                    mPopupMenu.getMenu().getItem(1).setTitle("取消收藏");
+                } else {
+                    mPopupMenu.getMenu().getItem(1).setTitle("收藏");
+                }
+                mWebView.setVisibility(View.VISIBLE);
+                mWebView.loadDataWithBaseURL(mBlogParser.getBlogBaseUrl(), resultData.blogContent,
+                        "text/html", "utf-8", null);
+
+                String title = mBlogParser.getBlogTitle(mBlogInfo.type, resultData.blogContent);
+                if (!TextUtils.isEmpty(title)) {
+                    mCurrentTitle = title;
+                    mTitleBar.setTitle(mCurrentTitle);
+                }
+            }
+
+            @Override
+            public void onError(int rtn, String msg) {
+                LogUtil.d("resultData=" + msg);
+                showErrorPage();
+            }
+
+            @Override
+            public void onFailure(int errorCode, String msg) {
+                LogUtil.d("errorCode=" + errorCode);
+                showErrorPage();
             }
         });
     }
@@ -173,6 +222,18 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         // 处理一下链接，可能需要补全域名
         mCurrentUrl = mBlogParser.getBlogContentUrl(mBlogInfo.link);
         mBlogInfo.link = mCurrentUrl;
+    }
+
+    private void saveBlog(final String blogContent) {
+        ThreadManager.getPoolProxy().execute(new Runnable() {
+            @Override
+            public void run() {
+                String cachePath = DataManager.getBlogCachePath(mBlogInfo.blogId);
+                mBlogInfo.localPath = cachePath;
+                FileUtil.writeFile(cachePath, blogContent);
+                BlogManager.getInstance().saveBlog(mBlogInfo);
+            }
+        });
     }
 
     private void initAd() {
@@ -355,7 +416,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
                 mProgressBar.setVisibility(View.VISIBLE);
                 toggleAdShow(true);
                 
-                DataFetcher.getInstance().fetchString(mCurrentUrl, BlogContentActivity.this);
+                loadData();
             }
         });
     }
@@ -369,18 +430,11 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
                 return true;
             }
 
-            if (mReLoadImageView.getVisibility() == View.VISIBLE) {
-                mReLoadImageView.setVisibility(View.GONE);
-                mWebView.setVisibility(View.VISIBLE);
-                return true;
-            }
             if (mBlogStack.size() > 1) {
                 mBlogStack.pop();//把当前的博客移除
                 String html = mBlogStack.peek();
-                Message msg = mHandler.obtainMessage(MSG_UPDATE);
-                msg.obj = html;
-                mHandler.removeMessages(MSG_UPDATE);
-                mHandler.sendMessage(msg);
+                mWebView.loadDataWithBaseURL(mBlogParser.getBlogBaseUrl(), html,
+                        "text/html", "utf-8", null);
                 return true;
             } else {
                 this.finish();
@@ -412,7 +466,7 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
                 toggleAdShow(true);
                 
                 mCurrentUrl = blogUrl;
-                BlogManager.getInstance().fetchBlogContent(blogUrl, BlogContentActivity.this);
+                loadData();
                 return true;
             }
             return false;
@@ -477,85 +531,17 @@ public class BlogContentActivity extends BaseActivity implements OnFetchDataList
         mWebView.stopLoading();
         mWebView.onPause();
         mWebView.destroy();
-
-        mHandler.removeCallbacksAndMessages(null);
     }
     
     private void showErrorPage() {
         UsageStatsManager.sendUsageData(UsageStatsManager.EXP_EMPTY_BLOG, TypeManager.getBlogName(mBlogInfo.type));
         
-        mWebView.setVisibility(View.INVISIBLE);
-        mProgressBar.setVisibility(View.INVISIBLE);
+        mWebView.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.GONE);
         mReLoadImageView.setVisibility(View.VISIBLE);
     }
     
-    private static final int MSG_UPDATE = 1;
-    private Handler.Callback mCallback = new Handler.Callback() {
-        
-        @Override
-        public boolean handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_UPDATE:
-                    toggleAdShow(false);// 隐藏广告
-                    mReLoadImageView.setVisibility(View.GONE);
-                    mProgressBar.setVisibility(View.GONE);
 
-                    mHasFavoed = BlogManager.getInstance().isFavo(mBlogInfo);
-                    if (mHasFavoed) {
-                        mPopupMenu.getMenu().getItem(1).setTitle("取消收藏");
-                    } else {
-                        mPopupMenu.getMenu().getItem(1).setTitle("收藏");
-                    }
-                    mWebView.setVisibility(View.VISIBLE);
-                    String content = (String) msg.obj;
-                    mWebView.loadDataWithBaseURL(mBlogParser.getBlogBaseUrl(), content,
-                            "text/html", "utf-8", null);
-
-                    mCurrentTitle = mBlogParser.getBlogTitle(mBlogInfo.type, content);
-                    if (!TextUtils.isEmpty(mCurrentTitle)) {
-                        mTitleBar.setTitle(mCurrentTitle);
-                    }
-                    break;
-            }
-            return true;
-        }
-    };
-    private Handler mHandler = new WeakRefHandler(mCallback);
-
-    @Override
-    public void onFetchFinished(final Result<String> response) {
-        LogUtil.i("response=" + response.data);
-        if (TextUtils.isEmpty(response.data)) {
-            showErrorPage();
-        } else {
-            ThreadManager.getPoolProxy().execute(new Runnable() {
-                @Override
-                public void run() {
-                    if (Config.isDebug) {
-                        FileUtil.writeFile("/sdcard/blogBefore", response.data);
-                    }
-                    String contentHtml = mBlogParser.getBlogContent(mBlogInfo.type, response.data);
-                    if (TextUtils.isEmpty(contentHtml)) { // 解析失败则直接显示原网页
-                        contentHtml = response.data;
-                    }
-                    if (response.url.equalsIgnoreCase(mBlogInfo.link)) {
-                        String cachePath = DataManager.getBlogCachePath(mBlogInfo.blogId);
-                        mBlogInfo.localPath = cachePath;
-                        FileUtil.writeFile(cachePath, contentHtml);
-                        BlogManager.getInstance().saveBlog(mBlogInfo);
-                    }
-
-                    CommonPreference.getInstance().addBlogReadCount();// 阅读数+1
-                    mBlogStack.push(contentHtml);
-
-                    Message msg = mHandler.obtainMessage(MSG_UPDATE);
-                    msg.obj = contentHtml;
-                    mHandler.sendMessage(msg);
-                } // end run
-            });
-        }
-    }
-    
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
