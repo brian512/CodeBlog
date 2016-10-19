@@ -90,7 +90,7 @@ public class SidePageFragment extends Fragment implements OnClickListener {
         mBlogerNameView.setText(bloger.nickName + "的博客");
         LogUtil.log("headUrl=" + bloger.headUrl);
         if (TextUtils.isEmpty(bloger.headUrl)) {
-            mBlogerHeadView.setImageResource(R.drawable.icon_default_user);
+            mBlogerHeadView.setImageResource(R.drawable.ic_default_user);
         } else {
             Picasso.with(Env.getContext()).load(bloger.headUrl).into(mBlogerHeadView);
         }
@@ -183,7 +183,7 @@ public class SidePageFragment extends Fragment implements OnClickListener {
         mBlogerNameView.setText(event.bloger.nickName + "的博客");
         LogUtil.log("headUrl=" + event.bloger.headUrl);
         if (TextUtils.isEmpty(event.bloger.headUrl)) {
-            mBlogerHeadView.setImageResource(R.drawable.icon_default_user);
+            mBlogerHeadView.setImageResource(R.drawable.ic_default_user);
         } else {
             Picasso.with(Env.getContext()).load(event.bloger.headUrl).into(mBlogerHeadView);
         }

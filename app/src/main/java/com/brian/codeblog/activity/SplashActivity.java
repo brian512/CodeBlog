@@ -1,5 +1,6 @@
 package com.brian.codeblog.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -16,6 +17,7 @@ import com.brian.codeblog.manager.AdHelper;
 import com.brian.codeblog.manager.DataManager;
 import com.brian.codeblog.manager.PushManager;
 import com.brian.codeblog.util.LogUtil;
+import com.brian.codeblog.util.NetStatusUtil;
 import com.brian.codeblog.util.PermissionUtil;
 import com.brian.codeblog.util.UIUtil;
 import com.brian.csdnblog.R;
@@ -63,7 +65,7 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
                         jumpMainActivityDeLay(2000); // 防止卡在广告页
                     }
                 }
-            }, 50);
+            }, 200);
         }
     }
 
@@ -79,8 +81,9 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
     }
 
     private void initAD() {
-        AdHelper.initAd(this.getApplicationContext());
-        if (!AdHelper.isAdCanShow) {
+        Context context = this.getApplicationContext();
+        AdHelper.initAd(context);
+        if (!AdHelper.isAdCanShow || !NetStatusUtil.isWifiNet(context)) {
             jumpMainActivityDeLay(1000);
             return;
         }

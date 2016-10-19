@@ -11,6 +11,8 @@
         android:layout_height="match_parent"
         android:divider="@null"
         android:dividerHeight="10dp"
+        android:paddingTop="10dp"
+        android:clipToPadding="false"
         android:fadingEdge="none"
         android:scrollbars="none" />
 

@@ -186,7 +186,7 @@ public class SearchActivity extends BaseActivity {
             loadListData(url);
             UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SEARCH, mInputText);
         } else {
-            ToastUtil.showMsgS("请输入适当关键字");
+            ToastUtil.showMsg("请输入适当关键字");
         }
     }
 

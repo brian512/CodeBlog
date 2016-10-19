@@ -202,9 +202,10 @@ public class ImageUtils {
         }
         return params;
     }
+    static class Params {
+        public int width;
+        public int height;
+    }
 }
 
-class Params {
-    public int width;
-    public int height;
-}
+

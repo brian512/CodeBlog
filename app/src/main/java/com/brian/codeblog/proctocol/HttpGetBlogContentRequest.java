@@ -2,12 +2,17 @@ package com.brian.codeblog.proctocol;
 
 import android.text.TextUtils;
 
+import com.brian.codeblog.Config;
 import com.brian.codeblog.model.BaseType;
 import com.brian.codeblog.parser.BlogHtmlParserFactory;
 import com.brian.codeblog.parser.IBlogHtmlParser;
 import com.brian.codeblog.proctocol.base.AbstractHttpClient;
 import com.brian.codeblog.proctocol.base.BaseRequestParam;
 import com.brian.codeblog.proctocol.base.HttpClientParam;
+import com.brian.codeblog.util.FileUtil;
+import com.brian.codeblog.util.LogUtil;
+import com.brian.codeblog.util.PathUtil;
+import com.brian.codeblog.util.ToastUtil;
 
 /**
  * 请求博客正文
@@ -40,6 +45,12 @@ public class HttpGetBlogContentRequest extends AbstractHttpClient<HttpGetBlogCon
     public ResultData convResponseResult(String responseContent) {
         if (type == -1) {
             throw new RuntimeException("set RequestParam.type!");
+        }
+        if (Config.isDebug) {
+            String filePath = PathUtil.getCacheDirPath() + "/blog_" + System.currentTimeMillis() + ".html";
+            FileUtil.writeFile(filePath, responseContent);
+            LogUtil.log("filePath=" + filePath);
+            ToastUtil.showMsg("filePath=" + filePath);
         }
         IBlogHtmlParser parser = BlogHtmlParserFactory.getBlogParser(type);
         ResultData resultData = new ResultData();

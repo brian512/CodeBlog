@@ -218,7 +218,7 @@ public class FileUtil {
         }
     }
 
-    public static void checkFileDirExists(String filePath) {
+    public static void ensureFileDirExists(String filePath) {
         if (TextUtils.isEmpty(filePath)) {
             return;
         }

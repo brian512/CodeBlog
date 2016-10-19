@@ -186,7 +186,20 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
         // 获取文档内容
         Document doc = Jsoup.parse(contentSrc);
         LogUtil.d("doc1=" + doc);
-        Element detail = doc.getElementsByClass("blog-content").get(0);
+        Element detail = null;
+        try {
+            detail = doc.getElementsByClass("blog-content").get(0);
+        } catch (Exception e) {
+        }
+        if (detail == null) {
+            try {
+                detail = doc.getElementsByClass("BlogContent").get(0);
+            } catch (Exception e) {
+            }
+        }
+        if (detail == null) {
+            return contentSrc;
+        }
 
 
         detail.getElementsByClass("title").get(0).tagName("h1");
@@ -237,7 +250,8 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
          } else {
              blogUrl = url;
          }
-         return blogUrl + "?fromerr=3WWGWBvP";
+         return blogUrl;
+//         return blogUrl + "?fromerr=3WWGWBvP";
      }
 
     @Override

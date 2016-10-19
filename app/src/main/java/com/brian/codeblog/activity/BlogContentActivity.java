@@ -208,7 +208,7 @@ public class BlogContentActivity extends BaseActivity {
         try {
             mBlogInfo = (BlogInfo) getIntent().getExtras().getSerializable(BUNDLE_EXTRAS_BLOGINFO);
         } catch (Exception e) {
-            ToastUtil.showMsgS("oops，打开出错。。。");
+            ToastUtil.showMsg("oops，打开出错。。。");
             return;
         }
         if (mBlogInfo == null || TextUtils.isEmpty(mBlogInfo.link)) {

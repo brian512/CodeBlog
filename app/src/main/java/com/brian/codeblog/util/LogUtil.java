@@ -18,6 +18,7 @@ import java.util.Locale;
  * @author brian @date 2015年7月24日
  */
 public class LogUtil {
+    private static final String TAG = LogUtil.class.getSimpleName();
     public static boolean mIsDebugMode = true;// 获取堆栈信息会影响性能，发布应用时记得关闭DebugMode
 
     private static final int JSON_INDENT = 2;
@@ -81,15 +82,21 @@ public class LogUtil {
 
     private static final String CLASS_METHOD_LINE_FORMAT = "%s.%s() (%s :%d)";
 
-    public static void trace(String tag) {
-        if (mIsDebugMode) {
-            StackTraceElement traceElement = Thread.currentThread()
-                    .getStackTrace()[3];// 从堆栈信息中获取当前被调用的方法信息
-            String logText = String.format(Locale.CHINA, CLASS_METHOD_LINE_FORMAT,
-                    traceElement.getClassName(), traceElement.getMethodName(),
-                    traceElement.getFileName(), traceElement.getLineNumber());
-            d(tag, logText);
+    /**
+     * 显示方法的调用轨迹，过滤关键字“showCallStack”
+     */
+    public static void showCallStack() {
+        if (!mIsDebugMode) {
+            return;
         }
+        StackTraceElement[] trace = new Throwable().fillInStackTrace().getStackTrace();
+        StringBuilder builder = new StringBuilder();
+        for (int i = trace.length - 1; i > 0; i--) {
+            builder.append("(" + trace[i].getFileName() + ":" + trace[i].getLineNumber() + ") " + trace[i].getMethodName());
+            builder.append(" ——> ");
+        }
+        builder.append(TAG + ".showCallStack()");
+        Log.e(TAG, "showCallStack:" + builder.toString());
     }
 
     public static void json(String json) {

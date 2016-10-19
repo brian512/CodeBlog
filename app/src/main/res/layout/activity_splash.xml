@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <!--<ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
@@ -26,7 +26,7 @@
         android:layout_marginTop="160dp"
         android:text="@string/madeby"
         android:textSize="16sp"
-        android:textColor="#88ffffff"/>
+        android:textColor="#88ffffff"/>-->
 
     <FrameLayout
         android:id="@+id/splash_container"

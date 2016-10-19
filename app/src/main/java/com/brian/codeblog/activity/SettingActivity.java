@@ -153,7 +153,7 @@ public class SettingActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_LIST, "cache");
-                ToastUtil.showMsgS("清除了缓存：" + FileUtil.fileSizeToString(DataManager.getInstance().getRemovableDataSize()));
+                ToastUtil.showMsg("清除了缓存：" + FileUtil.fileSizeToString(DataManager.getInstance().getRemovableDataSize()));
                 DataManager.getInstance().clearAllCacheData();
             }
         });
