@@ -1,7 +1,7 @@
 
 package com.brian.codeblog.model;
 
-import com.brian.codeblog.util.Md5;
+import com.brian.common.utils.Md5;
 
 import java.io.Serializable;
 

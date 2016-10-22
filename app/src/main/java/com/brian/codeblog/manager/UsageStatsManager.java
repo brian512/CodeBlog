@@ -5,7 +5,7 @@ import android.text.TextUtils;
 
 import com.brian.codeblog.Config;
 import com.brian.codeblog.Env;
-import com.brian.codeblog.util.LogUtil;
+import com.brian.common.utils.LogUtil;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
@@ -14,7 +14,7 @@ import java.util.HashMap;
  * @author brian @date 2015-9-8
  */
 public class UsageStatsManager {
-    private static final boolean DEBUG = Config.isDebug;
+    private static final boolean DEBUG = Config.DEBUG_ENABLE;
 
 
     public static final String USAGE_SHARE = "share";

@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.brian.codeblog.Config;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
-import com.brian.codeblog.util.LogUtil;
+import com.brian.common.utils.LogUtil;
 
 import tj.zl.op.AdManager;
 import tj.zl.op.onlineconfig.OnlineConfigCallBack;
@@ -21,7 +21,7 @@ public class AdHelper {
     public static boolean isAdCanShow = CommonPreference.getInstance().getAdIsOpened();
 
     public static void initAd(Context context) {
-        AdManager.getInstance(context).init(Constants.APPID, Constants.APPSECTET, false, Config.isDebug);
+        AdManager.getInstance(context).init(Constants.AD_YOUMI_APPID, Constants.AD_YOUMI_APPSECTET, false, Config.DEBUG_ENABLE);
         AdManager.getInstance(context).asyncGetOnlineConfig("is_ad_open", new OnlineConfigCallBack() {
             @Override
             public void onGetOnlineConfigSuccessful(String key, String value) {

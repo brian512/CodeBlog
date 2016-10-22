@@ -21,7 +21,7 @@ import com.brian.codeblog.manager.TypeManager;
 import com.brian.codeblog.manager.UsageStatsManager;
 import com.brian.codeblog.model.Bloger;
 import com.brian.codeblog.model.event.CurrBlogerEvent;
-import com.brian.codeblog.util.LogUtil;
+import com.brian.common.utils.LogUtil;
 import com.brian.common.view.CircleImageView;
 import com.brian.csdnblog.R;
 import com.squareup.picasso.Picasso;

@@ -43,7 +43,7 @@ android {
         // 打测试包
         debug{
             // 显示Log
-            buildConfigField "boolean", "LOG_DEBUG", "true"
+            buildConfigField "boolean", "DEBUG_ENABLE", "true"
 //            versionNameSuffix "-debug"
             minifyEnabled false
             zipAlignEnabled false
@@ -54,7 +54,7 @@ android {
         // 打正式包
         release {
             // 不显示Log
-            buildConfigField "boolean", "LOG_DEBUG", "false"
+            buildConfigField "boolean", "DEBUG_ENABLE", "false"
             // 启用混淆
             minifyEnabled false
             // Zipalign优化
@@ -109,6 +109,10 @@ android {
 
     // 配置渠道包
     productFlavors {
+        MAIN {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "MAIN"]
+        }
+
         WANDOUJIA {
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "WANDOUJIA"]
         }

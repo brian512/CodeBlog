@@ -9,10 +9,10 @@ import com.brian.codeblog.parser.IBlogHtmlParser;
 import com.brian.codeblog.proctocol.base.AbstractHttpClient;
 import com.brian.codeblog.proctocol.base.BaseRequestParam;
 import com.brian.codeblog.proctocol.base.HttpClientParam;
-import com.brian.codeblog.util.FileUtil;
-import com.brian.codeblog.util.LogUtil;
-import com.brian.codeblog.util.PathUtil;
-import com.brian.codeblog.util.ToastUtil;
+import com.brian.common.utils.FileUtil;
+import com.brian.common.utils.LogUtil;
+import com.brian.common.utils.PathUtil;
+import com.brian.common.utils.ToastUtil;
 
 /**
  * 请求博客正文
@@ -46,7 +46,7 @@ public class HttpGetBlogContentRequest extends AbstractHttpClient<HttpGetBlogCon
         if (type == -1) {
             throw new RuntimeException("set RequestParam.type!");
         }
-        if (Config.isDebug) {
+        if (Config.DEBUG_ENABLE) {
             String filePath = PathUtil.getCacheDirPath() + "/blog_" + System.currentTimeMillis() + ".html";
             FileUtil.writeFile(filePath, responseContent);
             LogUtil.log("filePath=" + filePath);

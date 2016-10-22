@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.brian.codeblog.manager.ShareManager;
 import com.brian.codeblog.manager.UsageStatsManager;
-import com.brian.codeblog.util.AppInfoUtil;
+import com.brian.common.utils.AppInfoUtil;
 import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;
 

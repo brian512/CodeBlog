@@ -9,13 +9,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ListView;
 
-import com.brian.codeblog.adapter.ChatListAdapter;
-import com.brian.codeblog.manager.ThreadManager;
+import com.brian.codeblog.activity.adapter.ChatListAdapter;
+import com.brian.common.tools.ThreadManager;
 import com.brian.codeblog.manager.UsageStatsManager;
 import com.brian.codeblog.model.ChatMsgInfo;
 import com.brian.codeblog.robot.ChatRobot;
 import com.brian.codeblog.robot.ChatRobot.OnReplyListener;
-import com.brian.codeblog.util.DeviceUtil;
+import com.brian.common.utils.DeviceUtil;
 import com.brian.common.view.ChatToolLayout;
 import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;

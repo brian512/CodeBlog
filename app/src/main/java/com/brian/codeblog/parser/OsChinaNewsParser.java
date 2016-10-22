@@ -4,9 +4,9 @@ import android.text.TextUtils;
 
 import com.brian.codeblog.Env;
 import com.brian.codeblog.model.BlogInfo;
-import com.brian.codeblog.util.JsoupUtil;
-import com.brian.codeblog.util.LogUtil;
-import com.brian.codeblog.util.Md5;
+import com.brian.common.utils.JsoupUtil;
+import com.brian.common.utils.LogUtil;
+import com.brian.common.utils.Md5;
 import com.umeng.analytics.MobclickAgent;
 
 import org.jsoup.Jsoup;

@@ -9,8 +9,8 @@ import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.brian.codeblog.util.LogUtil;
-import com.brian.codeblog.util.ResourceUtil;
+import com.brian.common.utils.LogUtil;
+import com.brian.common.utils.ResourceUtil;
 import com.brian.csdnblog.R;
 import com.umeng.analytics.MobclickAgent;
 

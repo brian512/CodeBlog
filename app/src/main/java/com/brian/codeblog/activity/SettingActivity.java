@@ -12,13 +12,13 @@ import android.widget.TextView;
 
 import com.brian.codeblog.Env;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
-import com.brian.codeblog.manager.DataManager;
+import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.manager.ShareManager;
-import com.brian.codeblog.manager.UpdateManager;
+import com.brian.codeblog.update.UpdateManager;
 import com.brian.codeblog.manager.UsageStatsManager;
-import com.brian.codeblog.util.FileUtil;
-import com.brian.codeblog.util.MarketUtils;
-import com.brian.codeblog.util.ToastUtil;
+import com.brian.common.utils.FileUtil;
+import com.brian.common.utils.MarketUtils;
+import com.brian.common.utils.ToastUtil;
 import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;
 import com.umeng.analytics.MobclickAgent;

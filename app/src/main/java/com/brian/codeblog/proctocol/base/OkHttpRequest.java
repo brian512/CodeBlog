@@ -1,6 +1,6 @@
 package com.brian.codeblog.proctocol.base;
 
-import com.brian.codeblog.util.LogUtil;
+import com.brian.common.utils.LogUtil;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.SynchronousQueue;

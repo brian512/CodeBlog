@@ -1,7 +1,7 @@
 package com.brian.codeblog.parser;
 
 import com.brian.codeblog.manager.TypeManager;
-import com.brian.codeblog.util.LogUtil;
+import com.brian.common.utils.LogUtil;
 
 public class BlogHtmlParserFactory {
 

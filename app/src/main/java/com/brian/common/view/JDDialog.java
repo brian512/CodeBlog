@@ -9,7 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.brian.codeblog.util.ResourceUtil;
+import com.brian.common.utils.ResourceUtil;
 import com.brian.csdnblog.R;
 
 /**

@@ -4,7 +4,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.brian.codeblog.Env;
-import com.brian.codeblog.util.LogUtil;
+import com.brian.common.utils.LogUtil;
 
 /**
  * 文章信息存储数据库

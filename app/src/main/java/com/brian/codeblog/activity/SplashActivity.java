@@ -14,12 +14,12 @@ import com.brian.codeblog.Config;
 import com.brian.codeblog.Env;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
 import com.brian.codeblog.manager.AdHelper;
-import com.brian.codeblog.manager.DataManager;
+import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.manager.PushManager;
-import com.brian.codeblog.util.LogUtil;
-import com.brian.codeblog.util.NetStatusUtil;
-import com.brian.codeblog.util.PermissionUtil;
-import com.brian.codeblog.util.UIUtil;
+import com.brian.common.utils.LogUtil;
+import com.brian.common.utils.NetStatusUtil;
+import com.brian.common.utils.PermissionUtil;
+import com.brian.common.utils.UIUtil;
 import com.brian.csdnblog.R;
 import com.umeng.analytics.MobclickAgent;
 
@@ -45,7 +45,7 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
         setContentView(R.layout.activity_splash);
 
         // 打开调试模式
-        MobclickAgent.setDebugMode(Config.isDebug);
+        MobclickAgent.setDebugMode(Config.DEBUG_ENABLE);
     }
 
     @Override

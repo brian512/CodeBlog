@@ -5,9 +5,9 @@ import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
 
-import com.brian.codeblog.util.AppInfoUtil;
-import com.brian.codeblog.util.ConfigHelper;
-import com.brian.codeblog.util.LogUtil;
+import com.brian.common.utils.AppInfoUtil;
+import com.brian.codeblog.manager.ConfigHelper;
+import com.brian.common.utils.LogUtil;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 
@@ -29,8 +29,8 @@ public class App extends Application {
         super.onCreate();
         if (PROCESS_NAME_MAIN.equals(AppInfoUtil.getProcessName(this))) {
             ConfigHelper.init(this);
-            LogUtil.w("Config.isDebug=" + Config.isDebug);
-            setStrictModeEnable(Config.isDebug);
+            LogUtil.w("Config.DEBUG_ENABLE=" + Config.DEBUG_ENABLE);
+            setStrictModeEnable(Config.DEBUG_ENABLE);
         }
         handleCrash();
     }

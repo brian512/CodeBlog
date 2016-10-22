@@ -5,8 +5,8 @@ import android.text.TextUtils;
 import com.brian.codeblog.Env;
 import com.brian.codeblog.manager.BlogManager;
 import com.brian.codeblog.model.BlogInfo;
-import com.brian.codeblog.util.FileUtil;
-import com.brian.codeblog.util.Md5;
+import com.brian.common.utils.FileUtil;
+import com.brian.common.utils.Md5;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

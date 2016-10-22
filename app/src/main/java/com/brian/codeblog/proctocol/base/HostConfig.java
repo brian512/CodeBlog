@@ -18,7 +18,7 @@ public class HostConfig {
      * 获得API请求域名
      */
     public static String getApiHost() {
-        if (!Config.isDebug) {
+        if (!Config.DEBUG_ENABLE) {
             return API_HOST;
         } else {
             return API_HOST_TEST;

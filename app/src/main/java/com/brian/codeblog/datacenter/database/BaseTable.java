@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.brian.codeblog.Config;
-import com.brian.codeblog.util.LogUtil;
+import com.brian.common.utils.LogUtil;
 
 import org.json.JSONException;
 
@@ -18,7 +18,7 @@ public abstract class BaseTable<T> {
 
     abstract protected void readCursor(ArrayList<T> list, Cursor cursor) throws JSONException;
 
-    private static final boolean DEBUG = Config.isDebug;
+    private static final boolean DEBUG = Config.DEBUG_ENABLE;
 
     /**
      * 插入一行数据前，判断数据库中是否已经存在，如果存在就更新它，不存在就插入

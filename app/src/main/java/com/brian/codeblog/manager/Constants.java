@@ -7,8 +7,8 @@ package com.brian.codeblog.manager;
  */
 public class Constants {
 
-    public static final String APPID = "1dd13ec61e646b27";
-    public static final String APPSECTET = "445a3e3f010f8cb3";
+    public static final String AD_YOUMI_APPID = "1dd13ec61e646b27";
+    public static final String AD_YOUMI_APPSECTET = "445a3e3f010f8cb3";
 
     public static final String URL_CSDN_LOGO = "http://a.hiphotos.baidu.com/image/pic/item/f636afc379310a556b16f08cb04543a982261093.jpg";
 

@@ -3,7 +3,7 @@ package com.brian.codeblog.manager;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
 import com.brian.codeblog.model.Bloger;
 import com.brian.codeblog.model.event.CurrBlogerEvent;
-import com.brian.codeblog.util.LogUtil;
+import com.brian.common.utils.LogUtil;
 
 import org.greenrobot.eventbus.EventBus;
 

@@ -7,9 +7,9 @@ import com.brian.codeblog.Env;
 import com.brian.codeblog.manager.UsageStatsManager;
 import com.brian.codeblog.proctocol.HttpGetChatRequest;
 import com.brian.codeblog.proctocol.base.IResponseCallback;
-import com.brian.codeblog.util.LogUtil;
-import com.brian.codeblog.util.NetStatusUtil;
-import com.brian.codeblog.util.RandomUtil;
+import com.brian.common.utils.LogUtil;
+import com.brian.common.utils.NetStatusUtil;
+import com.brian.common.utils.RandomUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

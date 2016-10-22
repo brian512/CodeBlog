@@ -11,16 +11,16 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.brian.codeblog.Config;
-import com.brian.codeblog.adapter.MainTabAdapter;
+import com.brian.codeblog.activity.adapter.MainTabAdapter;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.manager.PushManager;
 import com.brian.codeblog.manager.ShareManager;
-import com.brian.codeblog.manager.UpdateManager;
+import com.brian.codeblog.update.UpdateManager;
 import com.brian.codeblog.manager.UsageStatsManager;
-import com.brian.codeblog.util.LogUtil;
-import com.brian.codeblog.util.TimeUtil;
-import com.brian.codeblog.util.ToastUtil;
+import com.brian.common.utils.LogUtil;
+import com.brian.common.utils.TimeUtil;
+import com.brian.common.utils.ToastUtil;
 import com.brian.common.view.DrawerArrowDrawable;
 import com.brian.csdnblog.R;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -259,7 +259,7 @@ public class MainTabActivity extends SlidingFragmentActivity {
     }
 
     private void initOnlineParams() {
-        OnlineConfigAgent.getInstance().setDebugMode(Config.isDebug);
+        OnlineConfigAgent.getInstance().setDebugMode(Config.DEBUG_ENABLE);
         OnlineConfigAgent.getInstance().updateOnlineConfig(this);
 
         OnlineConfigAgent.getInstance().setOnlineConfigListener(new UmengOnlineConfigureListener() {

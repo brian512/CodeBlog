@@ -8,7 +8,7 @@ import com.brian.codeblog.activity.BlogContentActivity;
 import com.brian.codeblog.activity.ChatActivity;
 import com.brian.codeblog.model.NotifyMsgInfo;
 import com.brian.codeblog.model.PushInfo;
-import com.brian.codeblog.util.LogUtil;
+import com.brian.common.utils.LogUtil;
 
 /**
  * 消息跳转

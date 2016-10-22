@@ -25,7 +25,7 @@ import com.brian.codeblog.Env;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.manager.AdHelper;
 import com.brian.codeblog.manager.BlogManager;
-import com.brian.codeblog.manager.ThreadManager;
+import com.brian.common.tools.ThreadManager;
 import com.brian.codeblog.manager.TypeManager;
 import com.brian.codeblog.manager.UsageStatsManager;
 import com.brian.codeblog.model.BlogInfo;
@@ -35,10 +35,10 @@ import com.brian.codeblog.parser.BlogHtmlParserFactory;
 import com.brian.codeblog.parser.IBlogHtmlParser;
 import com.brian.codeblog.proctocol.HttpGetBlogListRequest;
 import com.brian.codeblog.proctocol.base.IResponseCallback;
-import com.brian.codeblog.util.CommonAdapter;
-import com.brian.codeblog.util.FileUtil;
-import com.brian.codeblog.util.LogUtil;
-import com.brian.codeblog.util.ResourceUtil;
+import com.brian.common.tools.CommonAdapter;
+import com.brian.common.utils.FileUtil;
+import com.brian.common.utils.LogUtil;
+import com.brian.common.utils.ResourceUtil;
 import com.brian.common.view.RefreshLayout;
 import com.brian.csdnblog.R;
 import com.google.gson.Gson;
@@ -54,8 +54,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import tj.zl.op.normal.banner.BannerManager;
 import tj.zl.op.normal.banner.BannerViewListener;
-
-import static com.brian.csdnblog.R.id.msg;
 
 /**
  * Fragment页面
@@ -478,7 +476,7 @@ public class BlogListFrag extends Fragment {
     }
 
     private void startRefresh() {
-        if (mRefreshable && (checkUpdateTime()||Config.isDebug)) {
+        if (mRefreshable && (checkUpdateTime()||Config.DEBUG_ENABLE)) {
             mRefreshLayout.setRefreshing(true);
             loadData(true);
         }

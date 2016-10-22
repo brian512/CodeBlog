@@ -8,8 +8,8 @@ import com.brian.codeblog.manager.TypeManager;
 import com.brian.codeblog.model.BlogInfo;
 import com.brian.codeblog.model.Bloger;
 import com.brian.codeblog.model.SearchResult;
-import com.brian.codeblog.util.JsoupUtil;
-import com.brian.codeblog.util.Md5;
+import com.brian.common.utils.JsoupUtil;
+import com.brian.common.utils.Md5;
 import com.umeng.analytics.MobclickAgent;
 
 import org.jsoup.Jsoup;

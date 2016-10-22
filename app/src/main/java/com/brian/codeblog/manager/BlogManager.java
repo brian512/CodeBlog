@@ -2,11 +2,12 @@ package com.brian.codeblog.manager;
 
 import android.text.TextUtils;
 
+import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.datacenter.database.BlogInfoTable;
 import com.brian.codeblog.model.BlogInfo;
-import com.brian.codeblog.util.FileUtil;
-import com.brian.codeblog.util.LogUtil;
-import com.brian.codeblog.util.Md5;
+import com.brian.common.utils.FileUtil;
+import com.brian.common.utils.LogUtil;
+import com.brian.common.utils.Md5;
 
 import java.util.List;
 

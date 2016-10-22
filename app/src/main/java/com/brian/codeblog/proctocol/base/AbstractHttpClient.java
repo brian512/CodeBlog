@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 
 import com.brian.codeblog.model.BaseType;
-import com.brian.codeblog.util.LogUtil;
+import com.brian.common.utils.LogUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
