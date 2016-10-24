@@ -46,6 +46,7 @@ v1.3.75
  - [ButterKnife](https://github.com/JakeWharton/butterknife)简化view初始化；
  - 友盟统计、在线参数；
  - 小米推送、更新模板；
+
 <br>
 ---
 ###作者博客
