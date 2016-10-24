@@ -7,9 +7,14 @@ CodeBlog是为了方便在手机端阅读编程技术博文。集成展示了CSD
  - 分享博文或应用到QQ好友；
  - 机器人陪聊；
  - 文章推送；
+ - 查看博主文章列表；
 
 ---
 ####更新日志：
+v1.3.80
+- 优化应用整体体验；
+- 调整代码结构；
+- 更新网页解析；
 
 v1.3.76
 - 集成小米推送模块；
@@ -25,36 +30,30 @@ v1.3.75
 - 优化首次打开博客卡顿；
 - 增加水波纹效果；
 
-v1.3.74
-- 修复CSDN列表解析；
-- 修复首次加载X5内核ANR；
-- 源代码提交github，地址见关于页面；
-
-v1.3.73
-- 优化X5内核加载；
-- 使用SwipeRefreshLayout；
-- 增加推送功能；
-
-v1.3.72
-- 修复博文列表及内容解析出错；
-- 集成腾讯X5内核；
-- 优化UI；
-
 
 ---
 使用到的技术点：
- - [Netroid](https://github.com/vince-styling/Netroid)(Volley拓展库)用于网络请求；
+ - [OkHttp](https://github.com/square/okhttp)用于网络请求；
+ - [Picasso](https://github.com/square/picasso)作为图片请求库；
  - [Jsoup](https://github.com/jhy/jsoup)解析网页；
- - 友盟推送、统计、在线参数；
- - 小米更新模板；
- - [EventBus](https://github.com/greenrobot/EventBus)
+ - [EventBus](https://github.com/greenrobot/EventBus)作为事件主线
  - [bugly](https://bugly.qq.com/v2/)异常收集；
  - [Gson](https://github.com/google/gson)进行序列化；
- - [litepal](https://github.com/LitePalFramework/LitePal)数据库存储；
  - [SwipebackLayout](https://github.com/ikew0ng/SwipeBackLayout)滑动退出activity；
  - [TabLayout](http://blog.csdn.net/brian512/article/details/51793430)实现主页tab切换；
  - [SlidingMenu](https://github.com/jfeinstein10/SlidingMenu)实现侧滑栏；
+ - [EasyPermissions](https://github.com/googlesamples/easypermissions)做权限请求；
+ - [ButterKnife](https://github.com/JakeWharton/butterknife)简化view初始化；
+ - 友盟统计、在线参数；
+ - 小米推送、更新模板；
+<br>
+---
+###作者博客
+[http://blog.csdn.net/brian512](http://blog.csdn.net/brian512) <br>
 
-----------------
-加群讨论技术和功能，欢迎大家参与！
-![这里写图片描述](http://img.blog.csdn.net/20160817112120745)
+[http://www.jianshu.com/users/e0279aa518fb](http://www.jianshu.com/users/e0279aa518fb)
+<br>
+---
+###开发交流群
+群号：194067225 <a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=5e43177a82a86c99bdaf1b33584ac534cf478dab55bd6310072a96e20695bd8b"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="Android交流" title="Android交流"></a><br>
+![](http://img.blog.csdn.net/20160817112120745)
