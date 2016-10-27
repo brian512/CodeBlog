@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:padding="20dp">
+
+    <!-- 对话框可见部分的背景 -->
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/com_bg_dlg"
+        android:orientation="vertical">
+
+        <!-- 标题 -->
+        <TextView
+            android:id="@+id/dlg_title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:paddingBottom="14dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="14dp"
+            android:text="提示"
+            android:textColor="@color/com_bg_black"
+            android:textSize="18sp"/>
+
+
+        <!-- 标题下面的分界线 -->
+        <View
+            android:id="@+id/jd_dlg_title_split"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:background="@color/gray"/>
+
+        <!-- 内容layout -->
+        <LinearLayout
+            android:id="@+id/jd_dlg_msg_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="26dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="26dp">
+
+            <!-- 内容 -->
+            <TextView
+                android:id="@+id/dlg_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="16"
+                android:textColor="@color/com_text_black"
+                android:textSize="16sp"
+                />
+
+            <!-- 内容 下面默认的一行小灰字，默认不显示-->
+            <TextView
+                android:id="@+id/dlg_content_ex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="10"
+                android:paddingTop="6dp"
+                android:text="tips..."
+                android:textColor="@color/com_text_tx3"
+                android:textSize="14sp"/>
+
+            <!-- 输入框 -->
+            <EditText
+                android:id="@+id/dlg_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/com_transparent"
+                android:maxLines="10"
+                android:textColor="@color/com_text_tx3"
+                android:textColorHint="@color/com_text_hint"
+                android:textSize="14sp"
+                android:visibility="gone"
+                />
+
+        </LinearLayout>
+
+        <!-- 内容下面的分界线 -->
+        <ImageView
+            android:id="@+id/jd_dlg_msg_splite"
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="@color/com_divider_gray_1"/>
+
+        <!-- 按钮 -->
+        <LinearLayout
+            android:id="@+id/jd_dlg_btn_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <!-- 左按钮 -->
+            <TextView
+                android:id="@+id/dlg_left_btn"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="取消"
+                android:textColor="@color/com_text_black"
+                android:textSize="14sp"/>
+
+            <!-- 分界线 -->
+            <ImageView
+                android:id="@+id/dlg_btn_split"
+                android:layout_width="1px"
+                android:layout_height="fill_parent"
+                android:background="@color/com_divider_gray_1"/>
+
+            <!-- 右按钮 -->
+            <TextView
+                android:id="@+id/dlg_right_btn"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="确定"
+                android:textColor="@color/com_text_black"
+                android:textSize="14sp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

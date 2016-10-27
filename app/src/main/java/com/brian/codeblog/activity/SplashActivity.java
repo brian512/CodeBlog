@@ -12,9 +12,9 @@ import android.widget.FrameLayout;
 
 import com.brian.codeblog.Config;
 import com.brian.codeblog.Env;
+import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
 import com.brian.codeblog.manager.AdHelper;
-import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.manager.PushManager;
 import com.brian.common.utils.LogUtil;
 import com.brian.common.utils.NetStatusUtil;
@@ -25,11 +25,14 @@ import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 import tj.zl.op.normal.common.ErrorCode;
 import tj.zl.op.normal.spot.SplashViewSettings;
 import tj.zl.op.normal.spot.SpotListener;
 import tj.zl.op.normal.spot.SpotManager;
+
 
 public class SplashActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
     private static final String TAG = SplashActivity.class.getSimpleName();
@@ -41,11 +44,21 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setFullScreenEnable(true);
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
         // 打开调试模式
         MobclickAgent.setDebugMode(Config.DEBUG_ENABLE);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // 请求权限
+        if (PermissionUtil.checkInitPermission(BaseActivity.getTopActivity())) {
+            doTaskAfterPermission();
+        }
     }
 
     @Override
@@ -58,12 +71,6 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
                 @Override
                 public void run() {
                     delayInitTask();
-
-                    // 请求权限
-                    if (PermissionUtil.checkInitPermission(BaseActivity.getTopActivity())) {
-                        initAD();
-                        jumpMainActivityDeLay(2000); // 防止卡在广告页
-                    }
                 }
             }, 200);
         }
@@ -148,6 +155,12 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
         BaseActivity.getUIHandler().postDelayed(mJumpTask, delay);
     }
 
+    @AfterPermissionGranted(PermissionUtil.PERMISSION_REQUEST_CODE_INIT)
+    private void doTaskAfterPermission() {
+        initAD();
+        jumpMainActivityDeLay(2000); // 防止卡在广告页
+    }
+
     /**
      * 创建桌面快捷方式
      */
@@ -207,26 +220,35 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
 
     @Override
     public void onPermissionsGranted(int requestCode, List<String> perms) {
-        // 请求权限
-        if (PermissionUtil.checkInitPermission(BaseActivity.getTopActivity())) {
-            initAD();
-            jumpMainActivityDeLay(2000); // 防止卡在广告页
-        }
+        // 所有权限都被授予后，会调用注解@AfterPermissionGranted(PERMISSION_REQUEST_CODE_INIT)
     }
 
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         if (requestCode == PermissionUtil.PERMISSION_REQUEST_CODE_INIT) {
-            PermissionUtil.checkInitPermission(BaseActivity.getTopActivity());
+            // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
+            // This will display a dialog directing them to enable the permission in app settings.
+            if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+                PermissionUtil.showPermissionDetail(this, "应用必须权限", true);
+                new AppSettingsDialog.Builder(this, "应用必须权限")
+                        .setTitle("权限设置")
+                        .setPositiveButton(getString(R.string.setting))
+                        .setNegativeButton(getString(R.string.cancel), null /* click listener */)
+                        .setRequestCode(PermissionUtil.PERMISSION_REQUEST_CODE_INIT)
+                        .build()
+                        .show();
+            } else {
+                PermissionUtil.checkInitPermission(this);
+            }
         }
     }
 
     /** 开屏页最好禁止用户对返回按钮的控制 */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_HOME) {
-            return true;
-        }
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            return true;
+//        }
         return super.onKeyDown(keyCode, event);
     }
 }

@@ -10,7 +10,7 @@ import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
-import com.brian.common.view.JDDialog;
+import com.brian.common.view.CommonDialog;
 import com.brian.codeblog.Env;
 
 import pub.devrel.easypermissions.EasyPermissions;
@@ -79,9 +79,6 @@ public class PermissionUtil {
 
     /**
      * 检查定位权限
-     *
-     * @param activity
-     * @return
      */
     public static boolean checkLocationPermission(Activity activity) {
         // SDK 小于23默认已经授权
@@ -98,9 +95,6 @@ public class PermissionUtil {
 
     /**
      * 照相机权限
-     *
-     * @param activity
-     * @return
      */
     public static boolean checkCameraPermission(Activity activity) {
         // SDK 小于23默认已经授权
@@ -117,9 +111,6 @@ public class PermissionUtil {
 
     /**
      * 检查录音权限
-     *
-     * @param activity
-     * @return
      */
     public static boolean checkAudioPermission(Activity activity) {
         // SDK 小于23默认已经授权
@@ -137,9 +128,6 @@ public class PermissionUtil {
 
     /**
      * 检查直播需要的相机和麦克风权限
-     *
-     * @param activity
-     * @return
      */
     public static boolean checkRecordPermission(Activity activity) {
         // SDK 小于23默认已经授权
@@ -195,15 +183,16 @@ public class PermissionUtil {
      * 显示请求权限对话框
      */
     public static void showPermissionDetail(final Activity activity, String tipStr, final boolean isToFinishActivityOnCancel) {
-        JDDialog dialog = new JDDialog(activity);
+        CommonDialog dialog = new CommonDialog(activity);
         dialog.setTitle("权限请求");
         dialog.setContent(tipStr);
         dialog.setLeftBtnText("取消");
         dialog.setRightBtnText("设置");
-        dialog.setLeftBtnListener(new DialogInterface.OnClickListener() {
+        dialog.setNegativeBtnListener(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if (isToFinishActivityOnCancel) {
+                    dialog.cancel();
                     activity.finish();
                 } else {
                     dialog.cancel();
@@ -211,7 +200,7 @@ public class PermissionUtil {
             }
         });
 
-        dialog.setRightBtnListener(new DialogInterface.OnClickListener() {
+        dialog.setPositiveBtnListener(new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Intent localIntent = new Intent();
