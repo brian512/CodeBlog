@@ -1,17 +1,16 @@
 
 package com.brian.codeblog.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.brian.codeblog.Env;
@@ -25,7 +24,6 @@ import com.brian.common.utils.LogUtil;
 import com.brian.common.view.CircleImageView;
 import com.brian.csdnblog.R;
 import com.squareup.picasso.Picasso;
-import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -36,7 +34,7 @@ import butterknife.ButterKnife;
 /**
  * 侧边栏
  */
-public class SidePageFragment extends Fragment implements OnClickListener {
+public class SlideMenuLayout extends FrameLayout implements OnClickListener {
 
     @BindView(R.id.bloger)              View mBlogerLy; // 博主
     @BindView(R.id.bloger_head)         CircleImageView mBlogerHeadView; // 博主头像
@@ -50,25 +48,19 @@ public class SidePageFragment extends Fragment implements OnClickListener {
     @BindView(R.id.chat)                View viewChat;
     @BindView(R.id.tv_select_type)      TextView mSelectTypeView;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public SlideMenuLayout(Context context) {
+        this(context, null, 0);
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        EventBus.getDefault().register(this);
-        LogUtil.i("onActivityCreated");
+    public SlideMenuLayout(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.slide_menu, null);
+    public SlideMenuLayout(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        View view = LayoutInflater.from(BaseActivity.getTopActivity()).inflate(R.layout.slide_menu, this);
         ButterKnife.bind(this, view);
         initUI();
-
-        return view;
     }
 
     /**
@@ -130,7 +122,7 @@ public class SidePageFragment extends Fragment implements OnClickListener {
                 break;
             case R.id.select_article_type: // 设置文章类型
                 UsageStatsManager.sendUsageData(UsageStatsManager.MENU_LIST, "articletype");
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("选择文章类型");
 
                 // 设置一个下拉的列表选择项
@@ -150,29 +142,15 @@ public class SidePageFragment extends Fragment implements OnClickListener {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        LogUtil.i("onActivityResult");
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        LogUtil.i("onResume");
-        MobclickAgent.onPageStart(this.getClass().getName()); //统计页面
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        LogUtil.i("onPause");
-        MobclickAgent.onPageEnd(this.getClass().getName());
-    }
-
-    @Override
-    public void onDestroy() {
+    protected void onDetachedFromWindow() {
         EventBus.getDefault().unregister(this);
-        super.onDestroy();
+        super.onDetachedFromWindow();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -189,4 +167,7 @@ public class SidePageFragment extends Fragment implements OnClickListener {
         }
     }
 
+    public Activity getActivity() {
+        return BaseActivity.getTopActivity();
+    }
 }

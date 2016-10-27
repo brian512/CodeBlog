@@ -5,9 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.brian.codeblog.Config;
@@ -16,17 +18,12 @@ import com.brian.codeblog.datacenter.preference.CommonPreference;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.manager.PushManager;
 import com.brian.codeblog.manager.ShareManager;
-import com.brian.codeblog.update.UpdateManager;
 import com.brian.codeblog.manager.UsageStatsManager;
-import com.brian.common.utils.LogUtil;
+import com.brian.codeblog.update.UpdateManager;
 import com.brian.common.utils.TimeUtil;
 import com.brian.common.utils.ToastUtil;
 import com.brian.common.view.DrawerArrowDrawable;
 import com.brian.csdnblog.R;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnCloseListener;
-import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenListener;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.umeng.onlineconfig.OnlineConfigLog;
@@ -43,13 +40,14 @@ import tj.zl.op.normal.spot.SpotManager;
 /**
  * 主界面
  */
-public class MainTabActivity extends SlidingFragmentActivity {
-
+public class MainTabActivity extends BaseActivity {
     private static final String TAG = MainTabActivity.class.getSimpleName();
 
     @BindView(R.id.left_menu) ImageView mBtnMenu;
     @BindView(R.id.right_search) ImageView mBtnSearch;
     @BindView(R.id.tabs) TabLayout mTabLayout;
+    @BindView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
+    @BindView(R.id.drawer_menu) FrameLayout mDrawerContainer;
     // 主界面的页面切换
     @BindView(R.id.pager) ViewPager mViewpager = null;
 
@@ -94,8 +92,9 @@ public class MainTabActivity extends SlidingFragmentActivity {
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);//设置滑动模式
         mTabLayout.setupWithViewPager(mViewpager);
 
-        // 初始化侧滑栏
-        initSlidingMenu();
+        mArrowDrawable = new DrawerArrowDrawable(this);
+        mArrowDrawable.setColor(getResources().getColor(R.color.white));
+        mBtnMenu.setImageDrawable(mArrowDrawable);
     }
 
     private void recoveryUI() {
@@ -110,58 +109,23 @@ public class MainTabActivity extends SlidingFragmentActivity {
         UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_MAIN_TAB, mTabAdapter.getPageTitle(initPosition));
     }
 
-    private void initSlidingMenu() {
-        // 设置左侧滑动菜单
-        setBehindContentView(R.layout.menu_frame_left);
-        getSupportFragmentManager().beginTransaction().replace(R.id.menu_frame, new SidePageFragment()).commit();
-
-        // 实例化滑动菜单对象
-        SlidingMenu sm = getSlidingMenu();
-        sm.setMode(SlidingMenu.LEFT);// 设置可以左右滑动菜单
-        sm.setShadowWidthRes(R.dimen.shadow_width);// 设置滑动阴影的宽度
-        sm.setShadowDrawable(null);// 设置滑动菜单阴影的图像资源
-        sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);// 设置左侧栏展开时与右边框的margin
-        sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_MARGIN);// 设置触摸屏幕的模式，从边上滑动才有效
-        sm.setFadeDegree(0.8f);// 设置渐入渐出效果的值,1.0为全黑
-        sm.setBehindScrollScale(0.5f);// 设置下方视图的在滚动时的缩放比例，1.0为从左往右推过来（无覆盖效果）
-        sm.setOnOpenListener(new OnOpenListener() {
-            @Override
-            public void onOpen() {
-                LogUtil.i(TAG, "OnOpenListener");
-
-                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SLIDEMENU_SHOW);
-            }
-        });
-
-        sm.setOnCloseListener(new OnCloseListener() {
-            @Override
-            public void onClose() {
-                LogUtil.i(TAG, "onClose");
-            }
-        });
-
-        mArrowDrawable = new DrawerArrowDrawable(this);
-        mArrowDrawable.setColor(getResources().getColor(R.color.white));
-        mBtnMenu.setImageDrawable(mArrowDrawable);
-        sm.setOnScrollListener(new SlidingMenu.OnScrollListener() {
-
-            @Override
-            public void onScroll(float percentOpen) {
-                mArrowDrawable.setProgress(percentOpen);
-            }
-        });
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         ShareManager.getInstance().onActivityResult(requestCode, resultCode, data);
     }
 
     private void initListener() {
+        mDrawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                mArrowDrawable.setProgress(slideOffset);
+            }
+        });
+
         mBtnMenu.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSlidingMenu().toggle(true);
+                toggleMenu();
             }
         });
         mBtnSearch.setOnClickListener(new OnClickListener() {
@@ -187,24 +151,30 @@ public class MainTabActivity extends SlidingFragmentActivity {
         });
     }
 
+    private void toggleMenu() {
+        if (mDrawerLayout.isDrawerOpen(mDrawerContainer)) {
+            mDrawerLayout.closeDrawer(mDrawerContainer);
+        } else {
+            mDrawerLayout.openDrawer(mDrawerContainer);
+        }
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-
-            if (getSlidingMenu().isMenuShowing()) {// 左侧栏已展开
-                getSlidingMenu().toggle(true);
+            if (mDrawerLayout.isDrawerOpen(mDrawerContainer)) {
+                mDrawerLayout.closeDrawer(mDrawerContainer);
+                return true;
+            }
+            boolean isRunInBack = SettingPreference.getInstance().getRunInBackEnable();
+            if (isRunInBack) {
+                moveTaskToBack(true);
             } else {
-
-                boolean isRunInBack = SettingPreference.getInstance().getRunInBackEnable();
-                if (isRunInBack) {
-                    moveTaskToBack(true);
-                } else {
-                    finish();
-                }
+                finish();
             }
             return true;
         } else if (keyCode == KeyEvent.KEYCODE_MENU) {
-            getSlidingMenu().toggle(true);
+            toggleMenu();
             return true;
         }
 
