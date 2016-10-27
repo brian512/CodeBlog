@@ -202,7 +202,7 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
     public String getBlogTitle(int type, String strHtml) {
         try {
             Document doc = Jsoup.parse(strHtml);
-            return doc.getElementsByTag("h2").text();
+            return doc.getElementsByTag("h2").get(0).text();
         } catch (Exception e) {
             e.printStackTrace();
             MobclickAgent.reportError(Env.getContext(), e);
@@ -220,6 +220,9 @@ public class CSDNHtmlParser implements IBlogHtmlParser {
 
         // 获取class="details"的元素
         Elements details = doc.getElementsByClass("details");
+        if (details == null || details.isEmpty()) {
+            details = doc.getElementsByClass("skin_detail");
+        }
         if (details == null || details.isEmpty()) {
             details = doc.getElementsByClass("markdown_views");
         }

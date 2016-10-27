@@ -171,7 +171,7 @@ public class OsChinaHtmlParser implements IBlogHtmlParser {
     public String getBlogTitle(int type, String strHtml) {
         try {
             Document doc = Jsoup.parse(strHtml);
-            return doc.getElementsByTag("h1").text();
+            return doc.getElementsByTag("h1").get(0).text();
         } catch (Exception e) {
             e.printStackTrace();
             return "";

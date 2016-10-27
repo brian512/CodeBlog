@@ -15,6 +15,7 @@ import com.brian.codeblog.Config;
 import com.brian.codeblog.Env;
 import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
+import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.manager.AdHelper;
 import com.brian.codeblog.manager.PushManager;
 import com.brian.common.utils.LogUtil;
@@ -45,7 +46,6 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setFullScreenEnable(true);
-        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
@@ -91,7 +91,7 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
     private void initAD() {
         Context context = this.getApplicationContext();
         AdHelper.initAd(context);
-        if (!AdHelper.isAdCanShow || !NetStatusUtil.isWifiNet(context)) {
+        if (!AdHelper.isAdCanShow || !NetStatusUtil.isWifiNet(context) || !SettingPreference.getInstance().getAdsEnable()) {
             jumpMainActivityDeLay(1000);
             return;
         }

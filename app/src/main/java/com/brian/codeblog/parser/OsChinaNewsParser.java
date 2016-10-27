@@ -101,7 +101,14 @@ public class OsChinaNewsParser implements IBlogHtmlParser {
     public String getBlogTitle(int type, String strHtml) {
         try {
             Document doc = Jsoup.parse(strHtml);
-            return doc.getElementsByTag("h2").text();
+            Element title = doc.getElementsByClass("title").get(0);
+            if (title != null) {
+                title.removeClass("original");
+                title.removeClass("recommend");
+                return title.text();
+            } else {
+                return "";
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return "";

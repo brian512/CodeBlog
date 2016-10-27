@@ -107,7 +107,7 @@ public class InfoQHtmlParser implements IBlogHtmlParser {
     public String getBlogTitle(int type, String strHtml) {
         try {
             Document doc = Jsoup.parse(strHtml);
-            return doc.getElementsByTag("h2").text();
+            return doc.getElementsByTag("h2").get(0).text();
         } catch (Exception e) {
             e.printStackTrace();
             return "";
