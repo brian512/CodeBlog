@@ -2,6 +2,7 @@ package com.brian.codeblog.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -19,6 +20,7 @@ import com.brian.codeblog.manager.PushManager;
 import com.brian.common.utils.LogUtil;
 import com.brian.common.utils.NetStatusUtil;
 import com.brian.common.utils.PermissionUtil;
+import com.brian.common.utils.ToastUtil;
 import com.brian.common.utils.UIUtil;
 import com.brian.csdnblog.R;
 import com.umeng.analytics.MobclickAgent;
@@ -26,7 +28,6 @@ import com.umeng.analytics.MobclickAgent;
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
-import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 import tj.zl.op.normal.common.ErrorCode;
 import tj.zl.op.normal.spot.SplashViewSettings;
@@ -229,14 +230,13 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
             // (Optional) Check whether the user denied any permissions and checked "NEVER ASK AGAIN."
             // This will display a dialog directing them to enable the permission in app settings.
             if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-                PermissionUtil.showPermissionDetail(this, "应用必须权限", true);
-                new AppSettingsDialog.Builder(this, "应用必须权限")
-                        .setTitle("权限设置")
-                        .setPositiveButton(getString(R.string.setting))
-                        .setNegativeButton(getString(R.string.cancel), null /* click listener */)
-                        .setRequestCode(PermissionUtil.PERMISSION_REQUEST_CODE_INIT)
-                        .build()
-                        .show();
+//                PermissionUtil.showPermissionDetail(this, "应用必须权限", true);
+                Intent localIntent = new Intent();
+                localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                localIntent.setData(Uri.fromParts("package", getPackageName(), null));
+                startActivity(localIntent);
+                ToastUtil.showMsg("必要的权限被禁止，请到应用管理授予权限！", true);
             } else {
                 PermissionUtil.checkInitPermission(this);
             }
