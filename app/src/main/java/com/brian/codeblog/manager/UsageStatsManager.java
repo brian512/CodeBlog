@@ -40,6 +40,7 @@ public class UsageStatsManager {
     
     public static final String SETTING_LIST = "setting_list";
     public static final String SETTING_AD = "setting_ad";
+    public static final String SETTING_NIGHT= "setting_night";
 
 //    private static ArrayList<HashMap<String, Object>> mUsageDatas = null;
 //    private static final int MAX_CACHE_SIZE = 10;

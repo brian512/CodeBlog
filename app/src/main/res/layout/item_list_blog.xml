@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:maxLines="2"
-        android:textColor="@color/black"
+        android:textColor="@color/bloglist_item_title"
         android:textSize="@dimen/item_size_title"/>
 
     <!-- android:ellipsize = "end"　　  省略号在结尾 -->
@@ -23,7 +23,7 @@
         android:ellipsize="end"
         android:maxLines="3"
         android:paddingLeft="@dimen/item_description_paddingLeft"
-        android:textColor="@color/nomalGray"
+        android:textColor="@color/bloglist_item_text"
         android:textSize="@dimen/item_size_description" />
 
     <TextView
@@ -33,7 +33,7 @@
         android:gravity="center_vertical|right"
         android:paddingTop="@dimen/item_msg_paddingTop"
         android:singleLine="true"
-        android:textColor="@color/nomalGray"
+        android:textColor="@color/bloglist_item_text"
         android:textSize="@dimen/item_size_msg" />
 
 </LinearLayout>

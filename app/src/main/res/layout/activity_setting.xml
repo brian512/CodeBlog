@@ -10,6 +10,25 @@
         android:layout_height="wrap_content" />
 
     <TextView
+        android:id="@+id/switch_night_mode"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:drawablePadding="8dp"
+        android:drawableRight="@drawable/setting_switch_selector"
+        android:gravity="center_vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="20dp"
+        android:text="夜间模式"
+        android:textSize="@dimen/com_text_size_content" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="20dp"
+        android:background="@color/com_divider_gray_0" />
+
+    <TextView
         android:id="@+id/switch_show_ad_text"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -20,7 +39,6 @@
         android:paddingLeft="16dp"
         android:paddingRight="20dp"
         android:text="展示广告"
-        android:textColor="@color/com_text_tx1"
         android:textSize="@dimen/com_text_size_content" />
 
     <ImageView
@@ -40,7 +58,6 @@
         android:paddingLeft="16dp"
         android:paddingRight="20dp"
         android:text="锁定竖屏"
-        android:textColor="@color/com_text_tx1"
         android:textSize="@dimen/com_text_size_content" />
 
     <ImageView
@@ -60,7 +77,6 @@
         android:paddingLeft="16dp"
         android:paddingRight="20dp"
         android:text="仅wifi下加载图片"
-        android:textColor="@color/com_text_tx1"
         android:textSize="@dimen/com_text_size_content" />
 
     <ImageView
@@ -80,7 +96,6 @@
         android:paddingLeft="16dp"
         android:paddingRight="20dp"
         android:text="退出时是否保留后台"
-        android:textColor="@color/com_text_tx1"
         android:textSize="@dimen/com_text_size_content" />
 
     <ImageView
@@ -99,7 +114,6 @@
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
         android:paddingRight="20dp"
-        android:textColor="@color/com_text_tx1"
         android:textSize="@dimen/com_text_size_content"/>
 
     <ImageView
@@ -118,7 +132,6 @@
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
         android:paddingRight="20dp"
-        android:textColor="@color/com_text_tx1"
         android:textSize="@dimen/com_text_size_content"/>
 
     <ImageView
@@ -137,7 +150,6 @@
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
         android:paddingRight="20dp"
-        android:textColor="@color/com_text_tx1"
         android:textSize="@dimen/com_text_size_content"/>
 
     <ImageView

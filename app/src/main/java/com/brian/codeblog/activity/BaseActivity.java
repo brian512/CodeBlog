@@ -124,7 +124,7 @@ public class BaseActivity extends SwipeBackActivity {
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ResourceUtil.getColor(R.color.light_blue));
+            getWindow().setStatusBarColor(ResourceUtil.getColor(R.color.common_titlebar_bg));
         }
     }
 

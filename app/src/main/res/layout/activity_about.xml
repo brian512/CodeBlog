@@ -19,7 +19,6 @@
         android:lineSpacingExtra="4dp"
         android:layout_marginTop="14dp"
         android:text="@string/app_description"
-        android:textColor="@color/black"
         android:textSize="18sp"/>
 
     <TableLayout
@@ -40,7 +39,6 @@
                 android:drawablePadding="10dp"
                 android:autoLink="web"
                 android:text="194067225"
-                android:textColor="@color/black"
                 android:textIsSelectable="true"
                 android:textSize="@dimen/user_center_size_info" />
         </TableRow>
@@ -54,7 +52,6 @@
                 android:autoLink="web"
                 android:text="https://github.com/brian512/CodeBlog"
                 android:textIsSelectable="true"
-                android:textColor="@color/black"
                 android:textSize="@dimen/user_center_size_info" />
         </TableRow>
 
@@ -67,8 +64,7 @@
                 android:drawablePadding="10dp"
                 android:autoLink="web"
                 android:textIsSelectable="true"
-                android:text="@string/brian_blog"
-                android:textColor="@color/black" />
+                android:text="@string/brian_blog" />
         </TableRow>
     </TableLayout>
 
@@ -78,8 +74,7 @@
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/contact"
         android:layout_marginTop="10dp"
-        android:text="欢迎大家的参与！"
-        android:textColor="@color/black" />
+        android:text="欢迎大家的参与！"/>
 
     <TextView
         android:id="@+id/madeby"
@@ -88,7 +83,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
-        android:text="@string/madeby"
-        android:textColor="@color/black" />
+        android:text="@string/madeby"/>
 
 </RelativeLayout>

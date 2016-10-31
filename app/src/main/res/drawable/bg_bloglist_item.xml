@@ -9,8 +9,8 @@
 
     <gradient
         android:angle="270"
-        android:endColor="#E1E1E1"
-        android:startColor="#F4F4F4" />
+        android:endColor="@color/bloglist_item_bg1"
+        android:startColor="@color/bloglist_item_bg2" />
 
     <corners
         android:bottomLeftRadius="10dp"

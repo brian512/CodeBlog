@@ -3,7 +3,7 @@
     android:id="@+id/slidemenu_ly"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/pc_bg"
+    android:background="@color/sidemenu_bg"
     android:gravity="center_vertical"
     android:orientation="vertical">
 
@@ -36,7 +36,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:text="Brian512的博客"
-                android:textColor="@color/black"
+                android:textColor="@color/sidemenu_text"
                 android:textSize="21sp" />
         </LinearLayout>
 
@@ -70,7 +70,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
             android:text="@string/chat"
-            android:textColor="@color/black"
+            android:textColor="@color/sidemenu_text"
             android:textSize="@dimen/user_center_size_menu" />
 
         <ImageView
@@ -104,7 +104,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
             android:text="@string/news"
-            android:textColor="@color/black"
+            android:textColor="@color/sidemenu_text"
             android:textSize="@dimen/user_center_size_menu" />
 
         <ImageView
@@ -138,7 +138,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
             android:text="博文收藏"
-            android:textColor="@color/black"
+            android:textColor="@color/sidemenu_text"
             android:textSize="@dimen/user_center_size_menu" />
 
         <ImageView
@@ -172,7 +172,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
             android:text="浏览记录"
-            android:textColor="@color/black"
+            android:textColor="@color/sidemenu_text"
             android:textSize="@dimen/user_center_size_menu" />
 
         <ImageView
@@ -206,7 +206,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
             android:text="@string/all_type"
-            android:textColor="@color/black"
+            android:textColor="@color/sidemenu_text"
             android:textSize="@dimen/user_center_size_menu" />
 
         <ImageView
@@ -240,7 +240,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
             android:text="@string/about"
-            android:textColor="@color/black"
+            android:textColor="@color/sidemenu_text"
             android:textSize="@dimen/user_center_size_menu" />
 
         <ImageView
@@ -273,7 +273,7 @@
             android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
             android:text="@string/settings"
-            android:textColor="@color/black"
+            android:textColor="@color/sidemenu_text"
             android:textSize="@dimen/user_center_size_menu" />
 
         <ImageView

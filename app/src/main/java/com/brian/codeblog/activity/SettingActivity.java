@@ -16,6 +16,7 @@ import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.manager.ShareManager;
 import com.brian.codeblog.update.UpdateManager;
 import com.brian.codeblog.manager.UsageStatsManager;
+import com.brian.common.tools.DayNightHelper;
 import com.brian.common.utils.FileUtil;
 import com.brian.common.utils.MarketUtils;
 import com.brian.common.utils.ToastUtil;
@@ -30,6 +31,7 @@ public class SettingActivity extends BaseActivity {
 
     @BindView(R.id.title_bar)               TitleBar mTitleBar;
 
+    @BindView(R.id.switch_night_mode)       TextView mNightModeText;
     @BindView(R.id.switch_show_ad_text)     TextView mSwitchAdText;
     @BindView(R.id.switch_vertical_text)    TextView mSwitchVerticalText;
     @BindView(R.id.switch_picinfwifi_text)  TextView mSwitchPicWifiText;
@@ -130,6 +132,23 @@ public class SettingActivity extends BaseActivity {
                 
                 // 保存preference
                 SettingPreference.getInstance().setRunInBackEnable(selected);
+            }
+        });
+
+        mNightModeText.setSelected(SettingPreference.getInstance().getNightModeEnable());
+        mNightModeText.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_NIGHT, "night_mode");
+                boolean selected = mNightModeText.isSelected();
+                selected = !selected;
+                mNightModeText.setSelected(selected);
+
+                // 保存preference
+                SettingPreference.getInstance().setNightModeEnable(selected);
+
+                DayNightHelper.getInstance().setDayNightMode(selected);
             }
         });
 

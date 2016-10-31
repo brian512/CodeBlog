@@ -5,6 +5,7 @@ package com.brian.codeblog.datacenter.preference;
  */
 public class SettingPreference extends BasePreference {
 
+    private static final String KEY_NIGHT_MODE      = "setting_night_mode";
     private static final String KEY_LOAD_IMAGE_WIFI = "setting_load_Img";
     private static final String KEY_RUN_IN_BACK     = "setting_run_in_back";
     private static final String KEY_SHOW_ADS        = "setting_show_ads";
@@ -23,12 +24,16 @@ public class SettingPreference extends BasePreference {
         return sInstance;
     }
 
-    public void setRunInBackEnable(boolean isInBackEnable) {
-        putBoolean(KEY_RUN_IN_BACK, isInBackEnable);
+    public void setRunInBackEnable(boolean enable) {
+        putBoolean(KEY_RUN_IN_BACK, enable);
     }
 
-    public void setLoadImgOnlyInWifiEnable(boolean isWifiOnly) {
-        putBoolean(KEY_LOAD_IMAGE_WIFI, isWifiOnly);
+    public void setLoadImgOnlyInWifiEnable(boolean enable) {
+        putBoolean(KEY_LOAD_IMAGE_WIFI, enable);
+    }
+
+    public void setNightModeEnable(boolean enable) {
+        putBoolean(KEY_NIGHT_MODE, enable);
     }
 
     public void setAdsEnable(boolean isAdsEnable) {
@@ -45,5 +50,9 @@ public class SettingPreference extends BasePreference {
 
     public boolean getAdsEnable() {
         return getBoolean(KEY_SHOW_ADS, true);
+    }
+
+    public boolean getNightModeEnable() {
+        return getBoolean(KEY_NIGHT_MODE, false);
     }
 }

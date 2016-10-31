@@ -135,13 +135,18 @@ android {
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'libs' //this way we can find the .aar file in libs folder
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.tencent.bugly:crashreport:latest.release'
-    compile 'me.imid.swipebacklayout.lib:library:1.0.0'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -152,4 +157,6 @@ dependencies {
     compile 'com.android.support:design:24.2.1'
     compile 'com.android.support:support-v4:24.2.1'
     compile 'pub.devrel:easypermissions:0.2.0'
+
+    compile(name:'swipebacklayout', ext:'aar')
 }

@@ -4,7 +4,7 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -38,13 +38,6 @@
     <style name="Animation.Activity.Translucent.Style" mce_bogus="1" parent="@android:style/Animation.Translucent">
         <item name="android:windowEnterAnimation">@anim/translate_between_interface_right_in</item>
         <item name="android:windowExitAnimation">@anim/translate_between_interface_right_out</item>
-    </style>
-
-    <style name="SwipeBackLayout">
-        <item name="edge_size">50dip</item>
-        <item name="shadow_left">@drawable/shadow_left</item>
-        <item name="shadow_right">@drawable/shadow_right</item>
-        <item name="shadow_bottom">@drawable/shadow_bottom</item>
     </style>
 
     <style name="TabLayoutTextAppearance" parent="TextAppearance.Design.Tab">

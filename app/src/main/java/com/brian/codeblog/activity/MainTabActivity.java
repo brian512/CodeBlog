@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.brian.codeblog.App;
 import com.brian.codeblog.Config;
 import com.brian.codeblog.activity.adapter.MainTabAdapter;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
@@ -211,9 +212,16 @@ public class MainTabActivity extends BaseActivity {
         int count = CommonPreference.getInstance().getBlogReadCount();
         String time = TimeUtil.convCountTime(CommonPreference.getInstance().getBlogReadTime());
         ToastUtil.showMsg(String.format(Locale.CHINA, "累计学习 %d篇博文，用时 %s", count, time));
-        super.onDestroy();
         OnlineConfigAgent.getInstance().removeOnlineConfigListener();
         SpotManager.getInstance(this).onDestroy();
+        super.onDestroy();
+
+        getUIHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                App.exit();
+            }
+        }, 500);
     }
 
     // 当启动模式为singletask，重新被启动时调用

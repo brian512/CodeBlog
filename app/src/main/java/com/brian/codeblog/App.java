@@ -5,6 +5,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
 
+import com.brian.common.tools.DayNightHelper;
 import com.brian.common.utils.AppInfoUtil;
 import com.brian.codeblog.manager.ConfigHelper;
 import com.brian.common.utils.LogUtil;
@@ -31,6 +32,7 @@ public class App extends Application {
             ConfigHelper.init(this);
             LogUtil.w("Config.DEBUG_ENABLE=" + Config.DEBUG_ENABLE);
             setStrictModeEnable(Config.DEBUG_ENABLE);
+            DayNightHelper.getInstance().initDayNightMode();
         }
         handleCrash();
     }

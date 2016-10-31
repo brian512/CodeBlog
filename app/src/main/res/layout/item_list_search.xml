@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:maxLines="2"
-        android:textColor="@color/black"
+        android:textColor="@color/bloglist_item_title"
         android:textSize="@dimen/item_size_title" />
 
     <TextView
@@ -23,7 +23,7 @@
         android:layout_marginLeft="20dp"
         android:ellipsize="end"
         android:maxLines="4"
-        android:textColor="@color/nomalGray"
+        android:textColor="@color/bloglist_item_text"
         android:textSize="18sp" />
 
     <TextView
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_gravity="right"
-        android:textColor="@color/nomalGray"
+        android:textColor="@color/bloglist_item_text"
         android:textSize="18sp" />
 
 </LinearLayout>
