@@ -3,6 +3,7 @@ package com.brian.codeblog.datacenter;
 
 import com.brian.codeblog.Env;
 import com.brian.codeblog.datacenter.dataupdate.V76;
+import com.brian.codeblog.datacenter.dataupdate.V80;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
 import com.brian.common.utils.FileUtil;
 import com.brian.common.utils.LogUtil;
@@ -46,6 +47,8 @@ public class DataManager {
         } else if (oldVersion <= 75) { // 防止跳过了这个版本，所以需要在往后的每个版本中进行如此的数据处理
                                         // 并且每次有数据更改都得增加else分支处理数据
             V76.updateData();
+        } else if (oldVersion <= 80) { // 将默认的preference拆分了，主要是将settingpreference独立出去了
+            V80.updateData();
         } else  {
             // do nothing
         }

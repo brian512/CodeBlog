@@ -20,9 +20,11 @@ public class CommonPreference extends BasePreference {
     private static final String KEY_AD_SWITCHER = "pre_key_ad_switcher";
 
     private static CommonPreference sInstance;
-    private CommonPreference(){}
+    private CommonPreference(){
+        initPreference(""); // 采用默认的preference
+    }
 
-    public static final CommonPreference getInstance() {
+    public static CommonPreference getInstance() {
         if (sInstance == null) {
             synchronized (CommonPreference.class) {
                 if (sInstance == null) {

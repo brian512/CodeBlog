@@ -2,7 +2,6 @@
 package com.brian.codeblog.activity;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,15 +10,16 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.brian.codeblog.Env;
-import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.datacenter.DataManager;
+import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.manager.ShareManager;
-import com.brian.codeblog.update.UpdateManager;
 import com.brian.codeblog.manager.UsageStatsManager;
+import com.brian.codeblog.update.UpdateManager;
 import com.brian.common.tools.DayNightHelper;
 import com.brian.common.utils.FileUtil;
 import com.brian.common.utils.MarketUtils;
 import com.brian.common.utils.ToastUtil;
+import com.brian.common.view.CommonDialogFragment;
 import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;
 import com.umeng.analytics.MobclickAgent;
@@ -179,27 +179,24 @@ public class SettingActivity extends BaseActivity {
     }
     
     private void showAdConfirmDialog() {
-        new AlertDialog.Builder(this).setTitle("真的不让作者赚这点广告费吗？T_T") 
-        .setIcon(android.R.drawable.ic_dialog_info) 
-        .setPositiveButton("残忍拒绝", new DialogInterface.OnClickListener() { 
-     
-            @Override 
-            public void onClick(DialogInterface dialog, int which) { 
-                UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_AD);
-                boolean selected = mSwitchAdText.isSelected();
-                selected = !selected;
-                mSwitchAdText.setSelected(selected);
+        CommonDialogFragment.create(getSupportFragmentManager())
+                .setNegativeBtnText("支持作者")
+                .setPositiveBtnText("残忍拒绝")
+                .setTitleText("关闭广告")
+                .setContentText("真的不让作者赚这点广告费吗？T_T")
+                .setPositiveBtnListener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_AD);
+                        boolean selected = mSwitchAdText.isSelected();
+                        selected = !selected;
+                        mSwitchAdText.setSelected(selected);
 
-                // 保存preference
-                SettingPreference.getInstance().setAdsEnable(selected);
-            } 
-        }) 
-        .setNegativeButton("支持作者", new DialogInterface.OnClickListener() { 
-     
-            @Override 
-            public void onClick(DialogInterface dialog, int which) { 
-            } 
-        }).show(); 
+                        // 保存preference
+                        SettingPreference.getInstance().setAdsEnable(selected);
+                    }
+                })
+                .show();
     }
 
     @Override

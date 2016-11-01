@@ -42,17 +42,13 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     
     /**
      * 对ItemView进行定制更新的函数
-     * 
-     * @param item
      */
     public abstract void convert(ViewHolder holder, T item);
     
     /**
      * 导入layout布局的回调
-     * 
-     * @param viewHolder
      */
-    public void onInitLayout(ViewHolder viewHolder) {};
+    public void onInitLayout(ViewHolder viewHolder) {}
     
 
     public CommonAdapter(Context context, List<T> datas, int layoutId) {
@@ -64,7 +60,6 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
 
     /**
      * 绑定数据
-     * @param datas
      */
     public void initListWithDatas(List<T> datas) {
         if (datas == null || datas.isEmpty()) {
@@ -74,7 +69,7 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
         if (mDatas != null) {
             mDatas.clear();
         } else {
-            mDatas = new ArrayList<T>();
+            mDatas = new ArrayList<>();
         }
         mDatas.addAll(datas);
         notifyDataSetChanged();
@@ -84,7 +79,6 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
      * 批量添加数据
      * 
      * PS：没有进行去重检查
-     * @param datas
      */
     public void addDatas(List<T> datas) {
         if (datas == null || datas.isEmpty()) {
@@ -92,7 +86,7 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
         }
         
         if (mDatas == null) {
-            mDatas = new ArrayList<T>();
+            mDatas = new ArrayList<>();
         }
         
         mDatas.addAll(datas);
@@ -102,8 +96,6 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     /**
      * 添加数据
      * PS：没有进行去重检查
-     * 
-     * @param data
      */
     public void addData(T data) {
         if (data == null) {
@@ -111,18 +103,32 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
         }
         
         if (mDatas == null) {
-            mDatas = new ArrayList<T>();
+            mDatas = new ArrayList<>();
         }
         mDatas.add(data);
         notifyDataSetChanged();
     }
-    
+
+    /**
+     * 添加数据
+     * PS：没有进行去重检查
+     */
+    public void addData(int index, T data) {
+        if (data == null) {
+            return;
+        }
+
+        if (mDatas == null) {
+            mDatas = new ArrayList<>();
+        }
+        mDatas.add(index, data);
+        notifyDataSetChanged();
+    }
+
     /**
      * 移除数据对象
      * 
      * PS：包括同一个对象和equal相等的对象
-     * 
-     * @param data
      */
     public void removeData(T data) {
         if (data == null) {
@@ -139,8 +145,6 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     
     /**
      * 移除指定位置的数据
-     * 
-     * @param pos
      */
     public void removeDataAt(int pos) {
         if (mDatas != null && pos >= 0 && pos < mDatas.size()) {
@@ -162,8 +166,6 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     /**
      * 更新数据
      * PS：使用替换的方式来进行更新
-     * 
-     * @param data
      */
     public void updateData(T data) {
         if (mDatas != null && data != null) {
@@ -175,10 +177,16 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
             }
         }
     }
+
+    public boolean containData(T data) {
+        if (getCount() <= 0 || data == null) {
+            return false;
+        }
+        return mDatas.indexOf(data) >= 0;
+    }
     
     /**
      * 获取全部数据
-     * @return
      */
     public List<T> getDatas() {
         if (mDatas == null) {
@@ -264,9 +272,6 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
 
         /**
          * 通过viewId获取控件
-         * 
-         * @param viewId
-         * @return
          */
         public <T extends View> T getView(int viewId) {
             View view = mViews.get(viewId);
@@ -283,10 +288,6 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
 
         /**
          * 设置TextView的值
-         * 
-         * @param viewId
-         * @param text
-         * @return
          */
         public ViewHolder setText(int viewId, String text) {
             TextView tv = getView(viewId);

@@ -15,12 +15,14 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.brian.codeblog.Env;
+import com.brian.codeblog.datacenter.preference.SearchPreference;
 import com.brian.codeblog.manager.UsageStatsManager;
 import com.brian.codeblog.model.Bloger;
 import com.brian.codeblog.model.SearchResult;
@@ -28,13 +30,17 @@ import com.brian.codeblog.parser.CSDNHtmlParser;
 import com.brian.codeblog.proctocol.HttpGetSearchBlogRequest;
 import com.brian.codeblog.proctocol.base.IResponseCallback;
 import com.brian.common.tools.CommonAdapter;
+import com.brian.common.tools.GsonHelper;
 import com.brian.common.utils.LogUtil;
 import com.brian.common.utils.ResourceUtil;
+import com.brian.common.utils.SDKUtil;
 import com.brian.common.utils.ToastUtil;
 import com.brian.common.utils.UIUtil;
 import com.brian.common.view.RefreshLayout;
 import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,15 +48,21 @@ import butterknife.ButterKnife;
 public class SearchActivity extends BaseActivity {
     private static final String TAG = SearchActivity.class.getSimpleName();
 
+    private static final int MAX_HISTORY_COUNT = 8;
+
     @BindView(R.id.title_bar) TitleBar mTitleBar;
-    @BindView(R.id.et_search) EditText mSearchInput = null;
-    @BindView(R.id.bt_search) TextView mSearchBtn = null;
-    @BindView(R.id.lv_result) ListView mResultListView = null;
+    @BindView(R.id.et_search) EditText mSearchInput;
+    @BindView(R.id.bt_search) Button mSearchBtn;
+    @BindView(R.id.lv_result) ListView mResultListView;
     @BindView(R.id.swipe_container) RefreshLayout mRefreshLayout;
-    @BindView(R.id.progressbar) ProgressBar mProgressBar = null;
+    @BindView(R.id.progressbar) ProgressBar mProgressBar;
+    @BindView(R.id.search_history_ll) View mHistoryLy;
+    @BindView(R.id.search_history_lv) ListView mHistoryList;
+    @BindView(R.id.clear_history_btn) Button mClearHistoryBtn;
     private View mFooterLayout;
 
-    private CommonAdapter<SearchResult> mAdapter = null;
+    private CommonAdapter<SearchResult> mSearchResultAdapter = null;
+    private CommonAdapter<String> mHistoryAdapter = null;
 
     private int mCurrentPage = 1;
     private String mInputText = "";
@@ -77,10 +89,27 @@ public class SearchActivity extends BaseActivity {
         mResultListView.addFooterView(mFooterLayout);
         mRefreshLayout.setChildView(mResultListView);
 
+        SDKUtil.showSoftInputOnfocus(mSearchInput, true);
+
         mTitleBar.setTitle("CSDN搜索");
         mTitleBar.setRightImageVisible(View.INVISIBLE);
 
-        mAdapter = new CommonAdapter<SearchResult>(Env.getContext(), null, R.layout.item_list_search) {
+        mHistoryAdapter = new CommonAdapter<String>(Env.getContext(), getSearchHistory(), R.layout.item_search_history) {
+            @Override
+            public void convert(ViewHolder holder, final String item) {
+                holder.setText(R.id.contentTextView, item);
+                holder.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mSearchInput.setText(item);
+                        doSearch();
+                    }
+                });
+            }
+        };
+        mHistoryList.setAdapter(mHistoryAdapter);
+
+        mSearchResultAdapter = new CommonAdapter<SearchResult>(Env.getContext(), null, R.layout.item_list_search) {
             private ForegroundColorSpan mColorSpanName = new ForegroundColorSpan(ResourceUtil.getColor(R.color.light_blue));
             @Override
             public void convert(ViewHolder holder, final SearchResult item) {
@@ -131,7 +160,7 @@ public class SearchActivity extends BaseActivity {
                 return view;
             }
         };
-        mResultListView.setAdapter(mAdapter);
+        mResultListView.setAdapter(mSearchResultAdapter);
 
         mResultListView.setVisibility(View.INVISIBLE);
     }
@@ -148,10 +177,17 @@ public class SearchActivity extends BaseActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH || (event!=null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
-                    onSendMsg();
+                    doSearch();
                     return true;
                 }
                 return false;
+            }
+        });
+
+        mSearchInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                mHistoryLy.setVisibility(hasFocus ? View.VISIBLE : View.GONE);
             }
         });
 
@@ -159,7 +195,7 @@ public class SearchActivity extends BaseActivity {
 
             @Override
             public void onClick(View v) {
-                onSendMsg();
+                doSearch();
             }
         });
 
@@ -171,9 +207,17 @@ public class SearchActivity extends BaseActivity {
                 }
             }
         });
+
+        mClearHistoryBtn.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearHistoryList();
+                mClearHistoryBtn.setVisibility(View.GONE);
+            }
+        });
     }
 
-    private void onSendMsg() {
+    private void doSearch() {
         UIUtil.hideKeyboard(mSearchInput);
         mInputText = mSearchInput.getText().toString()
                 .replaceAll(
@@ -184,6 +228,8 @@ public class SearchActivity extends BaseActivity {
             String url = getSearchUrl(mInputText, 1);
             mCurrentPage = 1;
             loadListData(url);
+
+            addSearchHistory(mInputText);
             UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SEARCH, mInputText);
         } else {
             ToastUtil.showMsg("请输入适当关键字");
@@ -197,7 +243,7 @@ public class SearchActivity extends BaseActivity {
     }
 
     private void loadListData(String loadUrl) {
-        if (mAdapter.isEmpty()) {
+        if (mSearchResultAdapter.isEmpty()) {
             mProgressBar.setVisibility(View.VISIBLE);
         } else {
             mFooterLayout.setVisibility(View.VISIBLE);
@@ -209,20 +255,21 @@ public class SearchActivity extends BaseActivity {
             @Override
             public void onSuccess(HttpGetSearchBlogRequest.ResultData resultData) {
                 mRefreshLayout.setLoading(false);
+                mHistoryLy.setVisibility(View.GONE);
 
                 if (resultData.blogInfoList == null || resultData.blogInfoList.isEmpty()) {
-                    if (mAdapter.isEmpty()) {
+                    if (mSearchResultAdapter.isEmpty()) {
                         // 没有搜索到结果的提示
                         UsageStatsManager.sendUsageData(UsageStatsManager.EXP_EMPTY_SEARCH, mInputText);
                     }
                 } else {
                     if (mCurrentPage <= 1) {
-                        mAdapter.removeAllDatas();
+                        mSearchResultAdapter.removeAllDatas();
                     }
                     mResultListView.setVisibility(View.VISIBLE);
                     mProgressBar.setVisibility(View.INVISIBLE);
                     mCurrentPage++;
-                    mAdapter.addDatas(resultData.blogInfoList);
+                    mSearchResultAdapter.addDatas(resultData.blogInfoList);
                 }
             }
 
@@ -236,5 +283,34 @@ public class SearchActivity extends BaseActivity {
                 LogUtil.e("errorCode=" + errorCode);
             }
         });
+    }
+
+    private List<String> getSearchHistory() {
+        List historyList = new GsonHelper<String>().fromJson(SearchPreference.getInstance().getHistoryListJson());
+        if (historyList == null || historyList.size() <= 0) {
+            mClearHistoryBtn.setVisibility(View.GONE);
+        } else {
+            mClearHistoryBtn.setVisibility(View.VISIBLE);
+        }
+        return historyList;
+    }
+
+    private void addSearchHistory(String keyWord) {
+        if (mHistoryAdapter.containData(keyWord)) {
+            return;
+        }
+        if (mHistoryAdapter.getCount() >= MAX_HISTORY_COUNT) {
+            mHistoryAdapter.removeDataAt(mHistoryAdapter.getCount()-1);
+        }
+        mHistoryAdapter.addData(0, keyWord);
+        SearchPreference.getInstance().setHistoryListJson(new GsonHelper<String>().convert2String(mHistoryAdapter.getDatas()));
+        if (!mHistoryAdapter.isEmpty()) {
+            mClearHistoryBtn.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void clearHistoryList() {
+        mHistoryAdapter.removeAllDatas();
+        SearchPreference.getInstance().setHistoryListJson(new GsonHelper<String>().convert2String(mHistoryAdapter.getDatas()));
     }
 }

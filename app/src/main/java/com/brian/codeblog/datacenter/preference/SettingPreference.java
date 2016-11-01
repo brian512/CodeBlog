@@ -1,6 +1,7 @@
 package com.brian.codeblog.datacenter.preference;
 
 /**
+ * 设置相关的偏好
  * Created by Brian on 2016/9/10 0010.
  */
 public class SettingPreference extends BasePreference {
@@ -11,9 +12,11 @@ public class SettingPreference extends BasePreference {
     private static final String KEY_SHOW_ADS        = "setting_show_ads";
 
     private static SettingPreference sInstance;
-    private SettingPreference(){}
+    private SettingPreference(){
+        initPreference("setting");
+    }
 
-    public static final SettingPreference getInstance() {
+    public static SettingPreference getInstance() {
         if (sInstance == null) {
             synchronized (SettingPreference.class) {
                 if (sInstance == null) {

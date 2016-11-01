@@ -15,8 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/title_bar"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
         android:orientation="horizontal" >
 
         <EditText
@@ -32,11 +30,10 @@
             android:layout_weight="1"
             android:imeOptions="actionSearch"
             android:imeActionLabel="搜索"/>
-        <TextView 
+        <Button
             android:id="@+id/bt_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:padding="5dp"
             android:textSize="18sp"
@@ -62,11 +59,48 @@
             android:fadingEdge="none"/>
     </com.brian.common.view.RefreshLayout>
 
+    <LinearLayout
+        android:id="@+id/search_history_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_input"
+        android:background="@color/common_bg"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/contentTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="4dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="4dp"
+            android:text="历史搜索"
+            android:textSize="12sp"/>
+
+        <ListView
+            android:id="@+id/search_history_lv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dividerHeight="0.5dp" />
+
+        <Button
+            android:id="@+id/clear_history_btn"
+            android:layout_width="210dp"
+            android:layout_height="38dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_round_btn_selector"
+            android:text="清除历史搜索记录"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
     <ProgressBar
         android:id="@+id/progressbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         style="@android:style/Holo.Light.ButtonBar"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 </RelativeLayout>
