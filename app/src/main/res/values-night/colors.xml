@@ -7,7 +7,8 @@
     <color name="common_titlebar_bg">#111</color>
     <color name="common_titlebar_text">@color/white</color>
 
-    <color name="sidemenu_bg">#333333</color>
+    <color name="common_bg">#333</color>
+    <color name="sidemenu_bg">#222</color>
     <color name="sidemenu_text">@color/white</color>
     <color name="bloglist_item_bg1">#666</color>
     <color name="bloglist_item_bg2">#666</color>

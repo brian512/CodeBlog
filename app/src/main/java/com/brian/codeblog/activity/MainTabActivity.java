@@ -21,6 +21,7 @@ import com.brian.codeblog.manager.PushManager;
 import com.brian.codeblog.manager.ShareManager;
 import com.brian.codeblog.manager.UsageStatsManager;
 import com.brian.codeblog.update.UpdateManager;
+import com.brian.common.tools.DayNightHelper;
 import com.brian.common.utils.TimeUtil;
 import com.brian.common.utils.ToastUtil;
 import com.brian.common.view.DrawerArrowDrawable;
@@ -216,12 +217,14 @@ public class MainTabActivity extends BaseActivity {
         SpotManager.getInstance(this).onDestroy();
         super.onDestroy();
 
-        getUIHandler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                App.exit();
-            }
-        }, 500);
+        if (DayNightHelper.getInstance().hasModeChanged()) {
+            getUIHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    App.exit();
+                }
+            }, 500);
+        }
     }
 
     // 当启动模式为singletask，重新被启动时调用

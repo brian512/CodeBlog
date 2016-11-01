@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -25,14 +26,13 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.brian.codeblog.Env;
+import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.manager.AdHelper;
 import com.brian.codeblog.manager.BlogManager;
 import com.brian.codeblog.manager.BlogerManager;
-import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.manager.ShareManager;
-import com.brian.common.tools.ThreadManager;
 import com.brian.codeblog.manager.TypeManager;
 import com.brian.codeblog.manager.UsageStatsManager;
 import com.brian.codeblog.model.BlogInfo;
@@ -42,9 +42,12 @@ import com.brian.codeblog.parser.BlogHtmlParserFactory;
 import com.brian.codeblog.parser.IBlogHtmlParser;
 import com.brian.codeblog.proctocol.HttpGetBlogContentRequest;
 import com.brian.codeblog.proctocol.base.IResponseCallback;
+import com.brian.common.tools.DayNightHelper;
+import com.brian.common.tools.ThreadManager;
 import com.brian.common.utils.FileUtil;
 import com.brian.common.utils.LogUtil;
 import com.brian.common.utils.NetStatusUtil;
+import com.brian.common.utils.ResourceUtil;
 import com.brian.common.utils.ToastUtil;
 import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;
@@ -311,6 +314,7 @@ public class BlogContentActivity extends BaseActivity {
         // 点击图片重新加载
         mWebView.setWebViewClient(new MyWebViewClient());
         mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        mWebView.setBackgroundColor(ResourceUtil.getColor(R.color.common_bg));
 
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -437,6 +441,10 @@ public class BlogContentActivity extends BaseActivity {
                         "text/html", "utf-8", null);
                 return true;
             } else {
+                mWebView.setWebViewClient(null);
+                mWebView.setWebChromeClient(null);
+                mWebView.loadData("<html></html>", "text/html", "utf-8");
+
                 this.finish();
             }
         }
@@ -474,12 +482,23 @@ public class BlogContentActivity extends BaseActivity {
 
         @Override
         public void onPageFinished(WebView view, String url) {
+            if (DayNightHelper.getInstance().isDayNightEnabled()) {
+                String js = "document.body.style.backgroundColor=\"#333\";document.body.style.color=\"white\";";
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    mWebView.evaluateJavascript(js, null);
+                } else {
+                    mWebView.loadUrl("javascript:" + js);
+                }
+                mWebView.setBackgroundColor(Color.TRANSPARENT);
+            }
+
             boolean isBlockImage = SettingPreference.getInstance().getLoadImgOnlyInWifiEnable();
             
             boolean shouldLoadImg = NetStatusUtil.isWifiNet(Env.getContext()) || !isBlockImage;
             mWebView.getSettings().setBlockNetworkImage(!shouldLoadImg);
             
             mWebView.getSettings().setLoadsImagesAutomatically(true);
+
             super.onPageFinished(view, url);
             LogUtil.i(TAG, "onPageFinished");
         }
@@ -526,11 +545,11 @@ public class BlogContentActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         CommonPreference.getInstance().addBlogReadTime(System.currentTimeMillis() - mStartTime);
-        super.onDestroy();
 
         mWebView.stopLoading();
         mWebView.onPause();
         mWebView.destroy();
+        super.onDestroy();
     }
     
     private void showErrorPage() {

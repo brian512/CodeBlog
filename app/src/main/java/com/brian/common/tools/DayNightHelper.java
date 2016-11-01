@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatDelegate;
 
 import com.brian.codeblog.activity.BaseActivity;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
+import com.brian.common.view.CommonDialogFragment;
 
 /**
  * 夜间模式辅助类
@@ -13,6 +14,7 @@ import com.brian.codeblog.datacenter.preference.SettingPreference;
 public class DayNightHelper {
 
     private boolean mIsDayNightEnabled = false;
+    private boolean mIsModeChanged = false;
 
     private static class SingletonHolder {
         private static final DayNightHelper INSTANCE = new DayNightHelper();
@@ -21,6 +23,10 @@ public class DayNightHelper {
     }
     public static final DayNightHelper getInstance() {
         return SingletonHolder.INSTANCE;
+    }
+
+    public boolean isDayNightEnabled() {
+        return mIsDayNightEnabled;
     }
 
     public void initDayNightMode() {
@@ -32,9 +38,18 @@ public class DayNightHelper {
         if (mIsDayNightEnabled == enable) {
             return;
         }
+        mIsModeChanged = true;
         mIsDayNightEnabled = enable;
-        BaseActivity activity = BaseActivity.getTopActivity();
-        activity.getDelegate().setLocalNightMode(enable ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-        activity.recreate();
+        AppCompatDelegate.setDefaultNightMode(enable ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+
+        final BaseActivity activity = BaseActivity.getTopActivity();
+        CommonDialogFragment.create(activity.getSupportFragmentManager())
+                .setContentText("主页面下次启动时才会生效")
+                .setPositiveBtnText("确定")
+                .show();
+    }
+
+    public boolean hasModeChanged() {
+        return mIsModeChanged;
     }
 }

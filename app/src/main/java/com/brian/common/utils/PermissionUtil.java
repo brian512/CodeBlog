@@ -8,10 +8,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 
-import com.brian.common.view.CommonDialog;
 import com.brian.codeblog.Env;
+import com.brian.common.view.CommonDialogFragment;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -175,43 +176,42 @@ public class PermissionUtil {
         }
     }
 
-    public static void showPermissionDetail(Activity activity, int tipResID, boolean isToFinishActivityOnCancel) {
+    public static void showPermissionDetail(FragmentActivity activity, int tipResID, boolean isToFinishActivityOnCancel) {
         showPermissionDetail(activity, ResourceUtil.getString(tipResID), isToFinishActivityOnCancel);
     }
 
     /**
      * 显示请求权限对话框
      */
-    public static void showPermissionDetail(final Activity activity, String tipStr, final boolean isToFinishActivityOnCancel) {
-        CommonDialog dialog = new CommonDialog(activity);
-        dialog.setTitle("权限请求");
-        dialog.setContent(tipStr);
-        dialog.setLeftBtnText("取消");
-        dialog.setRightBtnText("设置");
-        dialog.setNegativeBtnListener(new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (isToFinishActivityOnCancel) {
-                    dialog.cancel();
-                    activity.finish();
-                } else {
-                    dialog.cancel();
-                }
-            }
-        });
+    public static void showPermissionDetail(final FragmentActivity activity, String tipStr, final boolean isToFinishActivityOnCancel) {
+        CommonDialogFragment.create(activity.getSupportFragmentManager())
+                .setTitleText("权限请求")
+                .setContentText(tipStr)
+                .setPositiveBtnText("设置")
+                .setNegativeBtnText("取消")
+                .setPositiveBtnListener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent localIntent = new Intent();
+                        localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
+                        localIntent.setData(Uri.fromParts("package", activity.getPackageName(), null));
+                        activity.startActivity(localIntent);
+                    }
+                })
+                .setNegativeBtnListener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (isToFinishActivityOnCancel) {
+                            dialog.cancel();
+                            activity.finish();
+                        } else {
+                            dialog.cancel();
+                        }
+                    }
+                })
+                .show();
 
-        dialog.setPositiveBtnListener(new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Intent localIntent = new Intent();
-                localIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                localIntent.setAction("android.settings.APPLICATION_DETAILS_SETTINGS");
-                localIntent.setData(Uri.fromParts("package", activity.getPackageName(), null));
-                activity.startActivity(localIntent);
-            }
-        });
-
-        dialog.show();
     }
 
 }
