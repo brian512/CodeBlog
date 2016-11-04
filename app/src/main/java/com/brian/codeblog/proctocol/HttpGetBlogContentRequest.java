@@ -46,17 +46,17 @@ public class HttpGetBlogContentRequest extends AbstractHttpClient<HttpGetBlogCon
         if (type == -1) {
             throw new RuntimeException("set RequestParam.type!");
         }
-        if (Config.DEBUG_ENABLE) {
-            String filePath = PathUtil.getCacheDirPath() + "/blog_" + System.currentTimeMillis() + ".html";
-            FileUtil.writeFile(filePath, responseContent);
-            LogUtil.log("filePath=" + filePath);
-            ToastUtil.showMsg("filePath=" + filePath);
-        }
         IBlogHtmlParser parser = BlogHtmlParserFactory.getBlogParser(type);
         ResultData resultData = new ResultData();
         resultData.blogContent = parser.getBlogContent(type, responseContent);
         if (TextUtils.isEmpty(resultData.blogContent)) {
             resultData.blogContent = responseContent;
+        }
+        if (Config.DEBUG_ENABLE) {
+            String filePath = PathUtil.getCacheDirPath() + "/blog_" + System.currentTimeMillis() + ".html";
+            FileUtil.writeFile(filePath, resultData.blogContent);
+            LogUtil.log("filePath=" + filePath);
+            ToastUtil.showMsg("filePath=" + filePath);
         }
         return resultData;
     }

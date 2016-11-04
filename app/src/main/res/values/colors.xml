@@ -11,8 +11,9 @@
     <color name="common_bg">#fff</color>
     <color name="sidemenu_bg">@color/light_blue</color>
     <color name="sidemenu_text">@color/black</color>
-    <color name="bloglist_item_bg1">#E1E1E1</color>
-    <color name="bloglist_item_bg2">#F4F4F4</color>
+    <color name="bloglist_item_bg1">#fff</color>
+    <!--E1E1E1 F4F4F4-->
+    <color name="bloglist_item_bg2">#fff</color>
     <color name="bloglist_item_title">@color/black</color>
     <color name="bloglist_item_text">@color/nomalGray</color>
 </resources>

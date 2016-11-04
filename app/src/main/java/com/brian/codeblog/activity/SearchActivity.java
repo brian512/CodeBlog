@@ -48,7 +48,7 @@ import butterknife.ButterKnife;
 public class SearchActivity extends BaseActivity {
     private static final String TAG = SearchActivity.class.getSimpleName();
 
-    private static final int MAX_HISTORY_COUNT = 8;
+    private static final int MAX_HISTORY_COUNT = 5;
 
     @BindView(R.id.title_bar) TitleBar mTitleBar;
     @BindView(R.id.et_search) EditText mSearchInput;
@@ -297,9 +297,9 @@ public class SearchActivity extends BaseActivity {
 
     private void addSearchHistory(String keyWord) {
         if (mHistoryAdapter.containData(keyWord)) {
-            return;
+            mHistoryAdapter.removeData(keyWord);
         }
-        if (mHistoryAdapter.getCount() >= MAX_HISTORY_COUNT) {
+        while (mHistoryAdapter.getCount() >= MAX_HISTORY_COUNT) {
             mHistoryAdapter.removeDataAt(mHistoryAdapter.getCount()-1);
         }
         mHistoryAdapter.addData(0, keyWord);
