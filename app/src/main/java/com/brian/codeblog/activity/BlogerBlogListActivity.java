@@ -57,7 +57,7 @@ public class BlogerBlogListActivity extends BaseActivity {
             return;
         }
         if (!TextUtils.isEmpty(bloger.nickName)) {
-            mTitleBar.setTitle(bloger.nickName + "的博客");
+            mTitleBar.setTitle(bloger.nickName);
         }
         BlogerManager.getsInstance().setCurrBloger(bloger);
         mTitleBar.setLeftListener(new OnClickListener() {

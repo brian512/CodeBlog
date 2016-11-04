@@ -25,7 +25,6 @@ import com.brian.codeblog.Env;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.manager.AdHelper;
 import com.brian.codeblog.manager.BlogManager;
-import com.brian.common.tools.ThreadManager;
 import com.brian.codeblog.manager.TypeManager;
 import com.brian.codeblog.manager.UsageStatsManager;
 import com.brian.codeblog.model.BlogInfo;
@@ -36,6 +35,7 @@ import com.brian.codeblog.parser.IBlogHtmlParser;
 import com.brian.codeblog.proctocol.HttpGetBlogListRequest;
 import com.brian.codeblog.proctocol.base.IResponseCallback;
 import com.brian.common.tools.CommonAdapter;
+import com.brian.common.tools.ThreadManager;
 import com.brian.common.utils.FileUtil;
 import com.brian.common.utils.LogUtil;
 import com.brian.common.utils.ResourceUtil;
@@ -287,7 +287,7 @@ public class BlogListFrag extends Fragment {
         ThreadManager.getPoolProxy().execute(new Runnable() {
             @Override
             public void run() {
-                LogUtil.log("mType=" + mType);
+                LogUtil.log("mType=" + Integer.toHexString(mType));
                 try {
                     String cachedStr = FileUtil.getFileContent(Env.getContext().getFilesDir() + "/cache_" + mType);
                     final List<BlogInfo> list = new Gson().fromJson(cachedStr, new TypeToken<List<BlogInfo>>() {} .getType());

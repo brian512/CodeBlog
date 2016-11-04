@@ -8,11 +8,12 @@
     <!-- 左侧按钮 -->
     <ImageView
         android:id="@+id/left_text"
-        android:layout_width="24dp"
+        android:layout_width="38dp"
         android:layout_height="24dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="7dp"
+        android:paddingLeft="7dp"
+        android:paddingRight="7dp"
         android:background="?android:attr/selectableItemBackground"
         android:src="@drawable/ic_back"
         android:visibility="visible" />
@@ -41,11 +42,12 @@
     <!-- 右侧按钮 -->
     <ImageView
         android:id="@+id/right_text"
-        android:layout_width="24dp"
+        android:layout_width="41dp"
         android:layout_height="24dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
+        android:paddingLeft="7dp"
+        android:paddingRight="10dp"
         android:background="?android:attr/selectableItemBackground"
         android:src="@drawable/ic_share"
         android:visibility="visible" />

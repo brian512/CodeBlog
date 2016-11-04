@@ -8,12 +8,11 @@
     <color name="common_titlebar_text">@color/white</color>
 
 
+    <color name="window_bg">#fff</color>
     <color name="common_bg">#fff</color>
     <color name="sidemenu_bg">@color/light_blue</color>
     <color name="sidemenu_text">@color/black</color>
-    <color name="bloglist_item_bg1">#fff</color>
-    <!--E1E1E1 F4F4F4-->
-    <color name="bloglist_item_bg2">#fff</color>
+    <color name="bloglist_item_bg">#335CACEE</color>
     <color name="bloglist_item_title">@color/black</color>
     <color name="bloglist_item_text">@color/nomalGray</color>
 </resources>

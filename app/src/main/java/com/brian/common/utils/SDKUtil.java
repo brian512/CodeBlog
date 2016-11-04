@@ -85,4 +85,10 @@ public class SDKUtil {
             editText.setShowSoftInputOnFocus(show);
         }
     }
+
+    public static void setElevation(View view, float elevation) {
+        if (VERSION.SDK_INT > VERSION_CODES.LOLLIPOP) {
+            view.setElevation(elevation);
+        }
+    }
 }

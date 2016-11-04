@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_item_bloglist_ripple"
-    android:orientation="vertical" >
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/title"
@@ -19,12 +24,12 @@
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:singleLine="false"
         android:ellipsize="end"
         android:maxLines="3"
         android:paddingLeft="@dimen/item_description_paddingLeft"
+        android:singleLine="false"
         android:textColor="@color/bloglist_item_text"
-        android:textSize="@dimen/item_size_description" />
+        android:textSize="@dimen/item_size_description"/>
 
     <TextView
         android:id="@+id/msg"
@@ -34,6 +39,6 @@
         android:paddingTop="@dimen/item_msg_paddingTop"
         android:singleLine="true"
         android:textColor="@color/bloglist_item_text"
-        android:textSize="@dimen/item_size_msg" />
+        android:textSize="@dimen/item_size_msg"/>
 
 </LinearLayout>

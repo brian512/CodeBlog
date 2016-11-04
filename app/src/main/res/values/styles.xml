@@ -18,13 +18,14 @@
          -->
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/window_bg</item>
         <item name="android:windowAnimationStyle">@style/Animation.Activity.Translucent.Style</item>
     </style>
 
     <style name="AppTheme.Launcher" parent="AppBaseTheme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:background">@drawable/splash</item>
+        <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
     <!-- 滑入滑出的动画 -->

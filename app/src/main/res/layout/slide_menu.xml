@@ -1,297 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/slidemenu_ly"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/sidemenu_bg"
-    android:gravity="center_vertical"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/bloger"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:background="?android:attr/selectableItemBackground">
+        android:layout_height="160dp"
+        android:background="@drawable/bg_slidemenu_bloger_ripple"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:layout_centerInParent="true">
-
-            <com.brian.common.view.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/bloger_head"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:src="@drawable/ic_launcher"
-                app:border_color="#FFffffff"
-                app:border_width="@dimen/circle_border_width" />
-
-            <TextView
-                android:id="@+id/bloger_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:text="Brian512的博客"
-                android:textColor="@color/sidemenu_text"
-                android:textSize="21sp" />
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/user_center_menu_marginRight"
-            android:contentDescription="@string/str_null"
-            android:focusable="false"
-            android:src="@drawable/app_recommend_arrow" />
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/str_null"
-        android:src="@drawable/pc_divider_line" />
-
-    <RelativeLayout
-        android:id="@+id/chat"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height"
-        android:background="?android:attr/selectableItemBackground">
+        <com.brian.common.view.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/bloger_head"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@drawable/ic_launcher"
+            app:border_color="#FFffffff"
+            app:border_width="@dimen/circle_border_width"/>
 
         <TextView
+            android:id="@+id/bloger_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="brian512"
+            android:textColor="#fff"
+            android:textSize="21sp"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_weight="1"
+        android:background="@color/common_bg"
+        android:orientation="vertical"
+        android:onClick="@null"
+        android:divider="@drawable/pc_divider_line"
+        android:showDividers="middle|end">
+
+        <TextView
+            android:id="@+id/chat"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/user_center_menu_height"
+            android:paddingLeft="@dimen/user_center_menu_marginLeft"
+            android:paddingRight="@dimen/user_center_menu_marginRight"
+            android:drawableRight="@drawable/app_recommend_arrow"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
             android:text="@string/chat"
             android:textColor="@color/sidemenu_text"
-            android:textSize="@dimen/user_center_size_menu" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/user_center_menu_marginRight"
-            android:contentDescription="@string/str_null"
-            android:focusable="false"
-            android:src="@drawable/app_recommend_arrow" />
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/str_null"
-        android:src="@drawable/pc_divider_line" />
-
-    <RelativeLayout
-        android:id="@+id/news"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height"
-        android:background="?android:attr/selectableItemBackground">
+            android:textSize="@dimen/user_center_size_menu"/>
 
         <TextView
-            android:id="@+id/tv_news"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
+            android:id="@+id/news"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/user_center_menu_height"
+            android:paddingLeft="@dimen/user_center_menu_marginLeft"
+            android:paddingRight="@dimen/user_center_menu_marginRight"
+            android:drawableRight="@drawable/app_recommend_arrow"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
             android:text="@string/news"
             android:textColor="@color/sidemenu_text"
-            android:textSize="@dimen/user_center_size_menu" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/user_center_menu_marginRight"
-            android:contentDescription="@string/str_null"
-            android:focusable="false"
-            android:src="@drawable/app_recommend_arrow" />
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/str_null"
-        android:src="@drawable/pc_divider_line" />
-
-    <RelativeLayout
-        android:id="@+id/blog_favo"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height"
-        android:background="?android:attr/selectableItemBackground">
+            android:textSize="@dimen/user_center_size_menu"/>
 
         <TextView
-            android:id="@+id/tv_blog_favo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
+            android:id="@+id/blog_favo"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/user_center_menu_height"
+            android:paddingLeft="@dimen/user_center_menu_marginLeft"
+            android:paddingRight="@dimen/user_center_menu_marginRight"
+            android:drawableRight="@drawable/app_recommend_arrow"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
             android:text="博文收藏"
             android:textColor="@color/sidemenu_text"
-            android:textSize="@dimen/user_center_size_menu" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/user_center_menu_marginRight"
-            android:contentDescription="@string/str_null"
-            android:focusable="false"
-            android:src="@drawable/app_recommend_arrow" />
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/str_null"
-        android:src="@drawable/pc_divider_line" />
-
-    <RelativeLayout
-        android:id="@+id/blog_history"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height"
-        android:background="?android:attr/selectableItemBackground">
+            android:textSize="@dimen/user_center_size_menu"/>
 
         <TextView
-            android:id="@+id/tv_blog_history"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
+            android:id="@+id/blog_history"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/user_center_menu_height"
+            android:paddingLeft="@dimen/user_center_menu_marginLeft"
+            android:paddingRight="@dimen/user_center_menu_marginRight"
+            android:drawableRight="@drawable/app_recommend_arrow"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
             android:text="浏览记录"
             android:textColor="@color/sidemenu_text"
-            android:textSize="@dimen/user_center_size_menu" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/user_center_menu_marginRight"
-            android:contentDescription="@string/str_null"
-            android:focusable="false"
-            android:src="@drawable/app_recommend_arrow" />
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/str_null"
-        android:src="@drawable/pc_divider_line" />
-
-    <RelativeLayout
-        android:id="@+id/select_article_type"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height"
-        android:background="?android:attr/selectableItemBackground">
+            android:textSize="@dimen/user_center_size_menu"/>
 
         <TextView
-            android:id="@+id/tv_select_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
+            android:id="@+id/select_article_type"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/user_center_menu_height"
+            android:paddingLeft="@dimen/user_center_menu_marginLeft"
+            android:paddingRight="@dimen/user_center_menu_marginRight"
+            android:drawableRight="@drawable/app_recommend_arrow"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
             android:text="@string/all_type"
             android:textColor="@color/sidemenu_text"
-            android:textSize="@dimen/user_center_size_menu" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/user_center_menu_marginRight"
-            android:contentDescription="@string/str_null"
-            android:focusable="false"
-            android:src="@drawable/app_recommend_arrow" />
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/str_null"
-        android:src="@drawable/pc_divider_line" />
-
-    <RelativeLayout
-        android:id="@+id/aboutView"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height"
-        android:background="?android:attr/selectableItemBackground">
+            android:textSize="@dimen/user_center_size_menu"/>
 
         <TextView
-            android:id="@+id/tv10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
+            android:id="@+id/aboutView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/user_center_menu_height"
+            android:paddingLeft="@dimen/user_center_menu_marginLeft"
+            android:paddingRight="@dimen/user_center_menu_marginRight"
+            android:drawableRight="@drawable/app_recommend_arrow"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
             android:text="@string/about"
             android:textColor="@color/sidemenu_text"
-            android:textSize="@dimen/user_center_size_menu" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/user_center_menu_marginRight"
-            android:contentDescription="@string/str_null"
-            android:focusable="false"
-            android:src="@drawable/app_recommend_arrow" />
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/str_null"
-        android:src="@drawable/pc_divider_line" />
-
-    <RelativeLayout
-        android:id="@+id/settings"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/user_center_menu_height"
-        android:background="?android:attr/selectableItemBackground">
+            android:textSize="@dimen/user_center_size_menu"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginLeft="@dimen/user_center_menu_marginLeft"
+            android:id="@+id/settings"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/user_center_menu_height"
+            android:paddingLeft="@dimen/user_center_menu_marginLeft"
+            android:paddingRight="@dimen/user_center_menu_marginRight"
+            android:drawableRight="@drawable/app_recommend_arrow"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
             android:text="@string/settings"
             android:textColor="@color/sidemenu_text"
-            android:textSize="@dimen/user_center_size_menu" />
+            android:textSize="@dimen/user_center_size_menu"/>
+    </LinearLayout>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/user_center_menu_marginRight"
-            android:contentDescription="@string/str_null"
-            android:focusable="false"
-            android:src="@drawable/app_recommend_arrow" />
-    </RelativeLayout>
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@string/str_null"
-        android:src="@drawable/pc_divider_line" />
 
 </LinearLayout>

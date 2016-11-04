@@ -1,161 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <com.brian.common.view.TitleBar
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"/>
 
-    <TextView
-        android:id="@+id/switch_night_mode"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:drawablePadding="8dp"
-        android:drawableRight="@drawable/setting_switch_selector"
-        android:gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:showDividers="middle|end"
+        android:divider="@drawable/pc_divider_line"
+        android:orientation="vertical"
         android:paddingLeft="16dp"
-        android:paddingRight="20dp"
-        android:text="夜间模式"
-        android:textSize="@dimen/com_text_size_content" />
+        android:paddingRight="20dp">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginLeft="20dp"
-        android:background="@color/com_divider_gray_0" />
 
-    <TextView
-        android:id="@+id/switch_show_ad_text"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:drawablePadding="8dp"
-        android:drawableRight="@drawable/setting_switch_selector"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="20dp"
-        android:text="展示广告"
-        android:textSize="@dimen/com_text_size_content" />
+        <TextView
+            android:id="@+id/switch_night_mode"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableRight="@drawable/setting_switch_selector"
+            android:gravity="center_vertical"
+            android:text="夜间模式"
+            android:textSize="@dimen/com_text_size_content"/>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginLeft="20dp"
-        android:background="@color/com_divider_gray_0" />
+        <TextView
+            android:id="@+id/switch_show_ad_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableRight="@drawable/setting_switch_selector"
+            android:gravity="center_vertical"
+            android:text="展示广告"
+            android:textSize="@dimen/com_text_size_content"/>
 
-    <TextView
-        android:id="@+id/switch_vertical_text"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:drawablePadding="8dp"
-        android:drawableRight="@drawable/setting_switch_selector"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="20dp"
-        android:text="锁定竖屏"
-        android:textSize="@dimen/com_text_size_content" />
+        <TextView
+            android:id="@+id/switch_vertical_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableRight="@drawable/setting_switch_selector"
+            android:gravity="center_vertical"
+            android:text="锁定竖屏"
+            android:textSize="@dimen/com_text_size_content"/>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginLeft="20dp"
-        android:background="@color/com_divider_gray_0" />
+        <TextView
+            android:id="@+id/switch_picinfwifi_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableRight="@drawable/setting_switch_selector"
+            android:gravity="center_vertical"
+            android:text="仅wifi下加载图片"
+            android:textSize="@dimen/com_text_size_content"/>
 
-    <TextView
-        android:id="@+id/switch_picinfwifi_text"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:drawablePadding="8dp"
-        android:drawableRight="@drawable/setting_switch_selector"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="20dp"
-        android:text="仅wifi下加载图片"
-        android:textSize="@dimen/com_text_size_content" />
+        <TextView
+            android:id="@+id/switch_staybg_text"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableRight="@drawable/setting_switch_selector"
+            android:gravity="center_vertical"
+            android:text="退出时是否保留后台"
+            android:textSize="@dimen/com_text_size_content"/>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginLeft="20dp"
-        android:background="@color/com_divider_gray_0" />
+        <TextView
+            android:id="@+id/update"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableRight="@drawable/app_recommend_arrow"
+            android:gravity="center_vertical"
+            android:text="检查更新"
+            android:textSize="@dimen/com_text_size_content"/>
 
-    <TextView
-        android:id="@+id/switch_staybg_text"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="?android:attr/selectableItemBackground"
-        android:drawablePadding="8dp"
-        android:drawableRight="@drawable/setting_switch_selector"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="20dp"
-        android:text="退出时是否保留后台"
-        android:textSize="@dimen/com_text_size_content" />
+        <TextView
+            android:id="@+id/market"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableRight="@drawable/app_recommend_arrow"
+            android:gravity="center_vertical"
+            android:text="去应用市场评分"
+            android:textSize="@dimen/com_text_size_content"/>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginLeft="20dp"
-        android:background="@color/com_divider_gray_0" />
-
-    <TextView
-        android:id="@+id/update"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="检查更新"
-        android:drawableRight="@drawable/app_recommend_arrow"
-        android:background="?android:attr/selectableItemBackground"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="20dp"
-        android:textSize="@dimen/com_text_size_content"/>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginLeft="20dp"
-        android:background="@color/com_divider_gray_0" />
-
-    <TextView
-        android:id="@+id/market"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="去应用市场评分"
-        android:drawableRight="@drawable/app_recommend_arrow"
-        android:background="?android:attr/selectableItemBackground"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="20dp"
-        android:textSize="@dimen/com_text_size_content"/>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginLeft="20dp"
-        android:background="@color/com_divider_gray_0" />
-
-    <TextView
-        android:id="@+id/cache"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="清除缓存"
-        android:drawableRight="@drawable/app_recommend_arrow"
-        android:background="?android:attr/selectableItemBackground"
-        android:gravity="center_vertical"
-        android:paddingLeft="16dp"
-        android:paddingRight="20dp"
-        android:textSize="@dimen/com_text_size_content"/>
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_marginLeft="20dp"
-        android:background="@color/com_divider_gray_0" />
-
+        <TextView
+            android:id="@+id/cache"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableRight="@drawable/app_recommend_arrow"
+            android:gravity="center_vertical"
+            android:text="清除缓存"
+            android:textSize="@dimen/com_text_size_content"/>
+    </LinearLayout>
 </LinearLayout>

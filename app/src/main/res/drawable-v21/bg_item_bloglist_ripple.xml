@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
-    android:color="#888888" >
-    <item android:drawable="@drawable/bg_bloglist_item" />
+    android:color="#888" >
+    <item android:drawable="@color/bloglist_item_bg" />
 </ripple>

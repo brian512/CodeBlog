@@ -39,14 +39,13 @@ public class SlideMenuLayout extends FrameLayout implements OnClickListener {
     @BindView(R.id.bloger)              View mBlogerLy; // 博主
     @BindView(R.id.bloger_head)         CircleImageView mBlogerHeadView; // 博主头像
     @BindView(R.id.bloger_name)         TextView mBlogerNameView; // 博主名
-    @BindView(R.id.select_article_type) View mSelectTypeLy; // 设置类型
+    @BindView(R.id.select_article_type) TextView mSelectTypeView; // 设置类型
     @BindView(R.id.blog_history)        View mHistoryLy;
     @BindView(R.id.blog_favo)           View mFavoLy;
     @BindView(R.id.news)                View mNewsLy;
     @BindView(R.id.aboutView)           View mAboutLy;
     @BindView(R.id.settings)            View mSettingsLy;
     @BindView(R.id.chat)                View viewChat;
-    @BindView(R.id.tv_select_type)      TextView mSelectTypeView;
 
     public SlideMenuLayout(Context context) {
         this(context, null, 0);
@@ -70,7 +69,7 @@ public class SlideMenuLayout extends FrameLayout implements OnClickListener {
         mSelectTypeView.setText(TypeManager.getCurrCateName());
 
         mBlogerLy.setOnClickListener(this);
-        mSelectTypeLy.setOnClickListener(this);
+        mSelectTypeView.setOnClickListener(this);
         mFavoLy.setOnClickListener(this);
         mNewsLy.setOnClickListener(this);
         mHistoryLy.setOnClickListener(this);
@@ -79,7 +78,7 @@ public class SlideMenuLayout extends FrameLayout implements OnClickListener {
         viewChat.setOnClickListener(this);
 
         Bloger bloger = BlogerManager.getsInstance().getCurrBloger();
-        mBlogerNameView.setText(bloger.nickName + "的博客");
+        mBlogerNameView.setText(bloger.nickName);
         LogUtil.log("headUrl=" + bloger.headUrl);
         if (TextUtils.isEmpty(bloger.headUrl)) {
             mBlogerHeadView.setImageResource(R.drawable.ic_default_user);
@@ -158,7 +157,7 @@ public class SlideMenuLayout extends FrameLayout implements OnClickListener {
      */
     @Subscribe
     public void onEventMainThread(CurrBlogerEvent event) {
-        mBlogerNameView.setText(event.bloger.nickName + "的博客");
+        mBlogerNameView.setText(event.bloger.nickName);
         LogUtil.log("headUrl=" + event.bloger.headUrl);
         if (TextUtils.isEmpty(event.bloger.headUrl)) {
             mBlogerHeadView.setImageResource(R.drawable.ic_default_user);

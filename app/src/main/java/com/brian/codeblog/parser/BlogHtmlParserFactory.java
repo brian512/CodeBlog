@@ -15,7 +15,7 @@ public class BlogHtmlParserFactory {
      * @return
      */
     public static IBlogHtmlParser getBlogParser(int type) {
-        LogUtil.log("type=" + type);
+        LogUtil.log("type=" + Integer.toHexString(type));
         IBlogHtmlParser parser = null;
         int webType = TypeManager.getWebType(type);
         switch (webType) {
