@@ -113,6 +113,19 @@
             android:textSize="@dimen/user_center_size_menu"/>
 
         <TextView
+            android:id="@+id/payback"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/user_center_menu_height"
+            android:paddingLeft="@dimen/user_center_menu_marginLeft"
+            android:paddingRight="@dimen/user_center_menu_marginRight"
+            android:drawableRight="@drawable/app_recommend_arrow"
+            android:background="?android:attr/selectableItemBackground"
+            android:gravity="center_vertical"
+            android:text="@string/payback"
+            android:textColor="@color/sidemenu_text"
+            android:textSize="@dimen/user_center_size_menu"/>
+
+        <TextView
             android:id="@+id/aboutView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/user_center_menu_height"

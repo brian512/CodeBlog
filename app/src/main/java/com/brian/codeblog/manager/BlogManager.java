@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.datacenter.database.BlogInfoTable;
 import com.brian.codeblog.model.BlogInfo;
+import com.brian.codeblog.stat.UsageStatsManager;
 import com.brian.common.utils.FileUtil;
 import com.brian.common.utils.LogUtil;
 import com.brian.common.utils.Md5;
@@ -47,7 +48,7 @@ public class BlogManager {
             return false;
         }
         blogInfo.isFavo = isFavo;
-        UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_FAVO, TypeManager.getBlogName(blogInfo.type));
+        UsageStatsManager.reportData(UsageStatsManager.USAGE_FAVO, TypeManager.getBlogName(blogInfo.type));
         return BlogInfoTable.getInstance().doFavo(blogInfo);
     }
 

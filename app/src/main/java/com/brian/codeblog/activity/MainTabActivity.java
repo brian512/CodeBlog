@@ -19,7 +19,7 @@ import com.brian.codeblog.datacenter.preference.CommonPreference;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.manager.PushManager;
 import com.brian.codeblog.manager.ShareManager;
-import com.brian.codeblog.manager.UsageStatsManager;
+import com.brian.codeblog.stat.UsageStatsManager;
 import com.brian.codeblog.update.UpdateManager;
 import com.brian.common.tools.DayNightHelper;
 import com.brian.common.utils.TimeUtil;
@@ -31,13 +31,14 @@ import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.umeng.onlineconfig.OnlineConfigLog;
 import com.umeng.onlineconfig.UmengOnlineConfigureListener;
 
+import net.youmi.android.normal.spot.SpotManager;
+
 import org.json.JSONObject;
 
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import tj.zl.op.normal.spot.SpotManager;
 
 /**
  * 主界面
@@ -108,7 +109,7 @@ public class MainTabActivity extends BaseActivity {
         }
         mViewpager.setCurrentItem(initPosition, false);
 
-        UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_MAIN_TAB, mTabAdapter.getPageTitle(initPosition));
+        UsageStatsManager.reportData(UsageStatsManager.USAGE_MAIN_TAB, mTabAdapter.getPageTitle(initPosition));
     }
 
     @Override
@@ -135,7 +136,7 @@ public class MainTabActivity extends BaseActivity {
             public void onClick(View v) {
                 SearchActivity.startActivity(MainTabActivity.this);
 
-                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SEARCH);
+                UsageStatsManager.reportData(UsageStatsManager.USAGE_SEARCH);
             }
         });
 
@@ -145,7 +146,7 @@ public class MainTabActivity extends BaseActivity {
             }
             @Override
             public void onPageSelected(int position) {
-                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_MAIN_TAB, mTabAdapter.getPageTitle(position));
+                UsageStatsManager.reportData(UsageStatsManager.USAGE_MAIN_TAB, mTabAdapter.getPageTitle(position));
             }
             @Override
             public void onPageScrollStateChanged(int state) {

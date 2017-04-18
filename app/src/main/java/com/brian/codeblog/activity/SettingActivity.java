@@ -9,13 +9,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-import com.brian.codeblog.Env;
 import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.manager.ShareManager;
-import com.brian.codeblog.manager.UsageStatsManager;
+import com.brian.codeblog.pay.BmobPayHelper;
+import com.brian.codeblog.stat.UsageStatsManager;
 import com.brian.codeblog.update.UpdateManager;
 import com.brian.common.tools.DayNightHelper;
+import com.brian.common.tools.Env;
 import com.brian.common.utils.FileUtil;
 import com.brian.common.utils.MarketUtils;
 import com.brian.common.utils.ToastUtil;
@@ -38,6 +39,7 @@ public class SettingActivity extends BaseActivity {
     @BindView(R.id.switch_staybg_text)      TextView mSwitchStayBgText;
     @BindView(R.id.market)                  TextView mMarketText;
     @BindView(R.id.update)                  TextView mCheckUpdateText;
+    @BindView(R.id.install_weixin_plugin)   TextView mInstallWeixinPluginText;
     @BindView(R.id.cache)                   TextView mClearCacheText;
 
     public static void startActivity(Activity activity) {
@@ -76,7 +78,7 @@ public class SettingActivity extends BaseActivity {
 
             @Override
             public void onClick(View v) {
-                UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_LIST, "Ad");
+                UsageStatsManager.reportData(UsageStatsManager.SETTING_LIST, "Ad");
                 if (SettingPreference.getInstance().getAdsEnable()) {
                     showAdConfirmDialog();
                 } else {
@@ -95,7 +97,7 @@ public class SettingActivity extends BaseActivity {
             
             @Override
             public void onClick(View v) {
-                UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_LIST, "screen");
+                UsageStatsManager.reportData(UsageStatsManager.SETTING_LIST, "screen");
                 boolean selected = mSwitchVerticalText.isSelected();
                 selected = !selected;
                 mSwitchVerticalText.setSelected(selected);
@@ -110,7 +112,7 @@ public class SettingActivity extends BaseActivity {
             
             @Override
             public void onClick(View v) {
-                UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_LIST, "PicWifi");
+                UsageStatsManager.reportData(UsageStatsManager.SETTING_LIST, "PicWifi");
                 boolean selected = mSwitchPicWifiText.isSelected();
                 selected = !selected;
                 mSwitchPicWifiText.setSelected(selected);
@@ -125,7 +127,7 @@ public class SettingActivity extends BaseActivity {
             
             @Override
             public void onClick(View v) {
-                UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_LIST, "bg");
+                UsageStatsManager.reportData(UsageStatsManager.SETTING_LIST, "bg");
                 boolean selected = mSwitchStayBgText.isSelected();
                 selected = !selected;
                 mSwitchStayBgText.setSelected(selected);
@@ -140,7 +142,7 @@ public class SettingActivity extends BaseActivity {
 
             @Override
             public void onClick(View v) {
-                UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_NIGHT, "night_mode");
+                UsageStatsManager.reportData(UsageStatsManager.SETTING_NIGHT, "night_mode");
                 boolean selected = mNightModeText.isSelected();
                 selected = !selected;
                 mNightModeText.setSelected(selected);
@@ -155,7 +157,7 @@ public class SettingActivity extends BaseActivity {
         mMarketText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_LIST, "market");
+                UsageStatsManager.reportData(UsageStatsManager.SETTING_LIST, "market");
                 MarketUtils.launchAppDetail(getPackageName(), "");
             }
         });
@@ -163,15 +165,22 @@ public class SettingActivity extends BaseActivity {
         mCheckUpdateText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_LIST, "update");
+                UsageStatsManager.reportData(UsageStatsManager.SETTING_LIST, "update");
                 UpdateManager.getInstance().checkUpdate(Env.getContext());
+            }
+        });
+
+        mInstallWeixinPluginText.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BmobPayHelper.installBmobPayPlugin(Env.getContext());
             }
         });
 
         mClearCacheText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_LIST, "cache");
+                UsageStatsManager.reportData(UsageStatsManager.SETTING_LIST, "cache");
                 ToastUtil.showMsg("清除了缓存：" + FileUtil.fileSizeToString(DataManager.getInstance().getRemovableDataSize()));
                 DataManager.getInstance().clearAllCacheData();
             }
@@ -187,7 +196,7 @@ public class SettingActivity extends BaseActivity {
                 .setPositiveBtnListener(new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        UsageStatsManager.sendUsageData(UsageStatsManager.SETTING_AD);
+                        UsageStatsManager.reportData(UsageStatsManager.SETTING_AD);
                         boolean selected = mSwitchAdText.isSelected();
                         selected = !selected;
                         mSwitchAdText.setSelected(selected);

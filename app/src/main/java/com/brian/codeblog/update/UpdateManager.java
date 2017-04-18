@@ -4,7 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.brian.codeblog.Config;
-import com.brian.codeblog.Env;
+import com.brian.common.tools.Env;
 import com.xiaomi.market.sdk.UpdateResponse;
 import com.xiaomi.market.sdk.UpdateStatus;
 import com.xiaomi.market.sdk.XiaomiUpdateAgent;

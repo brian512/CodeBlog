@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.brian.codeblog.Env;
+import com.brian.common.tools.Env;
 import com.brian.codeblog.model.ChatMsgInfo;
 import com.brian.common.utils.ViewHolderUtil;
 import com.brian.csdnblog.R;

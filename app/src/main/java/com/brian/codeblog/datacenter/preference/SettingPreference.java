@@ -1,5 +1,7 @@
 package com.brian.codeblog.datacenter.preference;
 
+import com.brian.common.datacenter.preference.BasePreference;
+
 /**
  * 设置相关的偏好
  * Created by Brian on 2016/9/10 0010.

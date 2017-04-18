@@ -1,9 +1,9 @@
 package com.brian.codeblog.proctocol;
 
 import com.brian.codeblog.model.BaseType;
-import com.brian.codeblog.proctocol.base.AbstractHttpClient;
-import com.brian.codeblog.proctocol.base.BaseRequestParam;
-import com.brian.codeblog.proctocol.base.HttpClientParam;
+import com.brian.common.datacenter.network.AbstractHttpClient;
+import com.brian.common.datacenter.network.BaseRequestParam;
+import com.brian.common.datacenter.network.HttpClientParam;
 
 /**
  * 机器人聊天请求

@@ -5,8 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
-import com.brian.common.tools.ThreadManager;
 import com.brian.codeblog.model.BlogInfo;
+import com.brian.common.datacenter.database.BaseTable;
+import com.brian.common.tools.ThreadManager;
 import com.brian.common.utils.LogUtil;
 
 import org.json.JSONException;

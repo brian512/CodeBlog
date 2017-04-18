@@ -1,5 +1,7 @@
 package com.brian.codeblog.datacenter.preference;
 
+import com.brian.common.datacenter.preference.BasePreference;
+
 /**
  * 搜索相关的一些数据保存
  * Created by huamm on 2016/11/1 0001.

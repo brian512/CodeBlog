@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Environment;
 
-import com.brian.codeblog.Env;
 import com.brian.codeblog.activity.MainTabActivity;
 import com.brian.common.utils.LogUtil;
 import com.umeng.analytics.MobclickAgent;

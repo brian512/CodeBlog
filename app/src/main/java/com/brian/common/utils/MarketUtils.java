@@ -9,7 +9,7 @@ import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.text.TextUtils;
 
-import com.brian.codeblog.Env;
+import com.brian.common.tools.Env;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,18 +93,35 @@ public class MarketUtils {
      */
     public static void launchAppDetail(String appPkg, String marketPkg) {
         try {
+
             if (TextUtils.isEmpty(appPkg)) {
                 return;
             }
+
             Uri uri = Uri.parse("market://details?id=" + appPkg);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+
+            launchAppDetail(uri, marketPkg);
+
+        } catch (Exception e) {
+            LogUtil.printError(e);
+        }
+    }
+
+    public static void launchAppDetail(Uri appUri, String marketPkg) {
+
+        if (appUri == null){
+            return;
+        }
+        try {
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, appUri);
             if (!TextUtils.isEmpty(marketPkg)) {
                 intent.setPackage(marketPkg);
             }
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Env.getContext().startActivity(intent);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtil.printError(e);
         }
     }
 }

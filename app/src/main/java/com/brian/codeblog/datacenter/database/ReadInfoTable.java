@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.brian.codeblog.model.ReadInfo;
+import com.brian.common.datacenter.database.BaseTable;
 import com.brian.common.utils.LogUtil;
 
 import org.json.JSONException;
@@ -17,7 +18,7 @@ import java.util.Locale;
  * Created by huamm on 2016/9/26 0026.
  */
 
-public class ReadInfoTable extends BaseTable<ReadInfo>  {
+public class ReadInfoTable extends BaseTable<ReadInfo> {
     private static final String TAG = ReadInfoTable.class.getSimpleName();
 
     // 文章表名称

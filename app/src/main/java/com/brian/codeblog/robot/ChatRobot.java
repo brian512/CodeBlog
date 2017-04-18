@@ -3,10 +3,10 @@ package com.brian.codeblog.robot;
 import android.text.TextUtils;
 
 import com.brian.codeblog.Config;
-import com.brian.codeblog.Env;
-import com.brian.codeblog.manager.UsageStatsManager;
+import com.brian.common.tools.Env;
+import com.brian.codeblog.stat.UsageStatsManager;
 import com.brian.codeblog.proctocol.HttpGetChatRequest;
-import com.brian.codeblog.proctocol.base.IResponseCallback;
+import com.brian.common.datacenter.network.IResponseCallback;
 import com.brian.common.utils.LogUtil;
 import com.brian.common.utils.NetStatusUtil;
 import com.brian.common.utils.RandomUtil;
@@ -121,7 +121,7 @@ public class ChatRobot {
             }
             
         } catch (Exception e) {
-            UsageStatsManager.reportErrorToUmeng(e);
+            UsageStatsManager.reportError(e);
         }
     }
     

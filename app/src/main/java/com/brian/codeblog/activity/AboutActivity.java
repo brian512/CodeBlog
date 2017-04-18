@@ -13,7 +13,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import com.brian.codeblog.manager.ShareManager;
-import com.brian.codeblog.manager.UsageStatsManager;
+import com.brian.codeblog.stat.UsageStatsManager;
 import com.brian.common.utils.AppInfoUtil;
 import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;
@@ -78,7 +78,7 @@ public class AboutActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 // 友盟统计分享事件
-                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_LOOKUP_BLOGER);
+                UsageStatsManager.reportData(UsageStatsManager.USAGE_LOOKUP_BLOGER);
             }
         });
 
@@ -88,7 +88,7 @@ public class AboutActivity extends BaseActivity {
                 try {
                     String url="mqqwpa://im/chat?chat_type=group&uin=194067225";
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-                    UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_LOOKUP_QQ);
+                    UsageStatsManager.reportData(UsageStatsManager.USAGE_LOOKUP_QQ);
                 } catch (ActivityNotFoundException e) {
                     e.printStackTrace();
                 }

@@ -3,7 +3,7 @@ package com.brian.codeblog.parser;
 
 import android.text.TextUtils;
 
-import com.brian.codeblog.Env;
+import com.brian.common.tools.Env;
 import com.brian.codeblog.manager.TypeManager;
 import com.brian.codeblog.model.BlogInfo;
 import com.brian.codeblog.model.Bloger;

@@ -5,9 +5,13 @@ import android.app.Application;
 import android.content.Context;
 import android.os.StrictMode;
 
-import com.brian.common.tools.DayNightHelper;
-import com.brian.common.utils.AppInfoUtil;
+import com.brian.codeblog.ad.AdMobHelper;
 import com.brian.codeblog.manager.ConfigHelper;
+import com.brian.codeblog.manager.PushManager;
+import com.brian.codeblog.pay.BmobPayHelper;
+import com.brian.common.tools.DayNightHelper;
+import com.brian.common.tools.Env;
+import com.brian.common.utils.AppInfoUtil;
 import com.brian.common.utils.LogUtil;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
@@ -31,10 +35,15 @@ public class App extends Application {
         if (PROCESS_NAME_MAIN.equals(AppInfoUtil.getProcessName(this))) {
             ConfigHelper.init(this);
             LogUtil.w("Config.DEBUG_ENABLE=" + Config.DEBUG_ENABLE);
-            setStrictModeEnable(Config.DEBUG_ENABLE);
+//            setStrictModeEnable(Config.DEBUG_ENABLE);
             DayNightHelper.getInstance().initDayNightMode();
+
+            AdMobHelper.init(this);
+            BmobPayHelper.initPay();
         }
         handleCrash();
+
+        PushManager.getInstance().initPushMsg(this);
     }
 
     private void handleCrash() {

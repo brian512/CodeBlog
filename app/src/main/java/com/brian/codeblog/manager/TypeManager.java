@@ -2,6 +2,7 @@ package com.brian.codeblog.manager;
 
 import com.brian.codeblog.model.event.TypeChangeEvent;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
+import com.brian.codeblog.stat.UsageStatsManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -38,7 +39,7 @@ public class TypeManager {
         if (sCateType > Constants.TYPES_WORD.length) {
             sCateType = 0;
         }
-        UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_BLOG_CATE, Constants.TYPES_WORD[sCateType]);
+        UsageStatsManager.reportData(UsageStatsManager.USAGE_BLOG_CATE, Constants.TYPES_WORD[sCateType]);
     }
 
     public static int initType(int webType) {
@@ -54,7 +55,7 @@ public class TypeManager {
             TypeChangeEvent event = new TypeChangeEvent();
             event.cateType = cateType;
             EventBus.getDefault().post(event);
-            UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_BLOG_CATE, Constants.TYPES_WORD[cateType]);
+            UsageStatsManager.reportData(UsageStatsManager.USAGE_BLOG_CATE, Constants.TYPES_WORD[cateType]);
         }
     }
 

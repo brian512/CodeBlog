@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "684662663045",
+    "firebase_url": "https://codeblog-2a1c9.firebaseio.com",
+    "project_id": "codeblog-2a1c9",
+    "storage_bucket": "codeblog-2a1c9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:684662663045:android:8f632dd5ac545089",
+        "android_client_info": {
+          "package_name": "com.brian.csdnblog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "684662663045-puba4f8ftv3f5qjt6qif3v0nj8faop1s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMLqLShEioKnS9TLFg8Hid7SiX_K3t6oI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

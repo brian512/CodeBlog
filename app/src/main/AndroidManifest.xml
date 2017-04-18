@@ -21,12 +21,6 @@
     <!--小米更新-->
     <uses-permission android:name="com.xiaomi.market.sdk.UPDATE" />
 
-    <!--小米推送-->
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <permission android:name="com.brian.csdnblog.permission.MIPUSH_RECEIVE" android:protectionLevel="signature" />
-    <uses-permission android:name="com.brian.csdnblog.permission.MIPUSH_RECEIVE" />
-
     <application
         android:name="com.brian.codeblog.App"
         android:allowBackup="true"
@@ -109,73 +103,6 @@
             </intent-filter>
         </receiver>
 
-        <!--小米推送-->
-        <service
-            android:enabled="true"
-            android:process=":pushservice"
-            android:name="com.xiaomi.push.service.XMPushService"/>
-        <service
-            android:name="com.xiaomi.push.service.XMJobService"
-            android:enabled="true"
-            android:exported="false"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:process=":pushservice" />
-        <!--注：此service必须在3.0.1版本以后（包括3.0.1版本）加入-->
-        <service
-            android:enabled="true"
-            android:exported="true"
-            android:name="com.xiaomi.mipush.sdk.PushMessageHandler" />
-        <service android:enabled="true"
-            android:name="com.xiaomi.mipush.sdk.MessageHandleService" />
-        <!--注：此service必须在2.2.5版本以后（包括2.2.5版本）加入-->
-        <receiver
-            android:exported="true"
-            android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver" >
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:exported="false"
-            android:process=":pushservice"
-            android:name="com.xiaomi.push.service.receivers.PingReceiver" >
-            <intent-filter>
-                <action android:name="com.xiaomi.push.PING_TIMER" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:exported="true"
-            android:name="com.brian.codeblog.receiver.MiPushMessageReceiver">
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.xiaomi.mipush.ERROR" />
-            </intent-filter>
-        </receiver>
-
-        <!--有米广告-->
-        <activity
-            android:name="tj.zl.op.EA"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Light.NoTitleBar" >
-        </activity>
-        <service
-            android:name="tj.zl.op.EB"
-            android:exported="false" >
-        </service>
-        <receiver
-            android:name="tj.zl.op.EC" >
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_ADDED" />
-                <data android:scheme="package" />
-            </intent-filter>
-        </receiver>
-
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="54795b2ffd98c50c0d0005b0" />
@@ -185,6 +112,20 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="${UMENG_CHANNEL_VALUE}" />
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.youmi.android.addemo.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true" >
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider" />
+        </provider >
+
+        <!-- bmob支付免责申明页面 -->
+        <activity android:name="cn.bmob.pay.v3.act.PayAct" />
     </application>
 
 </manifest>

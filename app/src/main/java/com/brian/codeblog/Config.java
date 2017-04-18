@@ -4,6 +4,7 @@ package com.brian.codeblog;
 import android.text.TextUtils;
 
 import com.brian.codeblog.manager.Constants;
+import com.brian.common.tools.Env;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 
 public class Config {
@@ -24,7 +25,9 @@ public class Config {
     private static final String KEY_CHAT = "key_chat";
     private static final String KEY_CHAT_WELCOME = "key_chat_welcome";
     private static final String KEY_CHAT_UNKNOW = "key_chat_unknow";
-    
+
+    private static final String KEY_PAYBACK_PRICE = "payback_price";
+
     
     public static String getTulingUrl() {
         return getConfigParams(KEY_TULING);
@@ -59,7 +62,19 @@ public class Config {
     public static String getChatJson() {
         return getConfigParams(KEY_CHAT);
     }
-    
+
+    public static double getPaybackPrice() {
+        String payback = getConfigParams(KEY_PAYBACK_PRICE);
+        double price = 1.68;
+        if (!TextUtils.isEmpty(payback)) {
+            try {
+                price = Double.valueOf(payback);
+            } catch (Exception e) {
+            }
+        }
+        return price;
+    }
+
     private static String getConfigParams(String key) {
         return OnlineConfigAgent.getInstance().getConfigParams(Env.getContext(), key);
     }

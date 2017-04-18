@@ -2,7 +2,7 @@ package com.brian.codeblog.parser;
 
 import android.text.TextUtils;
 
-import com.brian.codeblog.Env;
+import com.brian.common.tools.Env;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
 import com.brian.codeblog.manager.BlogerManager;
 import com.brian.codeblog.manager.TypeManager;
@@ -196,7 +196,7 @@ public class ITEyeHtmlParser implements IBlogHtmlParser {
         
         // 获取文档内容
         Document doc = Jsoup.parse(contentSrc);
-        LogUtil.d("doc1=" + doc);
+//        LogUtil.d("doc1=" + doc);
         Element detail = doc.getElementsByClass("blog_main").get(0);
         detail.getElementById("bottoms").remove();
         detail.getElementsByClass("blog_nav").remove();
@@ -206,7 +206,7 @@ public class ITEyeHtmlParser implements IBlogHtmlParser {
         detail.getElementsByClass("boutique-curr-box").remove();
         detail.getElementsByClass("blog_comment").remove();
         detail.getElementsByTag("iframe").remove();
-        LogUtil.d("detai=" + detail);
+//        LogUtil.d("detai=" + detail);
         
         // 处理代码块-markdown
         Elements elements = detail.getElementsByClass("dp-highlighter");

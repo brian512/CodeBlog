@@ -12,12 +12,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
 import com.brian.codeblog.Config;
-import com.brian.codeblog.Env;
 import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.manager.AdHelper;
-import com.brian.codeblog.manager.PushManager;
+import com.brian.common.tools.Env;
 import com.brian.common.utils.LogUtil;
 import com.brian.common.utils.NetStatusUtil;
 import com.brian.common.utils.PermissionUtil;
@@ -26,15 +25,15 @@ import com.brian.common.utils.UIUtil;
 import com.brian.csdnblog.R;
 import com.umeng.analytics.MobclickAgent;
 
+import net.youmi.android.normal.common.ErrorCode;
+import net.youmi.android.normal.spot.SplashViewSettings;
+import net.youmi.android.normal.spot.SpotListener;
+import net.youmi.android.normal.spot.SpotManager;
+
 import java.util.List;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
-import tj.zl.op.normal.common.ErrorCode;
-import tj.zl.op.normal.spot.SplashViewSettings;
-import tj.zl.op.normal.spot.SpotListener;
-import tj.zl.op.normal.spot.SpotManager;
-
 
 public class SplashActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
     private static final String TAG = SplashActivity.class.getSimpleName();
@@ -78,7 +77,6 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
     }
 
     private void delayInitTask() {
-        PushManager.getInstance().initPushMsg(Env.getContext());
         if (isFirstLaunch()) {
             createShortCut();// 创建桌面快捷方式
 
@@ -88,7 +86,7 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
         }
     }
 
-    private void initAD() {
+    private void initAd() {
         Context context = this.getApplicationContext();
         AdHelper.initAd(context);
         if (!AdHelper.isAdCanShow || !NetStatusUtil.isWifiNet(context) || !SettingPreference.getInstance().getAdsEnable()) {
@@ -158,7 +156,10 @@ public class SplashActivity extends BaseActivity implements EasyPermissions.Perm
 
     @AfterPermissionGranted(PermissionUtil.PERMISSION_REQUEST_CODE_INIT)
     private void doTaskAfterPermission() {
-        initAD();
+        if (CommonPreference.getInstance().getPayCount() <= 0) {
+            // 有打赏则不显示广告
+            initAd();
+        }
         jumpMainActivityDeLay(2000); // 防止卡在广告页
     }
 

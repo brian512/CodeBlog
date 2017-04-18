@@ -13,13 +13,14 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.brian.codeblog.Env;
 import com.brian.codeblog.manager.BlogerManager;
 import com.brian.codeblog.manager.Constants;
 import com.brian.codeblog.manager.TypeManager;
-import com.brian.codeblog.manager.UsageStatsManager;
 import com.brian.codeblog.model.Bloger;
 import com.brian.codeblog.model.event.CurrBlogerEvent;
+import com.brian.codeblog.pay.BmobPayHelper;
+import com.brian.codeblog.stat.UsageStatsManager;
+import com.brian.common.tools.Env;
 import com.brian.common.utils.LogUtil;
 import com.brian.common.view.CircleImageView;
 import com.brian.csdnblog.R;
@@ -43,9 +44,10 @@ public class SlideMenuLayout extends FrameLayout implements OnClickListener {
     @BindView(R.id.blog_history)        View mHistoryLy;
     @BindView(R.id.blog_favo)           View mFavoLy;
     @BindView(R.id.news)                View mNewsLy;
+    @BindView(R.id.payback)             View mPaybackLy;
     @BindView(R.id.aboutView)           View mAboutLy;
     @BindView(R.id.settings)            View mSettingsLy;
-    @BindView(R.id.chat)                View viewChat;
+    @BindView(R.id.chat)                View mChatLy;
 
     public SlideMenuLayout(Context context) {
         this(context, null, 0);
@@ -75,7 +77,8 @@ public class SlideMenuLayout extends FrameLayout implements OnClickListener {
         mHistoryLy.setOnClickListener(this);
         mAboutLy.setOnClickListener(this);
         mSettingsLy.setOnClickListener(this);
-        viewChat.setOnClickListener(this);
+        mChatLy.setOnClickListener(this);
+        mPaybackLy.setOnClickListener(this);
 
         Bloger bloger = BlogerManager.getsInstance().getCurrBloger();
         mBlogerNameView.setText(bloger.nickName);
@@ -91,36 +94,40 @@ public class SlideMenuLayout extends FrameLayout implements OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.bloger: // 博主博文列表入口
-                UsageStatsManager.sendUsageData(UsageStatsManager.MENU_LIST, "bloger");
+                UsageStatsManager.reportData(UsageStatsManager.MENU_LIST, "bloger");
                 Bloger bloger = BlogerManager.getsInstance().getCurrBloger();
                 BlogerBlogListActivity.startActivity(getActivity(), bloger.blogerType, bloger);
                 break;
             case R.id.aboutView: // 关于
-                UsageStatsManager.sendUsageData(UsageStatsManager.MENU_LIST, "about");
+                UsageStatsManager.reportData(UsageStatsManager.MENU_LIST, "about");
                 AboutActivity.startActivity(getActivity());
                 break;
             case R.id.settings: // 设置
-                UsageStatsManager.sendUsageData(UsageStatsManager.MENU_LIST, "setting");
+                UsageStatsManager.reportData(UsageStatsManager.MENU_LIST, "setting");
                 SettingActivity.startActivity(getActivity());
                 break;
             case R.id.chat: // 聊天
-                UsageStatsManager.sendUsageData(UsageStatsManager.MENU_LIST, "chat");
+                UsageStatsManager.reportData(UsageStatsManager.MENU_LIST, "chat");
                 ChatActivity.startActivity(getActivity());
                 break;
+            case R.id.payback: // 打赏
+                UsageStatsManager.reportData(UsageStatsManager.MENU_LIST, "payback");
+                BmobPayHelper.pay("打赏作者");
+                break;
             case R.id.blog_favo: // 收藏的文章
-                UsageStatsManager.sendUsageData(UsageStatsManager.MENU_LIST, "favo");
+                UsageStatsManager.reportData(UsageStatsManager.MENU_LIST, "favo");
                 BlogListActivity.startActivity(getActivity(), BlogListActivity.TYPE_FAVO);
                 break;
             case R.id.news: // 新闻
-                UsageStatsManager.sendUsageData(UsageStatsManager.MENU_LIST, "news");
+                UsageStatsManager.reportData(UsageStatsManager.MENU_LIST, "news");
                 BlogListActivity.startActivity(getActivity(), BlogListActivity.TYPE_NEWS);
                 break;
             case R.id.blog_history: // 查看过的文章
-                UsageStatsManager.sendUsageData(UsageStatsManager.MENU_LIST, "history");
+                UsageStatsManager.reportData(UsageStatsManager.MENU_LIST, "history");
                 BlogListActivity.startActivity(getActivity(), BlogListActivity.TYPE_HISTORY);
                 break;
             case R.id.select_article_type: // 设置文章类型
-                UsageStatsManager.sendUsageData(UsageStatsManager.MENU_LIST, "articletype");
+                UsageStatsManager.reportData(UsageStatsManager.MENU_LIST, "articletype");
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("选择文章类型");
 
@@ -135,7 +142,7 @@ public class SlideMenuLayout extends FrameLayout implements OnClickListener {
                 builder.show();
                 break;
             default:
-                UsageStatsManager.sendUsageData(UsageStatsManager.MENU_LIST, "unknow");
+                UsageStatsManager.reportData(UsageStatsManager.MENU_LIST, "unknow");
                 break;
         }
     }

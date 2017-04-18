@@ -1,6 +1,7 @@
 package com.brian.codeblog.datacenter.preference;
 
 import com.brian.codeblog.model.Bloger;
+import com.brian.common.datacenter.preference.BasePreference;
 
 /**
  * Created by Brian on 2016/9/11 0011.
@@ -14,6 +15,8 @@ public class CommonPreference extends BasePreference {
 
     private static final String KEY_BLOG_COUNT = "pre_key_blog_count";
     private static final String KEY_BLOG_TIME = "pre_key_blog_time";
+
+    private static final String KEY_PAY_COUNT = "pre_key_pay_count";
 
     private static final String KEY_BLOGER_JSON = "pre_key_curr_bloger_json";
 
@@ -93,6 +96,18 @@ public class CommonPreference extends BasePreference {
 
     public void addBlogReadTime(long deltaTime) {
         putInt(KEY_BLOG_TIME, getBlogReadTime() + (int)deltaTime);
+    }
+
+    public int getPayCount() {
+        return getInt(KEY_PAY_COUNT, 0);
+    }
+
+    public void addPayCount(int count) {
+        int total = getPayCount() + count;
+        if (total < 0) {
+            total = 0;
+        }
+        putInt(KEY_PAY_COUNT, total);
     }
 
     public boolean getAdIsOpened() {

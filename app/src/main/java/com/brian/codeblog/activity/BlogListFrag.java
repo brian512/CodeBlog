@@ -1,7 +1,6 @@
 
 package com.brian.codeblog.activity;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,37 +9,38 @@ import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.brian.codeblog.Config;
-import com.brian.codeblog.Env;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.manager.AdHelper;
 import com.brian.codeblog.manager.BlogManager;
 import com.brian.codeblog.manager.TypeManager;
-import com.brian.codeblog.manager.UsageStatsManager;
 import com.brian.codeblog.model.BlogInfo;
 import com.brian.codeblog.model.Bloger;
 import com.brian.codeblog.model.event.TypeChangeEvent;
 import com.brian.codeblog.parser.BlogHtmlParserFactory;
 import com.brian.codeblog.parser.IBlogHtmlParser;
 import com.brian.codeblog.proctocol.HttpGetBlogListRequest;
-import com.brian.codeblog.proctocol.base.IResponseCallback;
+import com.brian.codeblog.stat.UsageStatsManager;
+import com.brian.common.datacenter.network.IResponseCallback;
 import com.brian.common.tools.CommonAdapter;
+import com.brian.common.tools.Env;
 import com.brian.common.tools.ThreadManager;
 import com.brian.common.utils.FileUtil;
 import com.brian.common.utils.LogUtil;
 import com.brian.common.utils.ResourceUtil;
 import com.brian.common.view.RefreshLayout;
 import com.brian.csdnblog.R;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.umeng.analytics.MobclickAgent;
@@ -52,8 +52,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import tj.zl.op.normal.banner.BannerManager;
-import tj.zl.op.normal.banner.BannerViewListener;
 
 /**
  * Fragment页面
@@ -67,6 +65,8 @@ public class BlogListFrag extends Fragment {
     @BindView(R.id.blogListView) ListView mBlogListView;// 博客列表
     @BindView(R.id.no_blog) View mNoBlogView; // 无数据时显示
     private View mFooterLayout;
+
+    private AdView mAdView;
 
     private boolean mRefreshable = true;
     
@@ -114,6 +114,9 @@ public class BlogListFrag extends Fragment {
     }
 
     private void initUI(LayoutInflater inflater) {
+        mRootLy = inflater.inflate(R.layout.frag_bloglist, null);
+        ButterKnife.bind(this, mRootLy);
+
         mAdapter = new CommonAdapter<BlogInfo>(Env.getContext(), null, R.layout.item_list_blog) {
             private ForegroundColorSpan mColorSpanName = new ForegroundColorSpan(ResourceUtil.getColor(R.color.light_blue));
             @Override
@@ -144,7 +147,7 @@ public class BlogListFrag extends Fragment {
                             Bloger bloger = Bloger.fromJson(item.blogerJson);
                             if (bloger != null) {
                                 BlogerBlogListActivity.startActivity(getActivity(), mType, bloger);
-                                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_BLOGER_ENTR, "bloglist");
+                                UsageStatsManager.reportData(UsageStatsManager.USAGE_BLOGER_ENTR, "bloglist");
                             }
                         }
                     }
@@ -174,47 +177,67 @@ public class BlogListFrag extends Fragment {
             }
         };
 
-        mRootLy = inflater.inflate(R.layout.frag_bloglist, null);
-        ButterKnife.bind(this, mRootLy);
-
         mRefreshLayout.setChildView(mBlogListView);
         mRefreshLayout.setColorSchemeResources(R.color.blue,
                 R.color.green_yellow,
                 R.color.red,
                 R.color.yellow);
 
-        if (AdHelper.isAdCanShow && SettingPreference.getInstance().getAdsEnable() && Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            final LinearLayout adLy = new LinearLayout(getContext());
-            final View bannerView = BannerManager.getInstance(getContext()).getBannerView(new BannerViewListener() {
-                @Override
-                public void onRequestSuccess() {
-                    LogUtil.i(TAG, "YoumiSdk 请求广告条成功");
-                }
+        if (AdHelper.isAdCanShow && SettingPreference.getInstance().getAdsEnable()) {
+//            final LinearLayout adLy = new LinearLayout(getContext());
+//            final View bannerView = BannerManager.getInstance(getContext()).getBannerView(getContext(), new BannerViewListener() {
+//                @Override
+//                public void onRequestSuccess() {
+//                    LogUtil.i(TAG, "YoumiSdk 请求广告条成功");
+//                }
+//
+//                @Override
+//                public void onSwitchBanner() {
+//                    LogUtil.i(TAG, "YoumiSdk 广告条切换");
+//                }
+//
+//                @Override
+//                public void onRequestFailed() {
+//                    mBlogListView.removeHeaderView(adLy);
+//                    LogUtil.e(TAG, "YoumiSdk 请求广告条失败");
+//                }
+//            });
+//            adLy.removeAllViews();
+//            adLy.addView(bannerView);
+//            adLy.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                        bannerView.dispatchTouchEvent(event);
+//                        bannerView.performClick();
+//                    }
+//                    return true;
+//                }
+//            });
 
-                @Override
-                public void onSwitchBanner() {
-                    LogUtil.i(TAG, "YoumiSdk 广告条切换");
-                }
-
-                @Override
-                public void onRequestFailed() {
-                    mBlogListView.removeHeaderView(adLy);
-                    LogUtil.e(TAG, "YoumiSdk 请求广告条失败");
-                }
-            });
-            adLy.removeAllViews();
-            adLy.addView(bannerView);
-            adLy.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        bannerView.dispatchTouchEvent(event);
-                        bannerView.performClick();
+            if (mAdView == null) {
+                mAdView = (AdView)inflater.inflate(R.layout.view_bloglist_ad, null);
+                mAdView.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdLoaded() {
+                        super.onAdLoaded();
+                        LogUtil.log("onAdLoaded");
+                        mBlogListView.addHeaderView(mAdView);
                     }
-                    return true;
-                }
-            });
-            mBlogListView.addHeaderView(adLy);
+
+                    @Override
+                    public void onAdFailedToLoad(int errorCode) {
+                        super.onAdFailedToLoad(errorCode);
+                        if (errorCode == AdRequest.ERROR_CODE_NO_FILL) {
+                            LogUtil.log("没有广告填充：" + errorCode);
+                        } else {
+                            LogUtil.log("errorCode=" + errorCode);
+                        }
+                    }
+                });
+            }
+            AdRequest adRequest = new AdRequest.Builder().build();
+            mAdView.loadAd(adRequest);
         }
         mFooterLayout = inflater.inflate(R.layout.loading_footer, null);
         mFooterLayout.setVisibility(View.GONE);
@@ -398,7 +421,7 @@ public class BlogListFrag extends Fragment {
     }
 
     private void showNoBlog() {
-        UsageStatsManager.sendUsageData(UsageStatsManager.EXP_EMPTY_LIST, TypeManager.getBlogName(mType));
+        UsageStatsManager.reportData(UsageStatsManager.EXP_EMPTY_LIST, TypeManager.getBlogName(mType));
         
         mBlogListView.setVisibility(View.GONE);
         mNoBlogView.setVisibility(View.VISIBLE);
@@ -440,6 +463,22 @@ public class BlogListFrag extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         LogUtil.d("onStart");
@@ -460,6 +499,10 @@ public class BlogListFrag extends Fragment {
     @Override
     public void onDestroy() {
         LogUtil.d("onDestroy");
+
+        if (mAdView != null) {
+            mAdView.destroy();
+        }
         super.onDestroy();
     }
     

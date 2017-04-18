@@ -3,6 +3,8 @@ package com.brian.common.utils;
 import android.os.Environment;
 import android.util.Log;
 
+import com.brian.codeblog.Config;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,7 +21,7 @@ import java.util.Locale;
  */
 public class LogUtil {
     private static final String TAG = LogUtil.class.getSimpleName();
-    public static boolean mIsDebugMode = true;// 获取堆栈信息会影响性能，发布应用时记得关闭DebugMode
+    public static boolean mIsDebugMode = Config.DEBUG_ENABLE;
 
     private static final int JSON_INDENT = 2;
 
@@ -43,6 +45,9 @@ public class LogUtil {
     }
     public static void log(String mess) {
         if (mIsDebugMode) { Log.i(getTag(), buildMessageSafe(mess)); }
+    }
+    public static void logError(String mess) {
+        if (LOGE) { Log.e(getTag(), buildMessageSafe(mess)); }
     }
 
     /**

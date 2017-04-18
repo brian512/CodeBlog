@@ -21,14 +21,14 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.brian.codeblog.Env;
+import com.brian.common.tools.Env;
 import com.brian.codeblog.datacenter.preference.SearchPreference;
-import com.brian.codeblog.manager.UsageStatsManager;
+import com.brian.codeblog.stat.UsageStatsManager;
 import com.brian.codeblog.model.Bloger;
 import com.brian.codeblog.model.SearchResult;
 import com.brian.codeblog.parser.CSDNHtmlParser;
 import com.brian.codeblog.proctocol.HttpGetSearchBlogRequest;
-import com.brian.codeblog.proctocol.base.IResponseCallback;
+import com.brian.common.datacenter.network.IResponseCallback;
 import com.brian.common.tools.CommonAdapter;
 import com.brian.common.tools.GsonHelper;
 import com.brian.common.utils.LogUtil;
@@ -136,7 +136,7 @@ public class SearchActivity extends BaseActivity {
                             Bloger bloger = Bloger.fromJson(item.blogerJson);
                             if (bloger != null) {
                                 BlogerBlogListActivity.startActivity(SearchActivity.this, item.type, bloger);
-                                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_BLOGER_ENTR, "bloglist");
+                                UsageStatsManager.reportData(UsageStatsManager.USAGE_BLOGER_ENTR, "bloglist");
                             }
                         }
                     }
@@ -230,7 +230,7 @@ public class SearchActivity extends BaseActivity {
             loadListData(url);
 
             addSearchHistory(mInputText);
-            UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SEARCH, mInputText);
+            UsageStatsManager.reportData(UsageStatsManager.USAGE_SEARCH, mInputText);
         } else {
             ToastUtil.showMsg("请输入适当关键字");
         }
@@ -260,7 +260,7 @@ public class SearchActivity extends BaseActivity {
                 if (resultData.blogInfoList == null || resultData.blogInfoList.isEmpty()) {
                     if (mSearchResultAdapter.isEmpty()) {
                         // 没有搜索到结果的提示
-                        UsageStatsManager.sendUsageData(UsageStatsManager.EXP_EMPTY_SEARCH, mInputText);
+                        UsageStatsManager.reportData(UsageStatsManager.EXP_EMPTY_SEARCH, mInputText);
                     }
                 } else {
                     if (mCurrentPage <= 1) {

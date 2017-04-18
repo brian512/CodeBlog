@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.brian.codeblog.manager.PushManager;
+import com.brian.codeblog.stat.UsageStatsManager;
 import com.brian.common.utils.LogUtil;
 import com.brian.common.utils.ResourceUtil;
 import com.brian.csdnblog.R;
@@ -30,19 +32,21 @@ public class BaseActivity extends SwipeBackActivity {
         super.onCreate(savedInstanceState);
 
         sTopActivity = this;
+
+        PushManager.getInstance().onAppStart();
     }
     
     @Override
     protected void onResume() {
         LogUtil.log("onResume：" + getClass().getSimpleName());
         super.onResume();
-        MobclickAgent.onResume(this);
+        UsageStatsManager.onResume(this, getClass().getSimpleName());
     }
 
     @Override
     protected void onPause() {
         LogUtil.log("onPause：" + getClass().getSimpleName());
-        MobclickAgent.onPause(this);
+        UsageStatsManager.onPause(this, getClass().getSimpleName());
         super.onPause();
     }
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.brian.codeblog.Config;
+import com.brian.codeblog.stat.UsageStatsManager;
 import com.brian.csdnblog.R;
 import com.tencent.connect.share.QQShare;
 import com.tencent.tauth.IUiListener;
@@ -65,7 +66,7 @@ public class ShareManager {
         bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, Constants.URL_CSDN_LOGO);
         bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, activity.getString(R.string.app_name));
         shareToQQ(activity, bundle, new BaseUiListener());
-        UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SHARE, "app");
+        UsageStatsManager.reportData(UsageStatsManager.USAGE_SHARE, "app");
     }
     
     public void shareBlogToQQ(Activity activity, Bundle bundle) {
@@ -73,7 +74,7 @@ public class ShareManager {
         bundle.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, Constants.URL_CSDN_LOGO);
         bundle.putString(QQShare.SHARE_TO_QQ_APP_NAME, activity.getString(R.string.app_name));
         shareToQQ(activity, bundle, new BaseUiListener());
-        UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_SHARE, "article");
+        UsageStatsManager.reportData(UsageStatsManager.USAGE_SHARE, "article");
     }
 
     /**

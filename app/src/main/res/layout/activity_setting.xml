@@ -91,6 +91,16 @@
             android:textSize="@dimen/com_text_size_content"/>
 
         <TextView
+            android:id="@+id/install_weixin_plugin"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableRight="@drawable/app_recommend_arrow"
+            android:gravity="center_vertical"
+            android:text="安装微信支付插件"
+            android:textSize="@dimen/com_text_size_content"/>
+
+        <TextView
             android:id="@+id/cache"
             android:layout_width="match_parent"
             android:layout_height="48dp"

@@ -3,7 +3,7 @@ package com.brian.codeblog.update;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.brian.codeblog.Env;
+import com.brian.common.tools.Env;
 import com.brian.codeblog.model.UpdateInfo;
 import com.brian.common.utils.FileUtil;
 import com.brian.common.utils.ResourceUtil;

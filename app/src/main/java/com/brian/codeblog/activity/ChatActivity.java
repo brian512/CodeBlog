@@ -11,7 +11,7 @@ import android.widget.ListView;
 
 import com.brian.codeblog.activity.adapter.ChatListAdapter;
 import com.brian.common.tools.ThreadManager;
-import com.brian.codeblog.manager.UsageStatsManager;
+import com.brian.codeblog.stat.UsageStatsManager;
 import com.brian.codeblog.model.ChatMsgInfo;
 import com.brian.codeblog.robot.ChatRobot;
 import com.brian.codeblog.robot.ChatRobot.OnReplyListener;
@@ -130,6 +130,6 @@ public class ChatActivity extends BaseActivity {
         for (ChatMsgInfo chatInfo : chatList) {
             list.add(chatInfo.toString());
         }
-        UsageStatsManager.reportErrorToUmeng(new Gson().toJson(list, new TypeToken<ArrayList<String>>() {}.getType()) + "\n DeviceToken=" + DeviceUtil.getUUID());
+        UsageStatsManager.reportError(new Gson().toJson(list, new TypeToken<ArrayList<String>>() {}.getType()) + "\n DeviceToken=" + DeviceUtil.getUUID());
     }
 }

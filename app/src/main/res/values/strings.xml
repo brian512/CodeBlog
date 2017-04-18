@@ -12,6 +12,7 @@
     <string name="news">新  闻</string>
     <string name="all_type">全部分类</string>
     <string name="share_friend">分享给好友</string>
+    <string name="payback">打  赏</string>
     <string name="about">关  于</string>
     <string name="search">搜索</string>
     <string name="settings">设  置</string>
@@ -26,5 +27,8 @@
     <string name="brian_blog"><a href="http://blog.csdn.net/brian512">http://blog.csdn.net/brian512 </a></string>
 
     <string name="madeby">Made by: brian512</string>
+
+    <string name="ad_banner_unit_id">ca-app-pub-7153470135701214/2776666884</string>
+    <string name="ad_interstitial_id">ca-app-pub-7153470135701214/8710544485</string>
 
 </resources>

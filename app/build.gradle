@@ -22,6 +22,11 @@ android {
         vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            stl "gnustl_static"
+            abiFilters "armeabi-v7a"
+        }
     }
 
     testOptions {
@@ -44,7 +49,7 @@ android {
         debug{
             // 显示Log
             buildConfigField "boolean", "DEBUG_ENABLE", "true"
-//            versionNameSuffix "-debug"
+            versionNameSuffix "-debug"
             minifyEnabled false
             zipAlignEnabled false
             shrinkResources false
@@ -144,8 +149,14 @@ repositories {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+
+    compile 'com.google.android.gms:play-services-analytics:10.2.1'
+    compile 'com.google.firebase:firebase-ads:10.2.1'
+
+    compile project(':PushSDK')
+
     compile 'org.greenrobot:eventbus:3.0.0'
-    compile 'com.google.code.gson:gson:2.4'
+    compile 'com.google.code.gson:gson:2.7'
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
@@ -154,9 +165,9 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
 
-    compile 'com.android.support:design:24.2.1'
-    compile 'com.android.support:support-v4:24.2.1'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:support-v4:25.3.1'
     compile 'pub.devrel:easypermissions:0.2.0'
-
-    compile(name:'swipebacklayout', ext:'aar')
+    compile 'me.imid.swipebacklayout.lib:library:1.0.0'
 }
+apply plugin: 'com.google.gms.google-services'

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import com.brian.codeblog.model.Bloger;
+import com.brian.common.datacenter.database.BaseTable;
 import com.brian.common.utils.LogUtil;
 
 import org.json.JSONException;

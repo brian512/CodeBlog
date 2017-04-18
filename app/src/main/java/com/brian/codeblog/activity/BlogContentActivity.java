@@ -25,7 +25,7 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
-import com.brian.codeblog.Env;
+import com.brian.codeblog.ad.AdMobHelper;
 import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
@@ -34,15 +34,17 @@ import com.brian.codeblog.manager.BlogManager;
 import com.brian.codeblog.manager.BlogerManager;
 import com.brian.codeblog.manager.ShareManager;
 import com.brian.codeblog.manager.TypeManager;
-import com.brian.codeblog.manager.UsageStatsManager;
 import com.brian.codeblog.model.BlogInfo;
 import com.brian.codeblog.model.Bloger;
 import com.brian.codeblog.model.SearchResult;
 import com.brian.codeblog.parser.BlogHtmlParserFactory;
 import com.brian.codeblog.parser.IBlogHtmlParser;
+import com.brian.codeblog.pay.BmobPayHelper;
 import com.brian.codeblog.proctocol.HttpGetBlogContentRequest;
-import com.brian.codeblog.proctocol.base.IResponseCallback;
+import com.brian.codeblog.stat.UsageStatsManager;
+import com.brian.common.datacenter.network.IResponseCallback;
 import com.brian.common.tools.DayNightHelper;
+import com.brian.common.tools.Env;
 import com.brian.common.tools.ThreadManager;
 import com.brian.common.utils.FileUtil;
 import com.brian.common.utils.LogUtil;
@@ -53,13 +55,14 @@ import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;
 import com.tencent.connect.share.QQShare;
 
+import net.youmi.android.normal.common.ErrorCode;
+import net.youmi.android.normal.spot.SpotListener;
+import net.youmi.android.normal.spot.SpotManager;
+
 import java.util.Stack;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import tj.zl.op.normal.common.ErrorCode;
-import tj.zl.op.normal.spot.SpotListener;
-import tj.zl.op.normal.spot.SpotManager;
 
 public class BlogContentActivity extends BaseActivity {
 
@@ -125,7 +128,10 @@ public class BlogContentActivity extends BaseActivity {
 
         initUI();// 初始化界面
         initListener();
-        initAd();
+        if (CommonPreference.getInstance().getPayCount() <= 0) {
+            // 有打赏则不显示广告
+            initAd();
+        }
 
         initBlogInfo();
 
@@ -160,7 +166,7 @@ public class BlogContentActivity extends BaseActivity {
         mHttpClient.request(param, new IResponseCallback<HttpGetBlogContentRequest.ResultData>() {
             @Override
             public void onSuccess(final HttpGetBlogContentRequest.ResultData resultData) {
-                LogUtil.d("resultData=" + resultData.blogContent);
+//                LogUtil.d("resultData=" + resultData.blogContent);
                 if (TextUtils.isEmpty(resultData.blogContent)) {
                     showErrorPage();
                     return;
@@ -221,7 +227,7 @@ public class BlogContentActivity extends BaseActivity {
         LogUtil.i(TAG, "currenturl:" + mBlogInfo.link);
 
         mBlogParser = BlogHtmlParserFactory.getBlogParser(mBlogInfo.type);
-        UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_BLOG_COUNT, TypeManager.getBlogName(mBlogInfo.type));
+        UsageStatsManager.reportData(UsageStatsManager.USAGE_BLOG_COUNT, TypeManager.getBlogName(mBlogInfo.type));
         // 处理一下链接，可能需要补全域名
         mCurrentUrl = mBlogParser.getBlogContentUrl(mBlogInfo.link);
         mBlogInfo.link = mCurrentUrl;
@@ -285,6 +291,11 @@ public class BlogContentActivity extends BaseActivity {
     }
 
     private void toggleAdShow(boolean isShow) {
+        if (isShow) {
+            AdMobHelper.show();
+        } else {
+            AdMobHelper.hide();
+        }
         if (mAdView != null && isShow && SettingPreference.getInstance().getAdsEnable() && AdHelper.isAdCanShow) {
             RelativeLayout.LayoutParams layoutParams =
                     new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -367,11 +378,11 @@ public class BlogContentActivity extends BaseActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case Menu.FIRST:
-                        UsageStatsManager.sendUsageData(UsageStatsManager.MENU_CONTENT_LIST, "分享");
+                        UsageStatsManager.reportData(UsageStatsManager.MENU_CONTENT_LIST, "分享");
                         onClickShare();
                         break;
                     case Menu.FIRST + 1:
-                        UsageStatsManager.sendUsageData(UsageStatsManager.MENU_CONTENT_LIST, "收藏");
+                        UsageStatsManager.reportData(UsageStatsManager.MENU_CONTENT_LIST, "收藏");
                         mHasFavoed = !mHasFavoed;
                         BlogManager.getInstance().doFavo(mBlogInfo, mHasFavoed);
                         if (mHasFavoed) {
@@ -381,13 +392,13 @@ public class BlogContentActivity extends BaseActivity {
                         }
                         break;
                     case Menu.FIRST + 2:
-                        UsageStatsManager.sendUsageData(UsageStatsManager.MENU_CONTENT_LIST, "博主");
+                        UsageStatsManager.reportData(UsageStatsManager.MENU_CONTENT_LIST, "博主");
                         if (!TextUtils.isEmpty(mBlogInfo.blogerID)) {
                             LogUtil.log(mBlogInfo.blogerJson);
                             Bloger bloger = Bloger.fromJson(mBlogInfo.blogerJson);
                             if (bloger != null) {
                                 BlogerBlogListActivity.startActivity(BlogContentActivity.this, mBlogInfo.type, bloger);
-                                UsageStatsManager.sendUsageData(UsageStatsManager.USAGE_BLOGER_ENTR, "bloglist");
+                                UsageStatsManager.reportData(UsageStatsManager.USAGE_BLOGER_ENTR, "bloglist");
                             }
                         }
                         break;
@@ -428,34 +439,37 @@ public class BlogContentActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            // 如果有需要，可以点击后退关闭插播广告。
-            if (mAdLayout != null && mAdLayout.getVisibility() == View.VISIBLE) {
-                mAdLayout.setVisibility(View.GONE);
-                return true;
-            }
-
-            if (mBlogStack.size() > 1) {
-                mBlogStack.pop();//把当前的博客移除
-                String html = mBlogStack.peek();
-                mWebView.loadDataWithBaseURL(mBlogParser.getBlogBaseUrl(), html,
-                        "text/html", "utf-8", null);
-                return true;
-            } else {
-                mWebView.setWebViewClient(null);
-                mWebView.setWebChromeClient(null);
-                mWebView.loadData("<html></html>", "text/html", "utf-8");
-
-                this.finish();
-            }
+            handleBack();
+            return true;
         }
 
         return super.onKeyDown(keyCode, event);
     }
 
+    private void handleBack() {
+        // 如果有需要，可以点击后退关闭插播广告。
+        if (mAdLayout != null && mAdLayout.getVisibility() == View.VISIBLE) {
+            mAdLayout.setVisibility(View.GONE);
+            return;
+        }
+
+        if (mBlogStack.size() > 1) {
+            mBlogStack.pop();//把当前的博客移除
+            String html = mBlogStack.peek();
+            mWebView.loadDataWithBaseURL(mBlogParser.getBlogBaseUrl(), html,
+                    "text/html", "utf-8", null);
+        } else {
+            mWebView.setWebViewClient(null);
+            mWebView.setWebChromeClient(null);
+            mWebView.loadData("<html></html>", "text/html", "utf-8");
+            finish();
+        }
+    }
+
     /**
      * 继承WebViewClient
      */
-    class MyWebViewClient extends WebViewClient {
+    private class MyWebViewClient extends WebViewClient {
 
         // 重写shouldOverrideUrlLoading方法，使点击链接后不使用其他的浏览器打开。
         @Override
@@ -537,15 +551,23 @@ public class BlogContentActivity extends BaseActivity {
 
     @Override
     protected void onStop() {
+        long readTime = System.currentTimeMillis() - mStartTime;
+        CommonPreference.getInstance().addBlogReadTime(readTime);
         super.onStop();
         // 插播广告
         SpotManager.getInstance(this).onStop();
+
+        if (readTime > 60_000) {
+            if (CommonPreference.getInstance().getPayCount() <= 0) {
+                BmobPayHelper.pay("学习到新知识，支持一下");
+            } else {
+                CommonPreference.getInstance().addPayCount(-1);
+            }
+        }
     }
 
     @Override
     protected void onDestroy() {
-        CommonPreference.getInstance().addBlogReadTime(System.currentTimeMillis() - mStartTime);
-
         mWebView.stopLoading();
         mWebView.onPause();
         mWebView.destroy();
@@ -553,7 +575,7 @@ public class BlogContentActivity extends BaseActivity {
     }
     
     private void showErrorPage() {
-        UsageStatsManager.sendUsageData(UsageStatsManager.EXP_EMPTY_BLOG, TypeManager.getBlogName(mBlogInfo.type));
+        UsageStatsManager.reportData(UsageStatsManager.EXP_EMPTY_BLOG, TypeManager.getBlogName(mBlogInfo.type));
         
         mWebView.setVisibility(View.GONE);
         mProgressBar.setVisibility(View.GONE);
@@ -575,4 +597,5 @@ public class BlogContentActivity extends BaseActivity {
         mWebView.loadDataWithBaseURL(mBlogParser.getBlogBaseUrl(), mBlogStack.peek(),
                 "text/html", "utf-8", null);
     }
+
 }

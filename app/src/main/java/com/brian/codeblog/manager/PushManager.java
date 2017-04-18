@@ -1,20 +1,24 @@
 
 package com.brian.codeblog.manager;
 
+import android.app.Notification;
 import android.content.Context;
+import android.net.Uri;
 import android.text.TextUtils;
 
+import com.brian.codeblog.Config;
 import com.brian.codeblog.model.BlogInfo;
 import com.brian.codeblog.model.NotifyMsgInfo;
 import com.brian.codeblog.model.PushInfo;
 import com.brian.codeblog.model.UpdateInfo;
-import com.brian.common.utils.DeviceUtil;
 import com.brian.common.utils.LogUtil;
+import com.brian.common.utils.MarketUtils;
 import com.google.gson.Gson;
-import com.xiaomi.channel.commonutils.logger.LoggerInterface;
-import com.xiaomi.mipush.sdk.Logger;
-import com.xiaomi.mipush.sdk.MiPushClient;
-import com.xiaomi.mipush.sdk.MiPushMessage;
+import com.umeng.message.IUmengRegisterCallback;
+import com.umeng.message.PushAgent;
+import com.umeng.message.UmengMessageHandler;
+import com.umeng.message.UmengNotificationClickHandler;
+import com.umeng.message.entity.UMessage;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +30,8 @@ import java.util.List;
 public class PushManager {
 
     private static PushManager sInstance = null;
+
+    private static PushAgent sPushAgent;
 
     private List<PushInfo> mWaitingTask;
     private List<PushInfo> mHistoryTask;
@@ -54,31 +60,56 @@ public class PushManager {
         }
     }
 
-    public void initPushMsg(Context context) {
-        MiPushClient.registerPush(context, "2882303761517322008", "5871732210008");
-        MiPushClient.setUserAccount(context, DeviceUtil.getUUID(), null);
-        //打开Log
-        LoggerInterface newLogger = new LoggerInterface() {
-            @Override
-            public void setTag(String tag) {
-            }
-
-            @Override
-            public void log(String content, Throwable t) {
-            }
-
-            @Override
-            public void log(String content) {
-            }
-        };
-        Logger.setLogger(context, newLogger);
+    public void onAppStart() {
+        sPushAgent.onAppStart();
     }
 
-    public void addPushMessage(MiPushMessage message) {
+    public void initPushMsg(Context context) {
+        sPushAgent = PushAgent.getInstance(context.getApplicationContext());
+        sPushAgent.setDebugMode(Config.DEBUG_ENABLE);
+        sPushAgent.setNotificaitonOnForeground(true); // 应用在前台也显示推送通知
+        //注册推送服务，每次调用register方法都会回调该接口
+        sPushAgent.register(new IUmengRegisterCallback() {
+
+            @Override
+            public void onSuccess(String deviceToken) {
+                //注册成功会返回device token
+                LogUtil.log("deviceToken=" + deviceToken);
+            }
+
+            @Override
+            public void onFailure(String s, String s1) {
+                LogUtil.logError("s=" + s + "; s1=" + s1);
+            }
+        });
+
+        UmengMessageHandler messageHandler = new UmengMessageHandler(){
+            @Override
+            public Notification getNotification(Context context, UMessage msg) {
+                LogUtil.log("msg.title=" + msg.title);
+//                addPushMessage(msg);
+                return super.getNotification(context, msg);
+            }
+        };
+        sPushAgent.setMessageHandler(messageHandler);
+
+        UmengNotificationClickHandler notificationClickHandler = new UmengNotificationClickHandler() {
+            @Override
+            public void dealWithCustomAction(Context context, UMessage msg) {
+                LogUtil.log("msg.custom=" + msg.custom);
+                if (!TextUtils.isEmpty(msg.custom) && msg.custom.startsWith("market")) {
+                    MarketUtils.launchAppDetail(Uri.parse(msg.custom), "");
+                }
+            }
+        };
+        sPushAgent.setNotificationClickHandler(notificationClickHandler);
+    }
+
+    public void addPushMessage(UMessage message) {
         if (message == null) {
             return;
         }
-        if (checkMsgExist(message.getMessageId())) {
+        if (checkMsgExist(message.msg_id)) {
             return;
         }
 
@@ -88,10 +119,10 @@ public class PushManager {
         }
     }
 
-    private PushInfo convert2LocalPush(MiPushMessage message) {
+    private PushInfo convert2LocalPush(UMessage message) {
         PushInfo pushInfo = new PushInfo();
-        pushInfo.msgID = message.getMessageId();
-        pushInfo.content = message.getContent();
+        pushInfo.msgID = message.message_id;
+        pushInfo.content = message.text;
         JSONTokener jsonParser = new JSONTokener(pushInfo.content);
         String type = null,value = null;
         try {
