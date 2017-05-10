@@ -71,6 +71,16 @@
             android:textSize="@dimen/com_text_size_content"/>
 
         <TextView
+            android:id="@+id/zhifubao"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableRight="@drawable/app_recommend_arrow"
+            android:gravity="center_vertical"
+            android:text="支付宝转账打赏"
+            android:textSize="@dimen/com_text_size_content"/>
+
+        <TextView
             android:id="@+id/update"
             android:layout_width="match_parent"
             android:layout_height="48dp"

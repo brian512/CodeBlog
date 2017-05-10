@@ -29,15 +29,6 @@
             android:layout_gravity="center"
             android:visibility="visible" />
 
-        <FrameLayout
-            android:id="@+id/ad_group"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:visibility="invisible">
-
-        </FrameLayout>
-
         <ImageView
             android:id="@+id/reLoadImage"
             android:layout_width="wrap_content"

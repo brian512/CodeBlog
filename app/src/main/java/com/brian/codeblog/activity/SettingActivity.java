@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
 import com.brian.codeblog.manager.ShareManager;
-import com.brian.codeblog.pay.BmobPayHelper;
+import com.brian.codeblog.pay.PayHelper;
 import com.brian.codeblog.stat.UsageStatsManager;
 import com.brian.codeblog.update.UpdateManager;
 import com.brian.common.tools.DayNightHelper;
@@ -38,6 +38,7 @@ public class SettingActivity extends BaseActivity {
     @BindView(R.id.switch_picinfwifi_text)  TextView mSwitchPicWifiText;
     @BindView(R.id.switch_staybg_text)      TextView mSwitchStayBgText;
     @BindView(R.id.market)                  TextView mMarketText;
+    @BindView(R.id.zhifubao)                TextView mZhifubaoText;
     @BindView(R.id.update)                  TextView mCheckUpdateText;
     @BindView(R.id.install_weixin_plugin)   TextView mInstallWeixinPluginText;
     @BindView(R.id.cache)                   TextView mClearCacheText;
@@ -154,6 +155,13 @@ public class SettingActivity extends BaseActivity {
             }
         });
 
+        mZhifubaoText.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PayHelper.jumpZhifubao(SettingActivity.this);
+            }
+        });
+
         mMarketText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,7 +181,7 @@ public class SettingActivity extends BaseActivity {
         mInstallWeixinPluginText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                BmobPayHelper.installBmobPayPlugin(Env.getContext());
+                PayHelper.installBmobPayPlugin(Env.getContext());
             }
         });
 
@@ -203,6 +211,12 @@ public class SettingActivity extends BaseActivity {
 
                         // 保存preference
                         SettingPreference.getInstance().setAdsEnable(selected);
+                    }
+                })
+                .setNegativeBtnListener(new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        PayHelper.pay("支持作者");
                     }
                 })
                 .show();

@@ -174,7 +174,9 @@ public abstract class AbstractHttpClient<TParam extends BaseRequestParam, TResul
         if (mListener == null) {
             return;
         }
-        mHandler.post(new Runnable() {
+        int delay = 0;
+//        int delay = CommonPreference.getInstance().getPayCount() <= 0 ? 500 : 0;
+        mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (responseCode == 200 && result != null) {
@@ -191,6 +193,6 @@ public abstract class AbstractHttpClient<TParam extends BaseRequestParam, TResul
                     mListener.onFailure(responseCode, "");
                 }
             }
-        });
+        }, delay);
     }
 }

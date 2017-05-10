@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+apply plugin: 'newlens'
 
 // 时间
 def releaseTime() {
@@ -118,10 +119,6 @@ android {
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "MAIN"]
         }
 
-        WANDOUJIA {
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "WANDOUJIA"]
-        }
-
         BAIDU {
             manifestPlaceholders = [UMENG_CHANNEL_VALUE: "BAIDU"]
         }
@@ -157,7 +154,7 @@ dependencies {
 
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.google.code.gson:gson:2.7'
-    compile 'com.tencent.bugly:crashreport:latest.release'
+    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
@@ -165,9 +162,11 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
 
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:support-v4:25.3.1'
+    compile "com.android.support:design:${SUPPORT_LIBRARY}"
+    compile "com.android.support:support-v4:${SUPPORT_LIBRARY}"
     compile 'pub.devrel:easypermissions:0.2.0'
     compile 'me.imid.swipebacklayout.lib:library:1.0.0'
+
+    compile "com.networkbench.newlens.agent.android:nbs.newlens.agent:2.5.3"
 }
 apply plugin: 'com.google.gms.google-services'

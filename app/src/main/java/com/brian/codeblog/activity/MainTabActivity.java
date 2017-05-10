@@ -26,12 +26,11 @@ import com.brian.common.utils.TimeUtil;
 import com.brian.common.utils.ToastUtil;
 import com.brian.common.view.DrawerArrowDrawable;
 import com.brian.csdnblog.R;
+import com.networkbench.agent.impl.NBSAppAgent;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.umeng.onlineconfig.OnlineConfigLog;
 import com.umeng.onlineconfig.UmengOnlineConfigureListener;
-
-import net.youmi.android.normal.spot.SpotManager;
 
 import org.json.JSONObject;
 
@@ -70,6 +69,10 @@ public class MainTabActivity extends BaseActivity {
         initUI();
         initListener();
         recoveryUI(); // 恢复上次浏览视图：主要是tab位置
+
+        NBSAppAgent.setLicenseKey("46d5cde6e3ea4682b598b9a3101f9c5d")
+                .withLocationServiceEnabled(true)
+                .start(this.getApplicationContext());
     }
 
     @Override
@@ -215,7 +218,6 @@ public class MainTabActivity extends BaseActivity {
         String time = TimeUtil.convCountTime(CommonPreference.getInstance().getBlogReadTime());
         ToastUtil.showMsg(String.format(Locale.CHINA, "累计学习 %d篇博文，用时 %s", count, time));
         OnlineConfigAgent.getInstance().removeOnlineConfigListener();
-        SpotManager.getInstance(this).onDestroy();
         super.onDestroy();
 
         if (DayNightHelper.getInstance().hasModeChanged()) {

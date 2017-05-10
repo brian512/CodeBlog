@@ -9,27 +9,22 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 
 import com.brian.codeblog.ad.AdMobHelper;
 import com.brian.codeblog.datacenter.DataManager;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
-import com.brian.codeblog.manager.AdHelper;
 import com.brian.codeblog.manager.BlogManager;
 import com.brian.codeblog.manager.BlogerManager;
 import com.brian.codeblog.manager.ShareManager;
@@ -39,7 +34,7 @@ import com.brian.codeblog.model.Bloger;
 import com.brian.codeblog.model.SearchResult;
 import com.brian.codeblog.parser.BlogHtmlParserFactory;
 import com.brian.codeblog.parser.IBlogHtmlParser;
-import com.brian.codeblog.pay.BmobPayHelper;
+import com.brian.codeblog.pay.PayHelper;
 import com.brian.codeblog.proctocol.HttpGetBlogContentRequest;
 import com.brian.codeblog.stat.UsageStatsManager;
 import com.brian.common.datacenter.network.IResponseCallback;
@@ -55,10 +50,6 @@ import com.brian.common.view.TitleBar;
 import com.brian.csdnblog.R;
 import com.tencent.connect.share.QQShare;
 
-import net.youmi.android.normal.common.ErrorCode;
-import net.youmi.android.normal.spot.SpotListener;
-import net.youmi.android.normal.spot.SpotManager;
-
 import java.util.Stack;
 
 import butterknife.BindView;
@@ -72,8 +63,6 @@ public class BlogContentActivity extends BaseActivity {
     @BindView(R.id.article_content) WebView mWebView;
     @BindView(R.id.blogContentPro) ProgressBar mProgressBar; // 进度条
     @BindView(R.id.reLoadImage) ImageView mReLoadImageView; // 重新加载的图片
-    @BindView(R.id.ad_group) FrameLayout mAdLayout; // 广告
-    private View mAdView;
     private PopupMenu mPopupMenu;
 
     private IBlogHtmlParser mBlogParser = null;
@@ -130,7 +119,7 @@ public class BlogContentActivity extends BaseActivity {
         initListener();
         if (CommonPreference.getInstance().getPayCount() <= 0) {
             // 有打赏则不显示广告
-            initAd();
+            toggleAdShow(true);
         }
 
         initBlogInfo();
@@ -189,13 +178,16 @@ public class BlogContentActivity extends BaseActivity {
                     mPopupMenu.getMenu().getItem(1).setTitle("收藏");
                 }
                 mWebView.setVisibility(View.VISIBLE);
-                mWebView.loadDataWithBaseURL(mBlogParser.getBlogBaseUrl(), resultData.blogContent,
-                        "text/html", "utf-8", null);
+                try {
+                    mWebView.loadDataWithBaseURL(mBlogParser.getBlogBaseUrl(), resultData.blogContent,
+                            "text/html", "utf-8", null);
 
-                String title = mBlogParser.getBlogTitle(mBlogInfo.type, resultData.blogContent);
-                if (!TextUtils.isEmpty(title)) {
-                    mCurrentTitle = title;
-                    mTitleBar.setTitle(mCurrentTitle);
+                    String title = mBlogParser.getBlogTitle(mBlogInfo.type, resultData.blogContent);
+                    if (!TextUtils.isEmpty(title)) {
+                        mCurrentTitle = title;
+                        mTitleBar.setTitle(mCurrentTitle);
+                    }
+                } catch (Exception e) {
                 }
             }
 
@@ -245,77 +237,11 @@ public class BlogContentActivity extends BaseActivity {
         });
     }
 
-    private void initAd() {
-        SpotManager.getInstance(Env.getContext()).setImageType(SpotManager.IMAGE_TYPE_VERTICAL);
-        // 获取原生插屏控件
-        mAdView = SpotManager.getInstance(Env.getContext()).getNativeSpot(Env.getContext(), new SpotListener() {
-
-                    @Override
-                    public void onShowSuccess() {
-                        Log.d(TAG, "插屏展示成功");
-                    }
-
-                    @Override
-                    public void onShowFailed(int errorCode) {
-                        Log.d(TAG, "插屏展示失败" + errorCode);
-                        switch (errorCode) {
-                            case ErrorCode.NON_NETWORK:
-                                LogUtil.e("YoumiSdk网络异常");
-                                break;
-                            case ErrorCode.NON_AD:
-                                LogUtil.e("YoumiSdk暂无广告");
-                                break;
-                            case ErrorCode.RESOURCE_NOT_READY:
-                                LogUtil.e(TAG, "YoumiSdk资源还没准备好");
-                                break;
-                            case ErrorCode.SHOW_INTERVAL_LIMITED:
-                                LogUtil.e(TAG, "YoumiSdk展示间隔限制");
-                                break;
-                            case ErrorCode.WIDGET_NOT_IN_VISIBILITY_STATE:
-                                LogUtil.e(TAG, "YoumiSdk控件处在不可见状态");
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void onSpotClosed() {
-                        LogUtil.d(TAG, "YoumiSdk插屏被关闭");
-                    }
-
-                    @Override
-                    public void onSpotClicked(boolean isWebPage) {
-                        LogUtil.d(TAG, "YoumiSdk插屏被点击");
-                    }
-                });
-        toggleAdShow(true);
-    }
-
     private void toggleAdShow(boolean isShow) {
-        if (isShow) {
+        if (isShow && SettingPreference.getInstance().getAdsEnable()) {
             AdMobHelper.show();
         } else {
             AdMobHelper.hide();
-        }
-        if (mAdView != null && isShow && SettingPreference.getInstance().getAdsEnable() && AdHelper.isAdCanShow) {
-            RelativeLayout.LayoutParams layoutParams =
-                    new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT);
-            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-            try {
-                mAdLayout.removeAllViews();
-            } catch (Exception e) {
-                LogUtil.printError(e);
-            }
-            if (mAdView.getParent() != null) {
-                ((ViewGroup)mAdView.getParent()).removeView(mAdView);
-            }
-            // 添加原生插屏控件到容器中
-            mAdLayout.addView(mAdView, layoutParams);
-            if (mAdLayout.getVisibility() != View.VISIBLE) {
-                mAdLayout.setVisibility(View.VISIBLE);
-            }
-        } else {
-            mAdLayout.setVisibility(View.GONE);
         }
     }
     
@@ -447,12 +373,6 @@ public class BlogContentActivity extends BaseActivity {
     }
 
     private void handleBack() {
-        // 如果有需要，可以点击后退关闭插播广告。
-        if (mAdLayout != null && mAdLayout.getVisibility() == View.VISIBLE) {
-            mAdLayout.setVisibility(View.GONE);
-            return;
-        }
-
         if (mBlogStack.size() > 1) {
             mBlogStack.pop();//把当前的博客移除
             String html = mBlogStack.peek();
@@ -479,14 +399,14 @@ public class BlogContentActivity extends BaseActivity {
             //使用这个parser就不能在不同的博客间跳转
             // TODO 根据域名判断博客类型
             String blogUrl = mBlogParser.getBlogContentUrl(url);
-            if (!TextUtils.isEmpty(blogUrl)) {
+            if (!TextUtils.isEmpty(blogUrl) && blogUrl.startsWith("http")) {
                 if (blogUrl.equalsIgnoreCase(mCurrentUrl)) {
                     return true;
                 }
                 
                 mProgressBar.setVisibility(View.VISIBLE);
                 toggleAdShow(true);
-                
+
                 mCurrentUrl = blogUrl;
                 loadData();
                 return true;
@@ -545,8 +465,6 @@ public class BlogContentActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        // 插播广告
-        SpotManager.getInstance(this).onPause();
     }
 
     @Override
@@ -554,20 +472,26 @@ public class BlogContentActivity extends BaseActivity {
         long readTime = System.currentTimeMillis() - mStartTime;
         CommonPreference.getInstance().addBlogReadTime(readTime);
         super.onStop();
-        // 插播广告
-        SpotManager.getInstance(this).onStop();
-
-        if (readTime > 60_000) {
-            if (CommonPreference.getInstance().getPayCount() <= 0) {
-                BmobPayHelper.pay("学习到新知识，支持一下");
-            } else {
-                CommonPreference.getInstance().addPayCount(-1);
-            }
-        }
     }
 
     @Override
     protected void onDestroy() {
+        long readTime = System.currentTimeMillis() - mStartTime;
+        if (readTime > 60_000) {
+            if (PayHelper.shouldNotifyPay()) {
+                PayHelper.pay("学习到新知识，支持一下", new PayHelper.IPayListener() {
+                    @Override
+                    public void onResult(boolean isOK) {
+                        if (!isOK) {
+                            ToastUtil.showMsg("打赏未完成");
+                        }
+                    }
+                });
+            } else {
+                CommonPreference.getInstance().addPayCount(-1);
+            }
+        }
+
         mWebView.stopLoading();
         mWebView.onPause();
         mWebView.destroy();

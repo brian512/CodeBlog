@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.brian.codeblog.Config;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
-import com.brian.codeblog.manager.AdHelper;
 import com.brian.codeblog.manager.BlogManager;
 import com.brian.codeblog.manager.TypeManager;
 import com.brian.codeblog.model.BlogInfo;
@@ -183,38 +182,7 @@ public class BlogListFrag extends Fragment {
                 R.color.red,
                 R.color.yellow);
 
-        if (AdHelper.isAdCanShow && SettingPreference.getInstance().getAdsEnable()) {
-//            final LinearLayout adLy = new LinearLayout(getContext());
-//            final View bannerView = BannerManager.getInstance(getContext()).getBannerView(getContext(), new BannerViewListener() {
-//                @Override
-//                public void onRequestSuccess() {
-//                    LogUtil.i(TAG, "YoumiSdk 请求广告条成功");
-//                }
-//
-//                @Override
-//                public void onSwitchBanner() {
-//                    LogUtil.i(TAG, "YoumiSdk 广告条切换");
-//                }
-//
-//                @Override
-//                public void onRequestFailed() {
-//                    mBlogListView.removeHeaderView(adLy);
-//                    LogUtil.e(TAG, "YoumiSdk 请求广告条失败");
-//                }
-//            });
-//            adLy.removeAllViews();
-//            adLy.addView(bannerView);
-//            adLy.setOnTouchListener(new View.OnTouchListener() {
-//                @Override
-//                public boolean onTouch(View v, MotionEvent event) {
-//                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//                        bannerView.dispatchTouchEvent(event);
-//                        bannerView.performClick();
-//                    }
-//                    return true;
-//                }
-//            });
-
+        if (SettingPreference.getInstance().getAdsEnable()) {
             if (mAdView == null) {
                 mAdView = (AdView)inflater.inflate(R.layout.view_bloglist_ad, null);
                 mAdView.setAdListener(new AdListener() {

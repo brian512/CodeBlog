@@ -17,6 +17,7 @@ public class CommonPreference extends BasePreference {
     private static final String KEY_BLOG_TIME = "pre_key_blog_time";
 
     private static final String KEY_PAY_COUNT = "pre_key_pay_count";
+    private static final String KEY_PAY_LAST_NOTIFY_TIME = "pre_key_pay_last_notify_time";
 
     private static final String KEY_BLOGER_JSON = "pre_key_curr_bloger_json";
 
@@ -108,6 +109,15 @@ public class CommonPreference extends BasePreference {
             total = 0;
         }
         putInt(KEY_PAY_COUNT, total);
+    }
+
+
+    public long getLastPayNotifyTime() {
+        return getLong(KEY_PAY_LAST_NOTIFY_TIME, 0);
+    }
+
+    public void updatePayNotifyTime() {
+        putLong(KEY_PAY_LAST_NOTIFY_TIME, System.currentTimeMillis());
     }
 
     public boolean getAdIsOpened() {

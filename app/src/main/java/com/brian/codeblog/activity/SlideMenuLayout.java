@@ -18,10 +18,11 @@ import com.brian.codeblog.manager.Constants;
 import com.brian.codeblog.manager.TypeManager;
 import com.brian.codeblog.model.Bloger;
 import com.brian.codeblog.model.event.CurrBlogerEvent;
-import com.brian.codeblog.pay.BmobPayHelper;
+import com.brian.codeblog.pay.PayHelper;
 import com.brian.codeblog.stat.UsageStatsManager;
 import com.brian.common.tools.Env;
 import com.brian.common.utils.LogUtil;
+import com.brian.common.utils.ToastUtil;
 import com.brian.common.view.CircleImageView;
 import com.brian.csdnblog.R;
 import com.squareup.picasso.Picasso;
@@ -112,7 +113,14 @@ public class SlideMenuLayout extends FrameLayout implements OnClickListener {
                 break;
             case R.id.payback: // 打赏
                 UsageStatsManager.reportData(UsageStatsManager.MENU_LIST, "payback");
-                BmobPayHelper.pay("打赏作者");
+                PayHelper.pay("打赏作者", new PayHelper.IPayListener() {
+                    @Override
+                    public void onResult(boolean isOK) {
+                        if (!isOK) {
+                            ToastUtil.showMsg("打赏未完成");
+                        }
+                    }
+                });
                 break;
             case R.id.blog_favo: // 收藏的文章
                 UsageStatsManager.reportData(UsageStatsManager.MENU_LIST, "favo");

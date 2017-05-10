@@ -191,6 +191,15 @@
    public static *** w(...);
  }
 
+
+
+# ProGuard configurations for NetworkBench Lens
+-keep class com.networkbench.** { *; }
+-dontwarn com.networkbench.**
+-keepattributes Exceptions, Signature, InnerClasses
+# End NetworkBench Lens
+
+
 -libraryjars libs/BmobPay_v3.x.x_xxxxxx.jar
 -keepclasseswithmembers class c.b.** { *; }
 -keep interface c.b.PListener{ *; }

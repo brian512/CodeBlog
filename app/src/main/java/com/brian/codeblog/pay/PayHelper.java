@@ -23,7 +23,7 @@ import c.b.PListener;
  * Created by huamm on 2017/4/18 0018.
  */
 
-public class BmobPayHelper {
+public class PayHelper {
 
     private static final String APPLICATION_ID = "2227a432dc72d00d24d59c1b6301ba82";
 
@@ -39,6 +39,10 @@ public class BmobPayHelper {
 
     public static void pay(String title) {
         pay(title, "", Config.getPaybackPrice(), null);
+    }
+
+    public static void pay(String title, IPayListener listener) {
+        pay(title, "", Config.getPaybackPrice(), listener);
     }
 
     /**
@@ -155,6 +159,17 @@ public class BmobPayHelper {
         } catch (PackageManager.NameNotFoundException e) {
         }
         return false;
+    }
+
+    public static void jumpZhifubao(Context context) {
+        try {
+            Uri uri = Uri.parse("alipayqr://platformapi/startapp?saId=10000007&qrcode=https://qr.alipay.com/FKX09796GKDI32H6B1WOF5");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intent);
+        } catch (Exception e) {
+            LogUtil.printError(e);
+        }
     }
 
     public interface IPayListener {
