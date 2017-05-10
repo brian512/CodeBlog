@@ -60,7 +60,7 @@ public class BmobPayHelper {
             @Override
             public void succeed() {
                 LogUtil.log("orderId=" + sOrderId);
-                CommonPreference.getInstance().addPayCount((int)(money/5));
+                CommonPreference.getInstance().addPayCount((int)(money/0.1));
                 if (listener != null) {
                     listener.onResult(true);
                 }
@@ -82,6 +82,19 @@ public class BmobPayHelper {
                 }
             }
         });
+    }
+
+    public static boolean shouldNotifyPay() {
+        CommonPreference preference = CommonPreference.getInstance();
+        if (preference.getPayCount() > 0) {
+            return false;
+        }
+        int oneDayTime = 24 * 3600_1000;
+        if ((preference.getLastPayNotifyTime() / oneDayTime) == (System.currentTimeMillis() / oneDayTime)) {
+            return false;
+        }
+        preference.updatePayNotifyTime();
+        return true;
     }
 
     private static boolean checkWeixin() {
