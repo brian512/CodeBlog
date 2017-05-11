@@ -153,7 +153,7 @@ public class PermissionUtil {
 
         boolean permission = ContextCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
         if (!permission) {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE_READ_PHONE_STATE);
+            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_PHONE_STATE}, PERMISSION_REQUEST_CODE_READ_PHONE_STATE);
             return false;
         }
         return true;
@@ -165,7 +165,7 @@ public class PermissionUtil {
             return true;
         }
 
-        String[] perms = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        String[] perms = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         // 手机状态和写SDCARD的权限是必须的
         if (EasyPermissions.hasPermissions(activity, perms)) {

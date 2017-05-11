@@ -7,12 +7,13 @@ import android.os.StrictMode;
 
 import com.brian.codeblog.ad.AdMobHelper;
 import com.brian.codeblog.manager.ConfigHelper;
-import com.brian.codeblog.manager.PushManager;
 import com.brian.codeblog.pay.PayHelper;
 import com.brian.common.tools.DayNightHelper;
 import com.brian.common.tools.Env;
 import com.brian.common.utils.AppInfoUtil;
 import com.brian.common.utils.LogUtil;
+import com.networkbench.agent.impl.NBSAppAgent;
+import com.oasisfeng.condom.CondomContext;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
@@ -40,17 +41,24 @@ public class App extends Application {
             DayNightHelper.getInstance().initDayNightMode();
 
             AdMobHelper.init(this);
+//            AdMobHelper.init(CondomContext.wrap(this, "AdMobSDK"));
             PayHelper.initPay();
+
+            NBSAppAgent.setLicenseKey("46d5cde6e3ea4682b598b9a3101f9c5d")
+                    .withLocationServiceEnabled(true)
+                    .start(CondomContext.wrap(this, "NBSAppSDK"));
         }
         handleCrash();
 
-        PushManager.getInstance().initPushMsg(this);
+//        try {
+//            PushManager.getInstance().initPushMsg(this);
+//        } catch (Exception e) {}
     }
 
     private void handleCrash() {
         // init bugly
-        CrashReport.setAppChannel(this, AppInfoUtil.sChannelName);
-        Bugly.init(getApplicationContext(), "900033443", false);
+        CrashReport.setAppChannel(CondomContext.wrap(this, "BuglySDK"), AppInfoUtil.sChannelName);
+        Bugly.init(CondomContext.wrap(this, "BuglySDK"), "900033443", false);
 
         // 友盟crash统计，目前使用bugly
         MobclickAgent.setCatchUncaughtExceptions(false);

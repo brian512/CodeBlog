@@ -50,7 +50,7 @@ public class AdMobHelper {
     private static void requestNewInterstitial() {
         AdRequest adRequest = new AdRequest.Builder()
 //                .addTestDevice("913EF1D19EF6B17728D4288870AC1D6F") // P9
-//                .addTestDevice("5A8A78116D5F5F5EB0A7CFF87C6AC0D6") // 荣耀6
+                .addTestDevice("5A8A78116D5F5F5EB0A7CFF87C6AC0D6") // 荣耀6
                 .build();
 
         mInterstitialAd.loadAd(adRequest);

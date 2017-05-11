@@ -150,8 +150,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-analytics:10.2.1'
     compile 'com.google.firebase:firebase-ads:10.2.1'
 
-    compile project(':PushSDK')
-
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.google.code.gson:gson:2.7'
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
@@ -168,5 +166,7 @@ dependencies {
     compile 'me.imid.swipebacklayout.lib:library:1.0.0'
 
     compile "com.networkbench.newlens.agent.android:nbs.newlens.agent:2.5.3"
+
+    compile 'com.oasisfeng.condom:library:1.1.1'
 }
 apply plugin: 'com.google.gms.google-services'

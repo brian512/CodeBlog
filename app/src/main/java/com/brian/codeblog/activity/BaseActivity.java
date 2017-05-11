@@ -9,7 +9,6 @@ import android.view.MotionEvent;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.brian.codeblog.manager.PushManager;
 import com.brian.codeblog.stat.UsageStatsManager;
 import com.brian.common.utils.LogUtil;
 import com.brian.common.utils.ResourceUtil;
@@ -32,8 +31,6 @@ public class BaseActivity extends SwipeBackActivity {
         super.onCreate(savedInstanceState);
 
         sTopActivity = this;
-
-        PushManager.getInstance().onAppStart();
     }
     
     @Override

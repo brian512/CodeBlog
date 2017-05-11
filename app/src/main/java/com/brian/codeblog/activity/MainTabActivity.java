@@ -17,7 +17,6 @@ import com.brian.codeblog.Config;
 import com.brian.codeblog.activity.adapter.MainTabAdapter;
 import com.brian.codeblog.datacenter.preference.CommonPreference;
 import com.brian.codeblog.datacenter.preference.SettingPreference;
-import com.brian.codeblog.manager.PushManager;
 import com.brian.codeblog.manager.ShareManager;
 import com.brian.codeblog.stat.UsageStatsManager;
 import com.brian.codeblog.update.UpdateManager;
@@ -26,7 +25,6 @@ import com.brian.common.utils.TimeUtil;
 import com.brian.common.utils.ToastUtil;
 import com.brian.common.view.DrawerArrowDrawable;
 import com.brian.csdnblog.R;
-import com.networkbench.agent.impl.NBSAppAgent;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.onlineconfig.OnlineConfigAgent;
 import com.umeng.onlineconfig.OnlineConfigLog;
@@ -69,10 +67,6 @@ public class MainTabActivity extends BaseActivity {
         initUI();
         initListener();
         recoveryUI(); // 恢复上次浏览视图：主要是tab位置
-
-        NBSAppAgent.setLicenseKey("46d5cde6e3ea4682b598b9a3101f9c5d")
-                .withLocationServiceEnabled(true)
-                .start(this.getApplicationContext());
     }
 
     @Override
@@ -196,7 +190,7 @@ public class MainTabActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
-        PushManager.getInstance().handlePushMessageIfNeed();
+//        PushManager.getInstance().handlePushMessageIfNeed();
     }
 
     @Override
